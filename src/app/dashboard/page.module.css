@@ -1,0 +1,119 @@
+.main {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    min-height: 80vh;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.header h1 {
+    font-size: 2rem;
+    color: var(--primary);
+}
+
+.badgeActive {
+    background-color: #ECFDF5;
+    color: #059669;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.badgeInactive {
+    background-color: #F3F4F6;
+    color: #6B7280;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.upsellCard {
+    background: var(--primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 3rem;
+    border: none;
+}
+
+.upsellContent h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.upsellContent p {
+    opacity: 0.9;
+    margin-bottom: 1.5rem;
+}
+
+.lockIcon {
+    opacity: 0.2;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.examCard {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.examHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.examHeader h3 {
+    font-size: 1.125rem;
+    color: var(--foreground);
+}
+
+.duration {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.cardLock {
+    color: var(--text-muted);
+}
+
+.examDesc {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+}
+
+.startBtn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+@media (max-width: 640px) {
+    .upsellCard {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+    }
+}

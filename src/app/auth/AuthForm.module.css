@@ -1,0 +1,129 @@
+.card {
+    width: 100%;
+    max-width: 400px;
+    background: white;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.header h2 {
+    font-size: 1.5rem;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.header p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.error {
+    background-color: #FEF2F2;
+    color: var(--error);
+    padding: 0.75rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    text-align: center;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.inputGroup label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--foreground);
+}
+
+.inputWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.icon {
+    position: absolute;
+    left: 12px;
+    color: var(--text-muted);
+}
+
+.input {
+    width: 100%;
+    height: 40px;
+    padding: 0 12px 0 40px;
+    border: 1px solid #E5E7EB;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: border-color 0.2s;
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 2px rgba(161, 99, 130, 0.1);
+}
+
+.submit {
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+.divider {
+    position: relative;
+    text-align: center;
+    margin: 1.5rem 0;
+}
+
+.divider::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+    background-color: #E5E7EB;
+}
+
+.divider span {
+    position: relative;
+    background-color: white;
+    padding: 0 0.75rem;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.google {
+    width: 100%;
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.footer a {
+    color: var(--secondary);
+    font-weight: 500;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
