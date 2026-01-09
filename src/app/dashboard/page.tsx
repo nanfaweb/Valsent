@@ -1,55 +1,123 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/context/AuthContext";
-import { Card } from "@/components/ui/Card";
+import { supabase } from "@/lib/supabase";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
+import { WelcomeHeader } from "@/components/dashboard/WelcomeHeader";
+import { TrialIndicator } from "@/components/dashboard/TrialIndicator";
+import { TrialResultCard } from "@/components/dashboard/TrialResultCard";
+import { StatsGrid } from "@/components/dashboard/StatsGrid";
+import { ExamPreviewGrid } from "@/components/dashboard/ExamPreviewGrid";
+import { UpgradePrompt } from "@/components/dashboard/UpgradePrompt";
 import Link from "next/link";
 import styles from "./page.module.css";
-import { Lock, PlayCircle, Clock } from "lucide-react";
 
-type MockExam = {
-    id: string;
-    title: string;
-    duration_minutes: number;
-    description: string;
-};
+type DashboardState = "trial_available" | "trial_completed" | "plan_purchased";
 
-type Purchase = {
-    status: string;
-};
+interface TrialAttempt {
+    score: number;
+    total_questions: number;
+    time_taken_seconds: number;
+    percentile?: number;
+}
 
 export default function Dashboard() {
     const { user } = useAuth();
-    const [hasActivePlan, setHasActivePlan] = useState<boolean | null>(null);
-    const [exams, setExams] = useState<MockExam[]>([]);
+    const router = useRouter();
     const [loading, setLoading] = useState(true);
+    const [state, setState] = useState<DashboardState>("trial_available");
+    const [trialAttempt, setTrialAttempt] = useState<TrialAttempt | null>(null);
+    const [stats, setStats] = useState<any>(null);
+    const [mockExams, setMockExams] = useState<any[]>([]);
 
     useEffect(() => {
-        async function loadDashboardData() {
-            if (!user) return;
+        async function loadDashboard() {
+            if (!user) {
+                router.push("/auth/signin");
+                return;
+            }
 
             try {
-                // 1. Check Purchase Status
+                // 1. Check for active purchase
                 const { data: purchase } = await supabase
                     .from("purchases")
-                    .select("status")
+                    .select("*")
                     .eq("user_id", user.id)
                     .eq("status", "active")
                     .single();
 
-                setHasActivePlan(!!purchase);
+                if (purchase) {
+                    // State 3: Plan Purchased
+                    setState("plan_purchased");
 
-                // 2. Load Exams (if active or just metadata if public)
-                // We'll load metadata anyway, but maybe lock them.
+                    // Load stats
+                    const { data: attempts } = await supabase
+                        .from("attempts")
+                        .select("*")
+                        .eq("user_id", user.id);
+
+                    const { data: allMocks } = await supabase
+                        .from("mocks")
+                        .select("*");
+
+                    const avgScore = attempts?.length
+                        ? Math.round(attempts.reduce((acc, a) => acc + (a.score || 0), 0) / attempts.length)
+                        : 0;
+
+                    setStats({
+                        totalExams: allMocks?.length || 0,
+                        testsTaken: attempts?.length || 0,
+                        avgScore: avgScore || "—",
+                        avgTime: "45", // Placeholder
+                    });
+                } else {
+                    // Check if trial used
+                    const trialUsed = user.user_metadata?.trial_used || false;
+
+                    if (trialUsed) {
+                        // State 2: Trial Completed
+                        setState("trial_completed");
+
+                        // Load trial attempt
+                        const { data: attempt } = await supabase
+                            .from("trial_attempts")
+                            .select("*")
+                            .eq("user_id", user.id)
+                            .single();
+
+                        if (attempt) {
+                            setTrialAttempt({
+                                score: attempt.score,
+                                total_questions: attempt.total_questions,
+                                time_taken_seconds: attempt.time_taken_seconds,
+                                percentile: attempt.percentile,
+                            });
+                        }
+                    } else {
+                        // State 1: Trial Available
+                        setState("trial_available");
+                    }
+                }
+
+                // Load mock exams for preview
                 const { data: mocks } = await supabase
                     .from("mocks")
                     .select("*")
                     .order("created_at", { ascending: false });
 
-                if (mocks) setExams(mocks);
-
+                if (mocks) {
+                    setMockExams(
+                        mocks.map((m) => ({
+                            id: m.id,
+                            title: m.title,
+                            duration: m.duration_minutes,
+                            totalQuestions: m.total_questions,
+                            difficulty: m.difficulty,
+                        }))
+                    );
+                }
             } catch (error) {
                 console.error("Error loading dashboard:", error);
             } finally {
@@ -57,68 +125,107 @@ export default function Dashboard() {
             }
         }
 
-        loadDashboardData();
-    }, [user]);
+        loadDashboard();
+    }, [user, router]);
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) {
+        return (
+            <div className={styles.loading}>
+                <div className={styles.spinner}></div>
+                <p>Loading your dashboard...</p>
+            </div>
+        );
+    }
+
+    const userName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Student";
 
     return (
         <main className={styles.main}>
-            <div className={styles.header}>
-                <h1>Your Dashboard</h1>
-                {hasActivePlan ? (
-                    <span className={styles.badgeActive}>Premium Active</span>
-                ) : (
-                    <span className={styles.badgeInactive}>Free Account</span>
+            <div className={styles.container}>
+                <WelcomeHeader userName={userName} />
+
+                {/* STATE 1: Trial Available */}
+                {state === "trial_available" && (
+                    <>
+                        <TrialIndicator used={false} showNoCardRequired />
+
+                        <div className={styles.primaryAction}>
+                            <Link href="/trial-exam" className={styles.ctaLink}>
+                                <Button size="lg" className={styles.primaryCta}>
+                                    Start Your Free Mock Exam
+                                </Button>
+                            </Link>
+                            <p className={styles.ctaSubtext}>
+                                Experience the full exam interface with no commitment
+                            </p>
+                        </div>
+
+                        {/* Placeholder stats */}
+                        <StatsGrid
+                            stats={[
+                                { label: "Mock exams available", value: mockExams.length || "50+", icon: "exams" },
+                                { label: "Tests taken", value: "—", icon: "taken" },
+                                { label: "Average score", value: "—", icon: "score" },
+                                { label: "Average time", value: "—", icon: "time" },
+                            ]}
+                        />
+
+                        <ExamPreviewGrid exams={mockExams} locked={true} />
+                    </>
                 )}
-            </div>
 
-            {!hasActivePlan && (
-                <Card className={styles.upsellCard}>
-                    <div className={styles.upsellContent}>
-                        <h2>Unlock Full Access</h2>
-                        <p>Get access to all {exams.length || "50+"} mock exams and detailed reporting.</p>
-                        <Link href="/pricing">
-                            <Button>Upgrade Now</Button>
-                        </Link>
-                    </div>
-                    <Lock className={styles.lockIcon} size={48} />
-                </Card>
-            )}
+                {/* STATE 2: Trial Completed */}
+                {state === "trial_completed" && (
+                    <>
+                        <TrialIndicator used={true} />
 
-            <div className={styles.grid}>
-                {exams.length === 0 ? (
-                    <p>No exams available yet. Check back soon!</p>
-                ) : (
-                    exams.map((exam) => (
-                        <Card key={exam.id} className={styles.examCard}>
-                            <div className={styles.examHeader}>
-                                <h3>{exam.title}</h3>
-                                {hasActivePlan ? (
-                                    <span className={styles.duration}>
-                                        <Clock size={14} /> {exam.duration_minutes} mins
-                                    </span>
-                                ) : (
-                                    <Lock size={16} className={styles.cardLock} />
-                                )}
-                            </div>
-                            <p className={styles.examDesc}>{exam.description || "Comprehensive mock exam."}</p>
+                        {trialAttempt && (
+                            <TrialResultCard
+                                score={trialAttempt.score}
+                                totalQuestions={trialAttempt.total_questions}
+                                timeTaken={trialAttempt.time_taken_seconds}
+                                percentile={trialAttempt.percentile}
+                            />
+                        )}
 
-                            <div className={styles.examActions}>
-                                {hasActivePlan ? (
-                                    <Link href={`/exam/${exam.id}`}>
-                                        <Button size="sm" variant="outline" className={styles.startBtn}>
-                                            <PlayCircle size={16} /> Start Exam
-                                        </Button>
-                                    </Link>
-                                ) : (
-                                    <Button size="sm" disabled className={styles.startBtn}>
-                                        Locked
-                                    </Button>
-                                )}
-                            </div>
-                        </Card>
-                    ))
+                        <UpgradePrompt />
+
+                        <ExamPreviewGrid exams={mockExams} locked={true} />
+                    </>
+                )}
+
+                {/* STATE 3: Plan Purchased */}
+                {state === "plan_purchased" && (
+                    <>
+                        <div className={styles.confirmationBanner}>
+                            <h2>🎉 All mock exams unlocked!</h2>
+                            <p>You have lifetime access to all content</p>
+                        </div>
+
+                        <StatsGrid
+                            stats={[
+                                { label: "Total mock exams", value: stats.totalExams, icon: "exams" },
+                                { label: "Tests taken", value: stats.testsTaken, icon: "taken" },
+                                { label: "Average score", value: `${stats.avgScore}%`, icon: "score" },
+                                { label: "Average time", value: `${stats.avgTime} mins`, icon: "time" },
+                            ]}
+                        />
+
+                        <div className={styles.actions}>
+                            <Link href="/exams" className={styles.ctaLink}>
+                                <Button size="lg" className={styles.primaryCta}>
+                                    View All Mock Exams
+                                </Button>
+                            </Link>
+                            <Link href="/performance">
+                                <Button size="lg" variant="outline">
+                                    View Performance Summary
+                                </Button>
+                            </Link>
+                        </div>
+
+                        <ExamPreviewGrid exams={mockExams} locked={false} showTitle={false} />
+                    </>
                 )}
             </div>
         </main>

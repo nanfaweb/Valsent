@@ -1,0 +1,133 @@
+.container {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: white;
+    padding: var(--space-8);
+    border-radius: var(--radius-xl);
+    margin-bottom: var(--space-8);
+    box-shadow: var(--shadow-xl);
+    position: relative;
+    overflow: hidden;
+}
+
+.container::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+}
+
+.sparkle {
+    color: #FCD34D;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.8;
+        transform: scale(1.1);
+    }
+}
+
+.title {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-bold);
+    margin: 0;
+}
+
+.pricing {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    margin-bottom: var(--space-2);
+}
+
+.originalPrice {
+    font-size: var(--text-lg);
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+.currentPrice {
+    font-size: var(--text-4xl);
+    font-weight: var(--font-extrabold);
+    color: white;
+}
+
+.subtitle {
+    font-size: var(--text-sm);
+    opacity: 0.9;
+    margin-bottom: var(--space-6);
+}
+
+.features {
+    list-style: none;
+    margin-bottom: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-base);
+}
+
+.checkIcon {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-full);
+    padding: 2px;
+    flex-shrink: 0;
+}
+
+.ctaLink {
+    display: block;
+    width: 100%;
+}
+
+.cta {
+    width: 100%;
+    background: white;
+    color: var(--primary);
+    font-weight: var(--font-bold);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 640px) {
+    .container {
+        padding: var(--space-6);
+    }
+
+    .title {
+        font-size: var(--text-xl);
+    }
+
+    .currentPrice {
+        font-size: var(--text-3xl);
+    }
+}

@@ -1,0 +1,35 @@
+.container {
+    background: var(--border-light);
+    padding: var(--space-4) var(--space-6);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-6);
+}
+
+.indicator {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--text-base);
+}
+
+.label {
+    color: var(--text-muted);
+    font-weight: var(--font-medium);
+}
+
+.valueAvailable {
+    color: var(--success);
+    font-weight: var(--font-semibold);
+}
+
+.valueUsed {
+    color: var(--text-muted);
+    font-weight: var(--font-semibold);
+}
+
+.microcopy {
+    margin-top: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    font-style: italic;
+}

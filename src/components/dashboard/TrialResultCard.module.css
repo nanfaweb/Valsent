@@ -1,0 +1,150 @@
+.container {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-8);
+    margin-bottom: var(--space-8);
+    box-shadow: var(--shadow-sm);
+}
+
+.title {
+    font-size: var(--text-xl);
+    font-weight: var(--font-semibold);
+    color: var(--primary);
+    margin-bottom: var(--space-6);
+    text-align: center;
+}
+
+.mainScore {
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--space-8);
+}
+
+.scoreCircle {
+    position: relative;
+    width: 120px;
+    height: 120px;
+}
+
+.progressRing {
+    width: 100%;
+    height: 100%;
+    transform: rotate(0deg);
+}
+
+.progressBackground {
+    stroke: var(--border-light);
+}
+
+.progressForeground {
+    stroke: var(--primary);
+    transition: stroke-dasharray 1s ease;
+}
+
+.scoreText {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.scoreValue {
+    display: block;
+    font-size: var(--text-3xl);
+    font-weight: var(--font-bold);
+    color: var(--primary);
+    line-height: 1;
+}
+
+.scoreLabel {
+    display: block;
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    margin-top: var(--space-1);
+}
+
+.metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-6);
+    border-bottom: 1px solid var(--border);
+}
+
+.metric {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.icon {
+    color: var(--secondary);
+    flex-shrink: 0;
+}
+
+.metricLabel {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    margin-bottom: var(--space-1);
+}
+
+.metricValue {
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    color: var(--foreground);
+}
+
+.benchmark {
+    background: var(--border-light);
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+}
+
+.benchmarkTitle {
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    color: var(--text-muted);
+    margin-bottom: var(--space-3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.benchmarkGrid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.benchmarkItem {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+}
+
+.benchmarkIcon {
+    color: var(--text-muted);
+}
+
+.benchmarkLabel {
+    color: var(--text-muted);
+    flex: 1;
+}
+
+.benchmarkValue {
+    font-weight: var(--font-semibold);
+    color: var(--foreground);
+}
+
+@media (max-width: 640px) {
+    .container {
+        padding: var(--space-6);
+    }
+
+    .metrics {
+        grid-template-columns: 1fr;
+    }
+}
