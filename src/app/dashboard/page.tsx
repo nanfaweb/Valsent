@@ -31,6 +31,7 @@ export default function Dashboard() {
     const [trialAttempt, setTrialAttempt] = useState<TrialAttempt | null>(null);
     const [stats, setStats] = useState<any>(null);
     const [mockExams, setMockExams] = useState<any[]>([]);
+    const [trialMockId, setTrialMockId] = useState<string | null>(null);
 
     useEffect(() => {
         async function loadDashboard() {
@@ -73,27 +74,51 @@ export default function Dashboard() {
                         avgTime: "45", // Placeholder
                     });
                 } else {
-                    // Check if trial used
-                    const trialUsed = user.user_metadata?.trial_used || false;
+                    // Check if trial used from profiles table
+                    const { data: profile } = await supabase
+                        .from("profiles")
+                        .select("trial_used")
+                        .eq("id", user.id)
+                        .single();
+
+                    const trialUsed = profile?.trial_used || false;
 
                     if (trialUsed) {
                         // State 2: Trial Completed
                         setState("trial_completed");
 
-                        // Load trial attempt
-                        const { data: attempt } = await supabase
-                            .from("trial_attempts")
-                            .select("*")
-                            .eq("user_id", user.id)
+                        // Load trial attempt - get trial mock first
+                        const { data: trialMock } = await supabase
+                            .from("mocks")
+                            .select("id")
+                            .eq("is_trial", true)
                             .single();
 
-                        if (attempt) {
-                            setTrialAttempt({
-                                score: attempt.score,
-                                total_questions: attempt.total_questions,
-                                time_taken_seconds: attempt.time_taken_seconds,
-                                percentile: attempt.percentile,
-                            });
+                        if (trialMock) {
+                            const { data: attempt } = await supabase
+                                .from("attempts")
+                                .select("*, mocks(total_questions)")
+                                .eq("user_id", user.id)
+                                .eq("mock_id", trialMock.id)
+                                .eq("status", "submitted")
+                                .order("created_at", { ascending: false })
+                                .limit(1)
+                                .single();
+
+                            if (attempt) {
+                                const totalQuestions = (attempt.mocks as any)?.total_questions || 45;
+                                const timeTaken = attempt.elapsed_seconds ||
+                                    (attempt.finished_at && attempt.started_at
+                                        ? (new Date(attempt.finished_at).getTime() - new Date(attempt.started_at).getTime()) / 1000
+                                        : 0);
+
+                                setTrialAttempt({
+                                    score: attempt.score || 0,
+                                    total_questions: totalQuestions,
+                                    time_taken_seconds: timeTaken,
+                                    percentile: undefined, // Can be calculated later
+                                });
+                            }
                         }
                     } else {
                         // State 1: Trial Available
@@ -108,6 +133,12 @@ export default function Dashboard() {
                     .order("created_at", { ascending: false });
 
                 if (mocks) {
+                    // Find trial mock
+                    const trialMock = mocks.find(m => m.is_trial);
+                    if (trialMock) {
+                        setTrialMockId(trialMock.id);
+                    }
+
                     setMockExams(
                         mocks.map((m) => ({
                             id: m.id,
@@ -150,11 +181,17 @@ export default function Dashboard() {
                         <TrialIndicator used={false} showNoCardRequired />
 
                         <div className={styles.primaryAction}>
-                            <Link href="/trial-exam" className={styles.ctaLink}>
-                                <Button size="lg" className={styles.primaryCta}>
-                                    Start Your Free Mock Exam
+                            {trialMockId ? (
+                                <Link href={`/exam/${trialMockId}`} className={styles.ctaLink}>
+                                    <Button size="lg" className={styles.primaryCta}>
+                                        Start Your Free Mock Exam
+                                    </Button>
+                                </Link>
+                            ) : (
+                                <Button size="lg" className={styles.primaryCta} disabled>
+                                    Loading trial exam...
                                 </Button>
-                            </Link>
+                            )}
                             <p className={styles.ctaSubtext}>
                                 Experience the full exam interface with no commitment
                             </p>
@@ -163,14 +200,15 @@ export default function Dashboard() {
                         {/* Placeholder stats */}
                         <StatsGrid
                             stats={[
-                                { label: "Mock exams available", value: mockExams.length || "50+", icon: "exams" },
+                                { label: "Mock exams available", value: "50+", icon: "exams" },
                                 { label: "Tests taken", value: "—", icon: "taken" },
                                 { label: "Average score", value: "—", icon: "score" },
                                 { label: "Average time", value: "—", icon: "time" },
                             ]}
                         />
 
-                        <ExamPreviewGrid exams={mockExams} locked={true} />
+                        {/* Show 4 placeholder cards for non-purchased users */}
+                        <ExamPreviewGrid exams={[]} locked={true} />
                     </>
                 )}
 
@@ -190,7 +228,8 @@ export default function Dashboard() {
 
                         <UpgradePrompt />
 
-                        <ExamPreviewGrid exams={mockExams} locked={true} />
+                        {/* Show 4 placeholder cards */}
+                        <ExamPreviewGrid exams={[]} locked={true} />
                     </>
                 )}
 
@@ -224,7 +263,12 @@ export default function Dashboard() {
                             </Link>
                         </div>
 
-                        <ExamPreviewGrid exams={mockExams} locked={false} showTitle={false} />
+                        {/* Show real exams (excluding trial) for purchased users */}
+                        <ExamPreviewGrid
+                            exams={mockExams.filter(m => !m.title?.toLowerCase().includes('trial'))}
+                            locked={false}
+                            showTitle={false}
+                        />
                     </>
                 )}
             </div>

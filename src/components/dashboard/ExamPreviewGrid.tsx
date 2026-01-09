@@ -22,21 +22,58 @@ const difficultyColors = {
 };
 
 export const ExamPreviewGrid = ({ exams, locked, showTitle = true }: ExamPreviewGridProps) => {
+    // For locked state (non-purchased users), show 4 placeholder cards
+    const placeholderExams: ExamPreview[] = [
+        {
+            id: 'placeholder-1',
+            title: 'Advanced Engineering Mock Exam',
+            duration: 120,
+            totalQuestions: 100,
+            difficulty: 'hard' as const,
+        },
+        {
+            id: 'placeholder-2',
+            title: 'Medical Entrance Test Preparation',
+            duration: 150,
+            totalQuestions: 120,
+            difficulty: 'hard' as const,
+        },
+        {
+            id: 'placeholder-3',
+            title: 'Mathematics & Physics Mock',
+            duration: 90,
+            totalQuestions: 75,
+            difficulty: 'medium' as const,
+        },
+        {
+            id: 'placeholder-4',
+            title: 'Chemistry Complete Practice Test',
+            duration: 100,
+            totalQuestions: 80,
+            difficulty: 'medium' as const,
+        },
+    ];
+
+    // Use placeholders for locked cards, real exams for unlocked
+    const displayExams = locked ? placeholderExams : exams.slice(0, 4);
+
     return (
         <div className={styles.container}>
             {showTitle && (
                 <h2 className={styles.sectionTitle}>
-                    {locked ? 'Preview: Mock Exams' : 'Available Mock Exams'}
+                    {locked ? 'Unlock Full Access' : 'Available Mock Exams'}
                 </h2>
             )}
 
             <div className={styles.grid}>
-                {exams.slice(0, 6).map((exam) => (
+                {displayExams.map((exam) => (
                     <div key={exam.id} className={`${styles.card} ${locked ? styles.locked : ''}`}>
                         {locked && (
                             <div className={styles.lockOverlay}>
-                                <Lock size={32} />
-                                <p>Unlock to access</p>
+                                <div className={styles.lockIcon}>
+                                    <Lock size={40} strokeWidth={2} />
+                                </div>
+                                <p className={styles.lockText}>Premium Content</p>
                             </div>
                         )}
 
