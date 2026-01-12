@@ -1,10 +1,8 @@
-"use client";
-
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import styles from "./TestPlayer.module.css";
-import { Timer, AlertCircle, CheckCircle, ChevronRight, ChevronLeft } from "lucide-react";
+import { Timer, CheckCircle, ChevronRight, ChevronLeft, Menu, X, Flag, Save } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
@@ -13,8 +11,9 @@ type Question = {
     id: string;
     type: "mcq" | "text";
     question_text: string;
-    choices?: string[]; // stored as JSONB in DB, parsed to array here
+    choices?: string[];
     correct_answer: string;
+    section?: string;
 };
 
 type Exam = {
@@ -26,13 +25,21 @@ type Exam = {
 interface TestPlayerProps {
     exam: Exam;
     questions: Question[];
+    attemptId?: string;
 }
 
-export const TestPlayer = ({ exam, questions }: TestPlayerProps) => {
+export const TestPlayer = ({ exam, questions, attemptId }: TestPlayerProps) => {
     const { user } = useAuth();
     const router = useRouter();
 
-    // State
+    const sections = ["Mathematics", "English"];
+
+    const [currentSection, setCurrentSection] = useState<string>("Mathematics");
+    const [sectionLocks, setSectionLocks] = useState<Record<string, boolean>>({
+        Mathematics: false,
+        English: true
+    });
+
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [answers, setAnswers] = useState<Record<string, string>>({});
     const [timeLeft, setTimeLeft] = useState(exam.duration_minutes * 60);
@@ -40,60 +47,119 @@ export const TestPlayer = ({ exam, questions }: TestPlayerProps) => {
     const [isFinished, setIsFinished] = useState(false);
     const [score, setScore] = useState(0);
 
-    // Load saved progress
-    useEffect(() => {
-        const saved = localStorage.getItem(`exam_progress_${exam.id}`);
-        if (saved) {
-            const parsed = JSON.parse(saved);
-            // Only restore if valid
-            if (parsed.answers) setAnswers(parsed.answers);
-            // Restore time? complex if they left page. Let's restart time for simplicity 
-            // or implement server-side start time tracking. 
-            // For MVP, we reset time on refresh OR we track 'started_at' in localStorage.
-        }
-    }, [exam.id]);
+    // UI States
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [showSaveModal, setShowSaveModal] = useState(false);
 
-    // Timer
+    const activeQuestions = questions.filter(q => (q.section || 'Mathematics') === currentSection);
+
+    useEffect(() => {
+        setCurrentQuestionIndex(0);
+    }, [currentSection]);
+
+    useEffect(() => {
+        async function loadProgress() {
+            if (!attemptId) return;
+
+            const { data: attempt } = await supabase
+                .from("attempts")
+                .select("answers, remaining_seconds, current_question_index, status, current_section, section_locked")
+                .eq("id", attemptId)
+                .single();
+
+            if (attempt) {
+                if (attempt.answers) setAnswers(attempt.answers);
+                if (attempt.remaining_seconds) setTimeLeft(attempt.remaining_seconds);
+                if (attempt.current_section) setCurrentSection(attempt.current_section);
+                if (attempt.section_locked) setSectionLocks(attempt.section_locked);
+            }
+        }
+        loadProgress();
+    }, [attemptId]);
+
     useEffect(() => {
         if (isFinished) return;
-
         const timer = setInterval(() => {
             setTimeLeft((prev) => {
                 if (prev <= 1) {
                     clearInterval(timer);
-                    handleSubmit(); // Auto submit
+                    handleSubmitExam();
                     return 0;
                 }
                 return prev - 1;
             });
         }, 1000);
-
         return () => clearInterval(timer);
     }, [isFinished]);
 
-    // Auto-save
     useEffect(() => {
-        if (!isFinished) {
-            localStorage.setItem(`exam_progress_${exam.id}`, JSON.stringify({ answers }));
+        if (!isFinished && attemptId) {
+            const saveToDb = async () => {
+                await supabase
+                    .from("attempts")
+                    .update({
+                        answers,
+                        remaining_seconds: timeLeft,
+                        current_question_index: currentQuestionIndex,
+                        current_section: currentSection,
+                        section_locked: sectionLocks,
+                        last_saved_at: new Date().toISOString()
+                    })
+                    .eq("id", attemptId);
+            };
+            const timeoutId = setTimeout(saveToDb, 1000);
+            return () => clearTimeout(timeoutId);
         }
-    }, [answers, exam.id, isFinished]);
+    }, [answers, timeLeft, currentQuestionIndex, isFinished, attemptId, currentSection, sectionLocks]);
 
     const handleAnswer = (val: string) => {
-        const qId = questions[currentQuestionIndex].id;
-        setAnswers((prev) => ({ ...prev, [qId]: val }));
+        const qId = activeQuestions[currentQuestionIndex].id;
+        setAnswers((prev) => {
+            const newAnswers = { ...prev };
+            // Deselection logic using radio-like behavior
+            if (newAnswers[qId] === val) {
+                delete newAnswers[qId]; // Remove answer if clicked again
+            } else {
+                newAnswers[qId] = val;
+            }
+            return newAnswers;
+        });
     };
 
     const calculateScore = () => {
         let correct = 0;
         questions.forEach((q) => {
             if (answers[q.id] === q.correct_answer) {
-                correct++;
+                correct += 4;
             }
         });
         return correct;
     };
 
-    const handleSubmit = useCallback(async () => {
+    const handleSubmitSection = async () => {
+        const newLocks = { ...sectionLocks, [currentSection]: true };
+        const nextSectionIndex = sections.indexOf(currentSection) + 1;
+
+        if (nextSectionIndex < sections.length) {
+            const nextSection = sections[nextSectionIndex];
+            newLocks[nextSection] = false;
+            setSectionLocks(newLocks);
+            setCurrentSection(nextSection);
+
+            if (attemptId) {
+                try {
+                    const { submitSection } = await import("@/app/exam/actions");
+                    await submitSection(attemptId, currentSection, nextSection);
+                } catch (err) {
+                    console.error("Failed to submit section:", err);
+                }
+            }
+        } else {
+            handleSubmitExam();
+        }
+    };
+
+    const handleSubmitExam = useCallback(async () => {
         if (isSubmitting || isFinished) return;
         setIsSubmitting(true);
 
@@ -102,32 +168,36 @@ export const TestPlayer = ({ exam, questions }: TestPlayerProps) => {
         setIsFinished(true);
 
         try {
-            // Save to Supabase
-            if (user) {
-                await supabase.from("attempts").insert({
-                    user_id: user.id,
-                    mock_id: exam.id,
-                    score: finalScore,
-                    answers: answers,
-                    finished_at: new Date().toISOString(),
-                    // started_at should technically be passed or tracked
-                });
+            if (user && attemptId) {
+                const { submitExam } = await import("@/app/exam/actions");
+                await submitExam(attemptId, answers, timeLeft);
             }
-
-            // Clear local storage
-            localStorage.removeItem(`exam_progress_${exam.id}`);
-
         } catch (error) {
             console.error("Failed to submit:", error);
         } finally {
             setIsSubmitting(false);
         }
-    }, [answers, exam.id, isFinished, isSubmitting, questions, user]);
+    }, [answers, isFinished, isSubmitting, questions, user, attemptId, timeLeft]);
+
+    const handleSaveAndExit = () => {
+        // Triggered by "Save & Exit" button
+        setShowSaveModal(true);
+    };
+
+    const confirmExit = () => {
+        // Logic to simply route away, as auto-save handles the data
+        router.push("/dashboard");
+    };
 
     const formatTime = (seconds: number) => {
-        const m = Math.floor(seconds / 60);
+        const h = Math.floor(seconds / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
         const s = seconds % 60;
-        return `${m}:${s.toString().padStart(2, "0")}`;
+
+        if (h > 0) {
+            return `${h}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+        }
+        return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
     };
 
     if (isFinished) {
@@ -137,91 +207,182 @@ export const TestPlayer = ({ exam, questions }: TestPlayerProps) => {
                 <h2>Exam Submitted!</h2>
                 <div className={styles.scoreDisplay}>
                     <span className={styles.scoreLabel}>Your Score</span>
-                    <span className={styles.scoreValue}>{score} / {questions.length}</span>
+                    <span className={styles.scoreValue}>{score} / {questions.length * 4}</span>
                 </div>
-                <p>Percentage: {Math.round((score / questions.length) * 100)}%</p>
+                <p>Percentage: {Math.round((score / (questions.length * 4)) * 100)}%</p>
                 <div className={styles.actions}>
                     <Button onClick={() => router.push("/dashboard")}>Back to Dashboard</Button>
-                    {/* Add Review Answers logic later */}
                 </div>
             </Card>
         );
     }
 
-    const currentQ = questions[currentQuestionIndex];
-    const isLast = currentQuestionIndex === questions.length - 1;
+    if (!activeQuestions || activeQuestions.length === 0) {
+        if (currentSection === "English") {
+            return (
+                <div className={styles.playerContainer}>
+                    <div className={styles.topBar}>
+                        <h3 style={{ margin: 0 }}>Section: {currentSection}</h3>
+                        <div className={styles.timer}>{formatTime(timeLeft)}</div>
+                    </div>
+                    <Card className={styles.questionCard}>
+                        <div style={{ textAlign: 'center', padding: '2rem' }}>
+                            <h3>English Section Coming Soon</h3>
+                            <p>This section is not yet available.</p>
+                        </div>
+                    </Card>
+                </div>
+            );
+        }
+        return <div className={styles.error}>No questions found for {currentSection}.</div>;
+    }
+
+    const currentQ = activeQuestions[currentQuestionIndex];
+    const isLastInList = currentQuestionIndex === activeQuestions.length - 1;
+    const isLastSection = sections.indexOf(currentSection) === sections.length - 1;
 
     return (
         <div className={styles.playerContainer}>
-            <div className={styles.topBar}>
-                <div className={styles.progress}>
-                    Question {currentQuestionIndex + 1} / {questions.length}
+            {/* Header */}
+            <div className={styles.header}>
+                <div className={styles.headerLeft}>
+                    <h1 className={styles.examTitle}>{exam.title}</h1>
+                    <div className={styles.sectionBadge}>{currentSection}</div>
                 </div>
-                <div className={`${styles.timer} ${timeLeft < 300 ? styles.timerWarning : ""}`}>
-                    <Timer size={18} />
-                    {formatTime(timeLeft)}
-                </div>
-            </div>
-
-            <Card className={styles.questionCard}>
-                <h3 className={styles.questionText}>{currentQ.question_text}</h3>
-
-                <div className={styles.choices}>
-                    {currentQ.type === "mcq" && currentQ.choices?.map((choice, idx) => (
-                        <label
-                            key={idx}
-                            className={`${styles.choice} ${answers[currentQ.id] === choice ? styles.selected : ""}`}
-                        >
-                            <input
-                                type="radio"
-                                name={currentQ.id}
-                                value={choice}
-                                checked={answers[currentQ.id] === choice}
-                                onChange={() => handleAnswer(choice)}
-                                className={styles.radio}
-                            />
-                            <span className={styles.choiceText}>{choice}</span>
-                        </label>
-                    ))}
-
-                    {currentQ.type === "text" && (
-                        <textarea
-                            className={styles.textArea}
-                            value={answers[currentQ.id] || ""}
-                            onChange={(e) => handleAnswer(e.target.value)}
-                            placeholder="Type your answer here..."
-                        />
-                    )}
-                </div>
-            </Card>
-
-            <div className={styles.footer}>
-                <Button
-                    variant="outline"
-                    disabled={currentQuestionIndex === 0}
-                    onClick={() => setCurrentQuestionIndex(prev => prev - 1)}
-                >
-                    <ChevronLeft size={16} /> Previous
-                </Button>
-
-                {isLast ? (
-                    <Button
-                        variant="primary"
-                        onClick={() => handleSubmit()}
-                        isLoading={isSubmitting}
-                        className={styles.submitBtn}
-                    >
-                        Submit Exam
-                    </Button>
-                ) : (
+                <div className={styles.headerRight}>
+                    <div className={`${styles.timer} ${timeLeft < 300 ? styles.timerWarning : ""}`}>
+                        <Timer size={18} />
+                        {formatTime(timeLeft)}
+                    </div>
                     <Button
                         variant="secondary"
-                        onClick={() => setCurrentQuestionIndex(prev => prev + 1)}
+                        size="sm"
+                        onClick={handleSaveAndExit}
+                        className={styles.saveExitBtn}
                     >
-                        Next <ChevronRight size={16} />
+                        <Save size={18} style={{ marginRight: "4px" }} /> Save & Exit
                     </Button>
-                )}
+                </div>
             </div>
+
+            <div className={styles.mainContent}>
+                {/* Sidebar Navigation (Desktop) / Dropdown (Mobile) */}
+                <div className={`${styles.navPanel} ${isMenuOpen ? styles.navPanelOpen : ''}`}>
+                    <div className={styles.navHeader}>
+                        <h3>Questions</h3>
+                        <button className={styles.closeNav} onClick={() => setIsMenuOpen(false)}>
+                            <X size={20} />
+                        </button>
+                    </div>
+                    <div className={styles.questionGrid}>
+                        {activeQuestions.map((q, idx) => {
+                            const isAnswered = !!answers[q.id];
+                            const isCurrent = currentQuestionIndex === idx;
+                            return (
+                                <button
+                                    key={q.id}
+                                    className={`${styles.navItem} ${isAnswered ? styles.navItemAnswered : ''} ${isCurrent ? styles.navItemCurrent : ''}`}
+                                    onClick={() => {
+                                        setCurrentQuestionIndex(idx);
+                                        setIsMenuOpen(false);
+                                    }}
+                                >
+                                    {idx + 1}
+                                </button>
+                            );
+                        })}
+                    </div>
+                    <div className={styles.navLegend}>
+                        <div className={styles.legendItem}><span className={styles.dotCurrent}></span> Current</div>
+                        <div className={styles.legendItem}><span className={styles.dotAnswered}></span> Answered</div>
+                        <div className={styles.legendItem}><span className={styles.dotUnanswered}></span> Unanswered</div>
+                    </div>
+                </div>
+
+                {/* Mobile Menu Toggle */}
+                <button className={styles.menuToggle} onClick={() => setIsMenuOpen(true)}>
+                    <Menu size={24} />
+                    <span>Question List</span>
+                </button>
+
+                {/* Question Area */}
+                <div className={styles.questionArea}>
+                    <Card className={styles.questionCard}>
+                        <div className={styles.questionHeader}>
+                            <span className={styles.qNumber}>Question {currentQuestionIndex + 1} of {activeQuestions.length}</span>
+                            <div className={styles.questionNav}>
+                                <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    disabled={currentQuestionIndex === 0}
+                                    onClick={() => setCurrentQuestionIndex(prev => prev - 1)}
+                                    className={styles.navBtnSmall}
+                                >
+                                    <ChevronLeft size={16} />
+                                </Button>
+                                <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    disabled={currentQuestionIndex === activeQuestions.length - 1}
+                                    onClick={() => setCurrentQuestionIndex(prev => prev + 1)}
+                                    className={styles.navBtnSmall}
+                                >
+                                    <ChevronRight size={16} />
+                                </Button>
+                            </div>
+                        </div>
+
+                        <h3 className={styles.questionText}>{currentQ.question_text}</h3>
+
+                        <div className={styles.choices}>
+                            {currentQ.type === "mcq" && currentQ.choices?.map((choice, idx) => (
+                                <div
+                                    key={idx}
+                                    className={`${styles.choice} ${answers[currentQ.id] === choice ? styles.selected : ""}`}
+                                    onClick={() => handleAnswer(choice)}
+                                >
+                                    <div className={styles.radioWrapper}>
+                                        <div className={`${styles.fakeRadio} ${answers[currentQ.id] === choice ? styles.fakeRadioChecked : ""}`}></div>
+                                    </div>
+                                    <span className={styles.choiceText}>{choice}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </Card>
+
+                    {isLastInList && (
+                        <div className={styles.footer}>
+                            <Button
+                                variant="primary"
+                                onClick={handleSubmitSection}
+                                isLoading={isSubmitting}
+                                className={styles.submitBtn}
+                            >
+                                {isLastSection ? "Submit Exam" : `Submit Section`} <ChevronRight size={16} />
+                            </Button>
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* Save & Exit Modal */}
+            {showSaveModal && (
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContent}>
+                        <div className={styles.modalHeader}>
+                            <h3>Save & Exit?</h3>
+                            <button onClick={() => setShowSaveModal(false)}><X size={20} /></button>
+                        </div>
+                        <div className={styles.modalBody}>
+                            <p>Your progress will be saved automatically. You can resume this exam later from the Dashboard. The timer will pause.</p>
+                        </div>
+                        <div className={styles.modalFooter}>
+                            <Button variant="outline" onClick={() => setShowSaveModal(false)}>Cancel</Button>
+                            <Button variant="primary" onClick={confirmExit}>Confirm Exit</Button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

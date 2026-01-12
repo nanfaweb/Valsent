@@ -137,6 +137,21 @@ export default function Dashboard() {
                     const trialMock = mocks.find(m => m.is_trial);
                     if (trialMock) {
                         setTrialMockId(trialMock.id);
+
+                        // Check if in progress
+                        if (state === "trial_available") {
+                            const { data: activeAttempt } = await supabase
+                                .from("attempts")
+                                .select("status")
+                                .eq("user_id", user.id)
+                                .eq("mock_id", trialMock.id)
+                                .in("status", ["in_progress", "paused"])
+                                .single();
+
+                            if (activeAttempt) {
+                                setTrialAttempt({ status: activeAttempt.status } as any);
+                            }
+                        }
                     }
 
                     setMockExams(
@@ -175,16 +190,18 @@ export default function Dashboard() {
             <div className={styles.container}>
                 <WelcomeHeader userName={userName} />
 
-                {/* STATE 1: Trial Available */}
+                {/* STATE 1: Trial Available or In Progress */}
                 {state === "trial_available" && (
                     <>
                         <TrialIndicator used={false} showNoCardRequired />
 
                         <div className={styles.primaryAction}>
                             {trialMockId ? (
-                                <Link href={`/exam/${trialMockId}`} className={styles.ctaLink}>
+                                <Link href="/exam/trial" className={styles.ctaLink}>
                                     <Button size="lg" className={styles.primaryCta}>
-                                        Start Your Free Mock Exam
+                                        {(trialAttempt as any)?.status === 'in_progress' || (trialAttempt as any)?.status === 'paused'
+                                            ? "Continue Your Free Mock Exam"
+                                            : "Start Your Free Mock Exam"}
                                     </Button>
                                 </Link>
                             ) : (

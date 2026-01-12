@@ -1,0 +1,160 @@
+.container {
+    min-height: 100vh;
+    padding: 2rem;
+    background-color: var(--background-subtle);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wrapper {
+    max-width: 800px;
+    width: 100%;
+}
+
+
+
+
+
+.content {
+    background: white;
+    border-radius: 16px;
+    padding: 3rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.infoCard {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    background: var(--surface-hover);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 2.5rem;
+}
+
+.row {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    flex: 1;
+}
+
+.divider {
+    width: 1px;
+    height: 50px;
+    background: var(--border);
+    margin: 0 2rem;
+}
+
+.icon {
+    color: var(--primary);
+    margin-top: 4px;
+}
+
+.row h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.row p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.rulesSection {
+    margin-bottom: 3rem;
+}
+
+.rulesSection h2 {
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.rulesList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.rulesList li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 1.25rem;
+    line-height: 1.6;
+    color: var(--text-primary);
+}
+
+.rulesList li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--primary);
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.highlight {
+    font-weight: 600;
+    color: var(--primary);
+    background: var(--primary-light);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.locked {
+    font-weight: 600;
+    color: #e11d48;
+    background: #ffe4e6;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.actionSection {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.startBtn {
+    font-size: 1.1rem;
+    padding: 1.5rem 3rem;
+    width: 100%;
+    max-width: 300px;
+}
+
+.note {
+    font-size: 0.85rem;
+    color: var(--text-tertiary);
+    display: flex;
+    align-items: center;
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .content {
+        padding: 1.5rem;
+    }
+
+    .infoCard {
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: flex-start;
+    }
+
+    .divider {
+        display: none;
+    }
+}

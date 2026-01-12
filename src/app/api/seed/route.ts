@@ -90,51 +90,58 @@ export async function POST() {
         }
 
         // 3. Seed sample questions for the trial exam
-        const trialMock = insertedMocks.find(m => m.is_trial);
-        if (trialMock) {
-            const sampleQuestions = [
-                {
-                    mock_id: trialMock.id,
-                    type: "mcq",
-                    question_text: "What is the SI unit of Force?",
-                    choices: ["Newton", "Joule", "Watt", "Pascal"],
-                    correct_answer: "Newton"
-                },
-                {
-                    mock_id: trialMock.id,
-                    type: "mcq",
-                    question_text: "Calculate the derivative of x².",
-                    choices: ["x", "2x", "x²", "2"],
-                    correct_answer: "2x"
-                },
-                {
-                    mock_id: trialMock.id,
-                    type: "mcq",
-                    question_text: "Which of the following is an inert gas?",
-                    choices: ["Oxygen", "Nitrogen", "Neon", "Hydrogen"],
-                    correct_answer: "Neon"
-                },
-                {
-                    mock_id: trialMock.id,
-                    type: "mcq",
-                    question_text: "What is the chemical formula for water?",
-                    choices: ["H2O", "CO2", "O2", "H2O2"],
-                    correct_answer: "H2O"
-                },
-                {
-                    mock_id: trialMock.id,
-                    type: "mcq",
-                    question_text: "Solve: 2x + 5 = 15",
-                    choices: ["x = 5", "x = 10", "x = 7.5", "x = 20"],
-                    correct_answer: "x = 5"
-                }
-            ];
+        // 3. Seed questions for the trial exam
+        if (trialMockId) {
+            // First, DELETE existing questions to prevent duplicates/issues
+            await supabaseAdmin.from("questions").delete().eq("mock_id", trialMockId);
 
+            // Import local JSON data (assuming it's available or we embed it)
+            // For robustness in this environment, I'm embedding the read logic:
+            // Since we can't easily rely on 'fs' in edge/serverless sometimes, but this is a route.
+            // I will use `require` or just paste the data if tool allows.
+            // Let's assume we can use `fs` to read the file relative to project root.
+
+            /* 
+               NOTE: In a real Next.js app, importing JSON is best. 
+               import mathQuestions from '../../../../bba_math_1.json';
+            */
+
+            // However, to ensure it works without file path issues in this specific environment,
+            // I will use a robust approach: Fetching or hardcoding the logic to read it.
+            // For now, I will use 'fs' to read the file from the known path.
+
+            const fs = require('fs');
+            const path = require('path');
+            const jsonPath = path.join(process.cwd(), 'bba_math_1.json');
+
+            let mathData = [];
+            try {
+                const fileContents = fs.readFileSync(jsonPath, 'utf8');
+                mathData = JSON.parse(fileContents);
+            } catch (err) {
+                console.error("Failed to read bba_math_1.json:", err);
+                // Fallback or error
+                throw new Error("Failed to read question data file");
+            }
+
+            const questionsToInsert = mathData.map((q: any) => ({
+                mock_id: trialMockId,
+                type: "mcq",
+                question_text: q.question,
+                choices: q.options, // Already an array of strings ["A. ...", "B. ..."]
+                correct_answer: q.answer, // "B. 25"
+                section: "Mathematics" // New column
+            }));
+
+            // Insert in batches if needed, but 45 is small enough for one go
             const { error: qError } = await supabaseAdmin
                 .from("questions")
-                .insert(sampleQuestions);
+                .insert(questionsToInsert);
 
-            if (qError) console.error("Questions insert error:", qError);
+            if (qError) {
+                console.error("Questions insert error:", qError);
+                return NextResponse.json({ error: "Questions insert failed", details: qError }, { status: 500 });
+            }
         }
 
         // 4. Seed testimonials

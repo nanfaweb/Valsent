@@ -1,43 +1,277 @@
+/* Container */
 .playerContainer {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 0 auto;
+    padding: 1rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-.topBar {
+/* Header */
+.header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background: white;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
     margin-bottom: 1.5rem;
-    font-weight: 500;
-    color: var(--text-muted);
+}
+
+.headerLeft {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.examTitle {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.sectionBadge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #f3f4f6;
+    border: 1px solid transparent;
+    /* Similar to timer style structure, maybe outline? */
+    /* User said "outlined round box just like timer". Timer has bg #f3f4f6, no border usually, but let's see. */
+    /* Timer style: background: #f3f4f6; padding: 0.5rem 1rem; border-radius: 20px; */
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.headerRight {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
 .timer {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    background: white;
+    background: #f3f4f6;
     padding: 0.5rem 1rem;
     border-radius: 20px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     font-family: var(--font-geist-mono), monospace;
+    font-weight: 600;
 }
 
 .timerWarning {
-    color: var(--error);
-    background-color: #FEF2F2;
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.saveExitBtn {
+    background: white;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Main Content Layout */
+.mainContent {
+    display: flex;
+    gap: 1.5rem;
+    flex: 1;
+    position: relative;
+}
+
+/* Navigation Panel (Sidebar) */
+.navPanel {
+    width: 280px;
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    /* Removed height: fit-content to match sibling height */
+    max-height: none;
+    overflow-y: visible;
+}
+
+.navHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.navHeader h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.closeNav {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: none;
+    /* Only visible on mobile */
+}
+
+.questionGrid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.navItem {
+    width: 100%;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background: #f3f4f6;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+}
+
+.navItem:hover {
+    background: #e5e7eb;
+}
+
+.navItemAnswered {
+    background: var(--primary-light);
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.navItemCurrent {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.navItemCurrent:hover {
+    background: var(--primary-dark);
+}
+
+.navLegend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    padding: 1rem;
+    border-radius: 8px;
+    background: #f8fafc;
+    /* Grayish box */
+    border: 1px solid #e2e8f0;
+}
+
+.legendItem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dotCurrent,
+.dotAnswered,
+.dotUnanswered {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.dotCurrent {
+    background: var(--primary);
+}
+
+.dotAnswered {
+    background: #FFFFFF;
+    border: 1px solid var(--primary);
+}
+
+.dotUnanswered {
+    background: #f3f4f6;
+    border: 1px solid #d1d5db;
+}
+
+
+/* Question Area */
+.questionArea {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
 }
 
 .questionCard {
-    min-height: 400px;
+    padding: 2.5rem;
+    flex: 1;
+    /* Stretch to fill questionArea */
     display: flex;
     flex-direction: column;
 }
 
+.questionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #f3f4f6;
+    padding-bottom: 1rem;
+}
+
+.questionNav {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.navBtnSmall {
+    min-width: 40px;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary);
+    border: none;
+    color: white;
+    transition: all 0.2s;
+}
+
+.navBtnSmall:hover:not(:disabled) {
+    opacity: 0.8;
+}
+
+.navBtnSmall:disabled {
+    background: #e5e7eb;
+    color: #9ca3af;
+    cursor: not-allowed;
+}
+
+.qNumber {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.qTotal {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
 .questionText {
-    font-size: 1.25rem;
-    margin-bottom: 2rem;
-    line-height: 1.5;
+    font-size: 1.35rem;
+    font-weight: 600;
+    line-height: 1.6;
+    margin-bottom: 2.5rem;
+    color: var(--text-primary);
 }
 
 .choices {
@@ -49,81 +283,200 @@
 .choice {
     display: flex;
     align-items: center;
-    padding: 1rem;
-    border: 1px solid #E5E7EB;
-    border-radius: 8px;
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    background: white;
 }
 
 .choice:hover {
-    background-color: #F9FAFB;
+    background: #f9fafb;
+    border-color: #d1d5db;
 }
 
 .selected {
     border-color: var(--primary);
-    background-color: #FDF2F8;
-    /* Light primary tint */
+    background: var(--primary-light);
+    box-shadow: 0 0 0 1px var(--primary);
 }
 
-.radio {
-    margin-right: 1rem;
-    accent-color: var(--primary);
+.radioWrapper {
+    margin-right: 1.25rem;
 }
 
-.textArea {
-    width: 100%;
-    min-height: 150px;
-    padding: 1rem;
-    border: 1px solid #E5E7EB;
-    border-radius: 8px;
-    font-family: inherit;
-    resize: vertical;
+.fakeRadio {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #d1d5db;
+    border-radius: 50%;
+    position: relative;
+    transition: all 0.2s;
 }
 
+.fakeRadioChecked {
+    border-color: var(--primary);
+    background: white;
+}
+
+.fakeRadioChecked::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--primary);
+}
+
+.choiceText {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+/* Footer Action Bar */
 .footer {
     display: flex;
-    justify-content: space-between;
-    margin-top: 2rem;
+    justify-content: center;
+    margin-top: 1.5rem;
 }
 
-.resultCard {
-    text-align: center;
-    padding: 3rem;
-    max-width: 500px;
-    margin: 0 auto;
+.navBtn {
+    min-width: 120px;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
 }
 
-.successIcon {
-    color: var(--success);
-    margin-bottom: 1rem;
+.submitBtn {
+    /* Special styling for submit */
+    min-width: 140px;
 }
 
-.scoreDisplay {
-    margin: 2rem 0;
-    padding: 1.5rem;
-    background-color: #F9FAFB;
-    border-radius: 12px;
-}
 
-.scoreLabel {
-    display: block;
-    font-size: 0.875rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 0.5rem;
-}
-
-.scoreValue {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--primary);
-}
-
-.actions {
+/* Modal */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(2px);
+}
+
+.modalContent {
+    background: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    animation: slideIn 0.2s ease-out;
+}
+
+.modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.modalHeader h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.modalBody {
+    padding: 2rem 1.5rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.modalFooter {
+    padding: 1.5rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
     gap: 1rem;
-    margin-top: 2rem;
+    background: #f9fafb;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* Mobile Responsiveness */
+.menuToggle {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    background: white;
+    border: 1px solid var(--border);
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    width: 100%;
+    justify-content: center;
+    font-weight: 600;
+}
+
+@media (max-width: 900px) {
+    .mainContent {
+        flex-direction: column;
+    }
+
+    .menuToggle {
+        display: flex;
+    }
+
+    .navPanel {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 100;
+        width: 85%;
+        max-width: 320px;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        height: 100vh;
+        max-height: 100vh;
+    }
+
+    .navPanelOpen {
+        transform: translateX(0);
+        box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .closeNav {
+        display: block;
+    }
+
+    .header h1 {
+        font-size: 1rem;
+    }
 }

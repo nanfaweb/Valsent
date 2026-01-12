@@ -32,22 +32,57 @@
 }
 
 .locked {
-    filter: blur(2px);
-    pointer-events: none;
+    opacity: 0.95;
+}
+
+.locked .cardContent {
+    filter: blur(3px);
 }
 
 .lockOverlay {
     position: absolute;
     inset: 0;
-    background: var(--locked-overlay);
+    background: linear-gradient(135deg, rgba(95, 0, 42, 0.95) 0%, rgba(161, 99, 130, 0.9) 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     color: white;
-    gap: var(--space-2);
+    gap: var(--space-3);
     z-index: 10;
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.lockIcon {
+    width: 64px;
+    height: 64px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    animation: lockPulse 2s ease-in-out infinite;
+}
+
+@keyframes lockPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.lockText {
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .lockOverlay p {

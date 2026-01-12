@@ -73,7 +73,7 @@ export const ExamPreviewGrid = ({ exams, locked, showTitle = true }: ExamPreview
                                 <div className={styles.lockIcon}>
                                     <Lock size={40} strokeWidth={2} />
                                 </div>
-                                <p className={styles.lockText}>Premium Content</p>
+                                <p className={styles.lockText}>Unlock to Access</p>
                             </div>
                         )}
 
