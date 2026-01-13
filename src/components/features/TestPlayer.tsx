@@ -114,6 +114,16 @@ export const TestPlayer = ({ exam, questions, attemptId }: TestPlayerProps) => {
         }
     }, [answers, timeLeft, currentQuestionIndex, isFinished, attemptId, currentSection, sectionLocks]);
 
+    // Redirect to result page after exam submission
+    useEffect(() => {
+        if (isFinished) {
+            const timer = setTimeout(() => {
+                router.push("/exam/trial/result");
+            }, 1500);
+            return () => clearTimeout(timer);
+        }
+    }, [isFinished, router]);
+
     const handleAnswer = (val: string) => {
         const qId = activeQuestions[currentQuestionIndex].id;
         setAnswers((prev) => {
@@ -211,20 +221,7 @@ export const TestPlayer = ({ exam, questions, attemptId }: TestPlayerProps) => {
     };
 
     if (isFinished) {
-        return (
-            <Card className={styles.resultCard}>
-                <CheckCircle size={48} className={styles.successIcon} />
-                <h2>Exam Submitted!</h2>
-                <div className={styles.scoreDisplay}>
-                    <span className={styles.scoreLabel}>Your Score</span>
-                    <span className={styles.scoreValue}>{score} / {questions.length * 4}</span>
-                </div>
-                <p>Percentage: {Math.round((score / (questions.length * 4)) * 100)}%</p>
-                <div className={styles.actions}>
-                    <Button onClick={() => router.push("/dashboard")}>Back to Dashboard</Button>
-                </div>
-            </Card>
-        );
+        return null; // Silently redirect via useEffect, no UI displayed
     }
 
     if (!activeQuestions || activeQuestions.length === 0) {
