@@ -58,20 +58,20 @@ export default function TrialExamPlayerPage() {
                 .order('created_at', { ascending: true }); // Ensure strictly ordered by insertion
 
             if (qData && qData.length > 0) {
-                // Map questions to sections based on known structure (45 Math, 45 English)
-                // Since we inserted Math first, then English.
-                const sectionsCount = { math: 45, eng: 45 };
+                // Explicitly group and order questions by section type
+                const mathQuestions = qData
+                    .filter(q => q.type === 'math')
+                    .map(q => ({ ...q, section: 'Mathematics' }));
 
-                const questionsWithSections = qData.map((q, idx) => {
-                    let section = 'Mathematics';
-                    if (idx >= sectionsCount.math) {
-                        section = 'English';
-                    }
-                    return { ...q, section };
-                });
+                const engQuestions = qData
+                    .filter(q => q.type === 'eng')
+                    .map(q => ({ ...q, section: 'English' }));
+
+                const questionsWithSections = [...mathQuestions, ...engQuestions];
 
                 setQuestions(questionsWithSections);
             } else {
+
                 console.warn("No questions found for trial mock.");
             }
 

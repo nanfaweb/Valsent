@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 
 type Question = {
     id: string;
-    type: "mcq" | "text";
+    type: "mcq" | "text" | "math" | "eng";
     question_text: string;
     choices?: string[];
     correct_answer: string;
@@ -50,6 +50,8 @@ export const TestPlayer = ({ exam, questions, attemptId }: TestPlayerProps) => {
     // UI States
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [showSaveModal, setShowSaveModal] = useState(false);
+    const [showSectionModal, setShowSectionModal] = useState(false);
+    const [showSubmitModal, setShowSubmitModal] = useState(false);
 
     const activeQuestions = questions.filter(q => (q.section || 'Mathematics') === currentSection);
 
@@ -83,7 +85,7 @@ export const TestPlayer = ({ exam, questions, attemptId }: TestPlayerProps) => {
             setTimeLeft((prev) => {
                 if (prev <= 1) {
                     clearInterval(timer);
-                    handleSubmitExam();
+                    confirmSubmitExam();
                     return 0;
                 }
                 return prev - 1;
@@ -136,7 +138,16 @@ export const TestPlayer = ({ exam, questions, attemptId }: TestPlayerProps) => {
         return correct;
     };
 
-    const handleSubmitSection = async () => {
+    const handleSubmitSection = () => {
+        if (sections.indexOf(currentSection) < sections.length - 1) {
+            setShowSectionModal(true);
+        } else {
+            setShowSubmitModal(true);
+        }
+    };
+
+    const confirmSubmitSection = async () => {
+        setShowSectionModal(false);
         const newLocks = { ...sectionLocks, [currentSection]: true };
         const nextSectionIndex = sections.indexOf(currentSection) + 1;
 
@@ -154,12 +165,11 @@ export const TestPlayer = ({ exam, questions, attemptId }: TestPlayerProps) => {
                     console.error("Failed to submit section:", err);
                 }
             }
-        } else {
-            handleSubmitExam();
         }
     };
 
-    const handleSubmitExam = useCallback(async () => {
+    const confirmSubmitExam = useCallback(async () => {
+        setShowSubmitModal(false);
         if (isSubmitting || isFinished) return;
         setIsSubmitting(true);
 
@@ -335,7 +345,7 @@ export const TestPlayer = ({ exam, questions, attemptId }: TestPlayerProps) => {
                         <h3 className={styles.questionText}>{currentQ.question_text}</h3>
 
                         <div className={styles.choices}>
-                            {currentQ.type === "mcq" && currentQ.choices?.map((choice, idx) => (
+                            {["mcq", "math", "eng"].includes(currentQ.type) && currentQ.choices?.map((choice, idx) => (
                                 <div
                                     key={idx}
                                     className={`${styles.choice} ${answers[currentQ.id] === choice ? styles.selected : ""}`}
@@ -379,6 +389,44 @@ export const TestPlayer = ({ exam, questions, attemptId }: TestPlayerProps) => {
                         <div className={styles.modalFooter}>
                             <Button variant="outline" onClick={() => setShowSaveModal(false)}>Cancel</Button>
                             <Button variant="primary" onClick={confirmExit}>Confirm Exit</Button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Section Submission Modal */}
+            {showSectionModal && (
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContent}>
+                        <div className={styles.modalHeader}>
+                            <h3>Proceed to English Section?</h3>
+                            <button onClick={() => setShowSectionModal(false)}><X size={20} /></button>
+                        </div>
+                        <div className={styles.modalBody}>
+                            <p>Are you sure you want to proceed to the English section? You will not be able to return to the Mathematics section after this.</p>
+                        </div>
+                        <div className={styles.modalFooter}>
+                            <Button variant="outline" onClick={() => setShowSectionModal(false)}>Cancel</Button>
+                            <Button variant="primary" onClick={confirmSubmitSection}>Confirm & Proceed</Button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Exam Submission Modal */}
+            {showSubmitModal && (
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContent}>
+                        <div className={styles.modalHeader}>
+                            <h3>Submit Exam?</h3>
+                            <button onClick={() => setShowSubmitModal(false)}><X size={20} /></button>
+                        </div>
+                        <div className={styles.modalBody}>
+                            <p>Are you sure you want to submit the exam and see your results?</p>
+                        </div>
+                        <div className={styles.modalFooter}>
+                            <Button variant="outline" onClick={() => setShowSubmitModal(false)}>Cancel</Button>
+                            <Button variant="primary" onClick={confirmSubmitExam}>Submit Exam</Button>
                         </div>
                     </div>
                 </div>

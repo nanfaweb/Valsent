@@ -1,6 +1,7 @@
 [
   {
     "id": 1,
+    "type": "math",
     "topic": "Simplification",
     "question": "A wallet contains Rs. 600 in the form of one-rupee, two-rupee, and five-rupee coins. The number of coins of each denomination is the same. What is the total number of coins in the wallet?",
     "options": [
@@ -13,6 +14,7 @@
   },
   {
     "id": 2,
+    "type": "math",
     "topic": "Simplification",
     "question": "The price of 6 notebooks is equal to that of 9 pens. If the combined price of 4 notebooks and 6 pens is Rs. 800, what is the price of 5 notebooks?",
     "options": [
@@ -25,6 +27,7 @@
   },
   {
     "id": 3,
+    "type": "math",
     "topic": "Simplification",
     "question": "Class X has two sections, A and B. If 5 students move from A to B, both sections have equal students. If 5 students move from B to A, section A has three times as many students as B. How many students are in section A?",
     "options": [
@@ -37,6 +40,7 @@
   },
   {
     "id": 4,
+    "type": "math",
     "topic": "Algebraic Identities",
     "question": "If x + 1/x = 6, what is the value of x² + 1/x²?",
     "options": [
@@ -49,6 +53,7 @@
   },
   {
     "id": 5,
+    "type": "math",
     "topic": "Algebraic Identities",
     "question": "If a + b + c = 10 and ab + bc + ca = 25, find the value of a² + b² + c².",
     "options": [
@@ -61,6 +66,7 @@
   },
   {
     "id": 6,
+    "type": "math",
     "topic": "Algebraic Identities",
     "question": "If x = 3 + √8, find the value of x² + 1/x².",
     "options": [
@@ -73,6 +79,7 @@
   },
   {
     "id": 7,
+    "type": "math",
     "topic": "Inequality and Modulus",
     "question": "Which of the following values of x satisfies the inequality |2x - 5| ≤ 9?",
     "options": [
@@ -85,6 +92,7 @@
   },
   {
     "id": 8,
+    "type": "math",
     "topic": "Inequality and Modulus",
     "question": "If x is an integer, how many values of x satisfy |x - 5| < 4?",
     "options": [
@@ -97,6 +105,7 @@
   },
   {
     "id": 9,
+    "type": "math",
     "topic": "Inequality and Modulus",
     "question": "Solve for x: -3 < 2x - 1 < 7",
     "options": [
@@ -109,6 +118,7 @@
   },
   {
     "id": 10,
+    "type": "math",
     "topic": "Surd and Indices",
     "question": "If 5^(x+1) + 5^(x-1) = 650, find the value of x.",
     "options": [
@@ -121,6 +131,7 @@
   },
   {
     "id": 11,
+    "type": "math",
     "topic": "Surd and Indices",
     "question": "Simplify: (√7 + √5) / (√7 - √5) + (√7 - √5) / (√7 + √5)",
     "options": [
@@ -133,6 +144,7 @@
   },
   {
     "id": 12,
+    "type": "math",
     "topic": "Surd and Indices",
     "question": "Which is larger: ∛4 or √3?",
     "options": [
@@ -145,6 +157,7 @@
   },
   {
     "id": 13,
+    "type": "math",
     "topic": "Integers and Numbers",
     "question": "The sum of five consecutive even integers is 200. What is the smallest of these integers?",
     "options": [
@@ -157,6 +170,7 @@
   },
   {
     "id": 14,
+    "type": "math",
     "topic": "Integers and Numbers",
     "question": "If n is an odd integer, which of the following must be even?",
     "options": [
@@ -169,6 +183,7 @@
   },
   {
     "id": 15,
+    "type": "math",
     "topic": "Integers and Numbers",
     "question": "What is the remainder when 3^21 is divided by 5?",
     "options": [
@@ -181,6 +196,7 @@
   },
   {
     "id": 16,
+    "type": "math",
     "topic": "Averages",
     "question": "The average weight of a class of 20 students increases by 0.5 kg when one student weighing 40 kg is replaced by a new student. What is the weight of the new student?",
     "options": [
@@ -193,6 +209,7 @@
   },
   {
     "id": 17,
+    "type": "math",
     "topic": "Averages",
     "question": "The average of 5 numbers is 27. If one number is excluded, the average becomes 25. The excluded number is:",
     "options": [
@@ -205,6 +222,7 @@
   },
   {
     "id": 18,
+    "type": "math",
     "topic": "Averages",
     "question": "A cricketer has an average score of 45 runs in 10 innings. How many runs must he score in the 11th inning to raise his average to 50?",
     "options": [
@@ -217,6 +235,7 @@
   },
   {
     "id": 19,
+    "type": "math",
     "topic": "Fraction",
     "question": "A tank is 3/5 full. If 20 liters are removed, it becomes 1/2 full. What is the total capacity of the tank?",
     "options": [
@@ -229,6 +248,7 @@
   },
   {
     "id": 20,
+    "type": "math",
     "topic": "Fraction",
     "question": "A man spends 1/3 of his income on rent and 2/5 of the remainder on food. If he is left with Rs. 4000, what is his monthly income?",
     "options": [
@@ -241,6 +261,7 @@
   },
   {
     "id": 21,
+    "type": "math",
     "topic": "Fraction",
     "question": "By how much is 4/5 of 60 greater than 3/4 of 40?",
     "options": [
@@ -253,6 +274,7 @@
   },
   {
     "id": 22,
+    "type": "math",
     "topic": "Percentage",
     "question": "If the length of a rectangle is increased by 20% and the width is decreased by 10%, what is the percentage change in area?",
     "options": [
@@ -265,6 +287,7 @@
   },
   {
     "id": 23,
+    "type": "math",
     "topic": "Percentage",
     "question": "A student scored 32% marks and failed by 6 marks. Another student scored 42% marks and got 14 marks more than the passing marks. The maximum marks are:",
     "options": [
@@ -277,6 +300,7 @@
   },
   {
     "id": 24,
+    "type": "math",
     "topic": "Percentage",
     "question": "Price of petrol increased by 25%. By how much percent should a car owner reduce his consumption so that expenditure remains the same?",
     "options": [
@@ -289,6 +313,7 @@
   },
   {
     "id": 25,
+    "type": "math",
     "topic": "Ratio and Proportion",
     "question": "Two numbers are in the ratio 4:5. If 5 is subtracted from each, the ratio becomes 3:4. The numbers are:",
     "options": [
@@ -301,6 +326,7 @@
   },
   {
     "id": 26,
+    "type": "math",
     "topic": "Ratio and Proportion",
     "question": "A bag contains 50p, 25p, and 10p coins in the ratio 5:9:4. The total value is Rs. 206. How many 25p coins are there?",
     "options": [
@@ -313,6 +339,7 @@
   },
   {
     "id": 27,
+    "type": "math",
     "topic": "Ratio and Proportion",
     "question": "If a:b = 2:3 and b:c = 4:5, what is a:b:c?",
     "options": [
@@ -325,6 +352,7 @@
   },
   {
     "id": 28,
+    "type": "math",
     "topic": "Time, Speed and Distance",
     "question": "A train 150m long is running at 54 km/hr. How much time will it take to cross a pole?",
     "options": [
@@ -337,6 +365,7 @@
   },
   {
     "id": 29,
+    "type": "math",
     "topic": "Time, Speed and Distance",
     "question": "Walking at 3/4 of his usual speed, a man reaches his office 20 minutes late. What is his usual time?",
     "options": [
@@ -349,6 +378,7 @@
   },
   {
     "id": 30,
+    "type": "math",
     "topic": "Time, Speed and Distance",
     "question": "Two cars travel toward each other from points 400 km apart at speeds of 40 km/h and 60 km/h. When will they meet?",
     "options": [
@@ -361,6 +391,7 @@
   },
   {
     "id": 31,
+    "type": "math",
     "topic": "Work and Time",
     "question": "A can do a piece of work in 12 days and B in 15 days. They work together for 4 days and then A leaves. How long will B take to finish the remaining work?",
     "options": [
@@ -373,6 +404,7 @@
   },
   {
     "id": 32,
+    "type": "math",
     "topic": "Work and Time",
     "question": "Pipe A can fill a tank in 10 hours and Pipe B in 15 hours. If both are opened together, how long will it take to fill the tank?",
     "options": [
@@ -385,6 +417,7 @@
   },
   {
     "id": 33,
+    "type": "math",
     "topic": "Work and Time",
     "question": "12 men can complete a work in 18 days. In how many days can 9 men complete the same work?",
     "options": [
@@ -397,6 +430,7 @@
   },
   {
     "id": 34,
+    "type": "math",
     "topic": "Word Problem (Algebraic)",
     "question": "In a farm, there are cows and chickens. If heads are counted, there are 40. If legs are counted, there are 110. How many cows are there?",
     "options": [
@@ -409,6 +443,7 @@
   },
   {
     "id": 35,
+    "type": "math",
     "topic": "Word Problem",
     "question": "Five years ago, a mother was three times as old as her daughter. Ten years hence, she will be twice as old as her daughter. What is the mother's present age?",
     "options": [
@@ -421,6 +456,7 @@
   },
   {
     "id": 36,
+    "type": "math",
     "topic": "Word Problem",
     "question": "The cost of 3 tables and 2 chairs is Rs. 1800. If a table costs Rs. 200 more than a chair, find the cost of a table.",
     "options": [
@@ -433,6 +469,7 @@
   },
   {
     "id": 37,
+    "type": "math",
     "topic": "Probability",
     "question": "Two dice are rolled. What is the probability that the sum of the numbers is 10?",
     "options": [
@@ -445,6 +482,7 @@
   },
   {
     "id": 38,
+    "type": "math",
     "topic": "Probability",
     "question": "A bag contains 4 red, 5 green, and 6 blue balls. If one ball is drawn at random, what is the probability it is green?",
     "options": [
@@ -457,6 +495,7 @@
   },
   {
     "id": 39,
+    "type": "math",
     "topic": "Probability",
     "question": "Three coins are tossed simultaneously. What is the probability of getting exactly two heads?",
     "options": [
@@ -469,6 +508,7 @@
   },
   {
     "id": 40,
+    "type": "math",
     "topic": "Problem on Numbers",
     "question": "A two-digit number is 4 times the sum of its digits. If 18 is added to the number, the digits are reversed. The number is:",
     "options": [
@@ -481,6 +521,7 @@
   },
   {
     "id": 41,
+    "type": "math",
     "topic": "Problem on Numbers",
     "question": "The difference between a number and its square is 72. The number is:",
     "options": [
@@ -493,6 +534,7 @@
   },
   {
     "id": 42,
+    "type": "math",
     "topic": "Problem on Numbers",
     "question": "Three numbers are in the ratio 3:4:5 and their sum is 60. The largest number is:",
     "options": [
@@ -505,6 +547,7 @@
   },
   {
     "id": 43,
+    "type": "math",
     "topic": "Mean, Median, and Mode",
     "question": "Find the median of the data set: 12, 15, 11, 18, 20, 15, 14",
     "options": [
@@ -517,6 +560,7 @@
   },
   {
     "id": 44,
+    "type": "math",
     "topic": "Mean, Median, and Mode",
     "question": "If the mean of five numbers is 10 and the mean of three of them is 8, what is the mean of the remaining two?",
     "options": [
@@ -529,6 +573,7 @@
   },
   {
     "id": 45,
+    "type": "math",
     "topic": "Combination",
     "question": "How many ways can a committee of 3 people be chosen from a group of 10 people?",
     "options": [

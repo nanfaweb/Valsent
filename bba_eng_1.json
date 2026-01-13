@@ -1,6 +1,7 @@
 [
   {
     "id": 1,
+    "type": "eng",
     "topic": "Sentence Completion (Vocabulary)",
     "question": "The professor’s lecture was so __________ that many students struggled to grasp the core concepts, leaving the hall more confused than when they entered.",
     "options": [
@@ -13,6 +14,7 @@
   },
   {
     "id": 2,
+    "type": "eng",
     "topic": "Sentence Completion (Vocabulary)",
     "question": "Although the CEO’s speech was brief, it was __________; she managed to inspire the entire company in just three minutes.",
     "options": [
@@ -25,6 +27,7 @@
   },
   {
     "id": 3,
+    "type": "eng",
     "topic": "Sentence Completion (Vocabulary)",
     "question": "The diplomat was known for his __________ nature; he could calm even the most hostile negotiations with his gentle demeanor.",
     "options": [
@@ -37,6 +40,7 @@
   },
   {
     "id": 4,
+    "type": "eng",
     "topic": "Sentence Completion (Vocabulary)",
     "question": "The evidence presented by the defense was __________, effectively disproving the prosecution's entire theory of the crime.",
     "options": [
@@ -49,6 +53,7 @@
   },
   {
     "id": 5,
+    "type": "eng",
     "topic": "Sentence Completion (Vocabulary)",
     "question": "Historically, the island has been __________ to hurricanes, suffering major damage at least once a decade.",
     "options": [
@@ -61,6 +66,7 @@
   },
   {
     "id": 6,
+    "type": "eng",
     "topic": "Sentence Completion (Vocabulary)",
     "question": "The software engineer found the code to be __________, filled with unnecessary lines that slowed down the processing speed.",
     "options": [
@@ -73,6 +79,7 @@
   },
   {
     "id": 7,
+    "type": "eng",
     "topic": "Sentence Completion (Vocabulary)",
     "question": "Despite his reputation for being __________, the billionaire secretly donated millions to charity every year.",
     "options": [
@@ -85,6 +92,7 @@
   },
   {
     "id": 8,
+    "type": "eng",
     "topic": "Sentence Completion (Vocabulary)",
     "question": "The critic’s review was entirely __________; he attacked the author’s personal life rather than the quality of the book.",
     "options": [
@@ -97,6 +105,7 @@
   },
   {
     "id": 9,
+    "type": "eng",
     "topic": "Sentence Completion (Vocabulary)",
     "question": "The atmosphere in the meeting room was __________; everyone was shouting, and no agreement could be reached.",
     "options": [
@@ -109,6 +118,7 @@
   },
   {
     "id": 10,
+    "type": "eng",
     "topic": "Sentence Completion (Vocabulary)",
     "question": "To __________ the effects of the drought, the city council implemented strict water conservation measures.",
     "options": [
@@ -121,6 +131,7 @@
   },
   {
     "id": 11,
+    "type": "eng",
     "topic": "Error Identification",
     "question": "Identify the error: (A) Between you and I, (B) the decision to hire the new manager (C) was made rather hastily. (D) No error.",
     "options": [
@@ -133,6 +144,7 @@
   },
   {
     "id": 12,
+    "type": "eng",
     "topic": "Error Identification",
     "question": "Identify the error: The team of researchers (A) have discovered a new species of (B) frog that (C) glows in the dark. (D) No error.",
     "options": [
@@ -145,6 +157,7 @@
   },
   {
     "id": 13,
+    "type": "eng",
     "topic": "Error Identification",
     "question": "Identify the error: (A) Having finished his homework, (B) the TV was turned on (C) by Mark. (D) No error.",
     "options": [
@@ -157,6 +170,7 @@
   },
   {
     "id": 14,
+    "type": "eng",
     "topic": "Error Identification",
     "question": "Identify the error: The novel, (A) which was published in 1920, (B) depict the struggles of (C) the working class. (D) No error.",
     "options": [
@@ -169,6 +183,7 @@
   },
   {
     "id": 15,
+    "type": "eng",
     "topic": "Error Identification",
     "question": "Identify the error: Neither the players (A) nor the coach (B) were aware that the game (C) had been canceled. (D) No error.",
     "options": [
@@ -181,6 +196,7 @@
   },
   {
     "id": 16,
+    "type": "eng",
     "topic": "Error Identification",
     "question": "Identify the error: She is one of the (A) few people who (B) knows how to (C) operate this machine. (D) No error.",
     "options": [
@@ -193,6 +209,7 @@
   },
   {
     "id": 17,
+    "type": "eng",
     "topic": "Error Identification",
     "question": "Identify the error: (A) Despite he studied hard, he (B) failed to score (C) well on the exam. (D) No error.",
     "options": [
@@ -205,6 +222,7 @@
   },
   {
     "id": 18,
+    "type": "eng",
     "topic": "Error Identification",
     "question": "Identify the error: The scenery in Switzerland is (A) more beautiful than (B) any country (C) in Europe. (D) No error.",
     "options": [
@@ -217,6 +235,7 @@
   },
   {
     "id": 19,
+    "type": "eng",
     "topic": "Error Identification",
     "question": "Identify the error: (A) Hardly had I reached the station (B) than the train (C) left. (D) No error.",
     "options": [
@@ -229,6 +248,7 @@
   },
   {
     "id": 20,
+    "type": "eng",
     "topic": "Error Identification",
     "question": "Identify the error: If I (A) was you, I (B) would accept the offer (C) immediately. (D) No error.",
     "options": [
@@ -241,6 +261,7 @@
   },
   {
     "id": 21,
+    "type": "eng",
     "topic": "Reading Comprehension (Prose)",
     "question": "Passage: The rise of the 'gig economy'—a labor market characterized by the prevalence of short-term contracts or freelance work as opposed to permanent jobs—has fundamentally shifted the traditional understanding of employment. Proponents argue that this shift empowers workers, offering them the flexibility to choose their hours and the autonomy to be their own bosses. Platforms like Uber, Upwork, and TaskRabbit are cited as liberators that break the shackles of the 9-to-5 grind.\n\nHowever, critics paint a starkly different picture. They contend that the gig economy is a euphemism for the erosion of worker rights. Without the safety net of health insurance, paid leave, and retirement benefits, gig workers are often left vulnerable to economic downturns. Furthermore, the algorithm-driven management of these platforms can be just as demanding, if not more so, than a human supervisor, often penalizing workers for taking breaks or refusing low-paying tasks. As this sector grows, the debate intensifies: is this the future of freedom, or a regression to a precariat class where financial stability is a luxury?\n\nQuestion: The primary purpose of the passage is to:",
     "options": [
@@ -253,6 +274,7 @@
   },
   {
     "id": 22,
+    "type": "eng",
     "topic": "Reading Comprehension (Prose)",
     "question": "Passage: The rise of the 'gig economy'—a labor market characterized by the prevalence of short-term contracts or freelance work as opposed to permanent jobs—has fundamentally shifted the traditional understanding of employment. Proponents argue that this shift empowers workers, offering them the flexibility to choose their hours and the autonomy to be their own bosses. Platforms like Uber, Upwork, and TaskRabbit are cited as liberators that break the shackles of the 9-to-5 grind.\n\nHowever, critics paint a starkly different picture. They contend that the gig economy is a euphemism for the erosion of worker rights. Without the safety net of health insurance, paid leave, and retirement benefits, gig workers are often left vulnerable to economic downturns. Furthermore, the algorithm-driven management of these platforms can be just as demanding, if not more so, than a human supervisor, often penalizing workers for taking breaks or refusing low-paying tasks. As this sector grows, the debate intensifies: is this the future of freedom, or a regression to a precariat class where financial stability is a luxury?\n\nQuestion: The author implies that the 'freedom' mentioned by proponents might be:",
     "options": [
@@ -265,6 +287,7 @@
   },
   {
     "id": 23,
+    "type": "eng",
     "topic": "Reading Comprehension (Prose)",
     "question": "Passage: The rise of the 'gig economy'—a labor market characterized by the prevalence of short-term contracts or freelance work as opposed to permanent jobs—has fundamentally shifted the traditional understanding of employment. Proponents argue that this shift empowers workers, offering them the flexibility to choose their hours and the autonomy to be their own bosses. Platforms like Uber, Upwork, and TaskRabbit are cited as liberators that break the shackles of the 9-to-5 grind.\n\nHowever, critics paint a starkly different picture. They contend that the gig economy is a euphemism for the erosion of worker rights. Without the safety net of health insurance, paid leave, and retirement benefits, gig workers are often left vulnerable to economic downturns. Furthermore, the algorithm-driven management of these platforms can be just as demanding, if not more so, than a human supervisor, often penalizing workers for taking breaks or refusing low-paying tasks. As this sector grows, the debate intensifies: is this the future of freedom, or a regression to a precariat class where financial stability is a luxury?\n\nQuestion: As used in the passage, the word 'prevalence' most nearly means:",
     "options": [
@@ -277,6 +300,7 @@
   },
   {
     "id": 24,
+    "type": "eng",
     "topic": "Reading Comprehension (Prose)",
     "question": "Passage: The rise of the 'gig economy'—a labor market characterized by the prevalence of short-term contracts or freelance work as opposed to permanent jobs—has fundamentally shifted the traditional understanding of employment. Proponents argue that this shift empowers workers, offering them the flexibility to choose their hours and the autonomy to be their own bosses. Platforms like Uber, Upwork, and TaskRabbit are cited as liberators that break the shackles of the 9-to-5 grind.\n\nHowever, critics paint a starkly different picture. They contend that the gig economy is a euphemism for the erosion of worker rights. Without the safety net of health insurance, paid leave, and retirement benefits, gig workers are often left vulnerable to economic downturns. Furthermore, the algorithm-driven management of these platforms can be just as demanding, if not more so, than a human supervisor, often penalizing workers for taking breaks or refusing low-paying tasks. As this sector grows, the debate intensifies: is this the future of freedom, or a regression to a precariat class where financial stability is a luxury?\n\nQuestion: According to the critics mentioned in the passage, what is a major downside of the gig economy?",
     "options": [
@@ -289,6 +313,7 @@
   },
   {
     "id": 25,
+    "type": "eng",
     "topic": "Reading Comprehension (Prose)",
     "question": "Passage: The rise of the 'gig economy'—a labor market characterized by the prevalence of short-term contracts or freelance work as opposed to permanent jobs—has fundamentally shifted the traditional understanding of employment. Proponents argue that this shift empowers workers, offering them the flexibility to choose their hours and the autonomy to be their own bosses. Platforms like Uber, Upwork, and TaskRabbit are cited as liberators that break the shackles of the 9-to-5 grind.\n\nHowever, critics paint a starkly different picture. They contend that the gig economy is a euphemism for the erosion of worker rights. Without the safety net of health insurance, paid leave, and retirement benefits, gig workers are often left vulnerable to economic downturns. Furthermore, the algorithm-driven management of these platforms can be just as demanding, if not more so, than a human supervisor, often penalizing workers for taking breaks or refusing low-paying tasks. As this sector grows, the debate intensifies: is this the future of freedom, or a regression to a precariat class where financial stability is a luxury?\n\nQuestion: The 'precariat class' mentioned in the final sentence refers to:",
     "options": [
@@ -301,6 +326,7 @@
   },
   {
     "id": 26,
+    "type": "eng",
     "topic": "Reading Comprehension (Prose)",
     "question": "Passage: The rise of the 'gig economy'—a labor market characterized by the prevalence of short-term contracts or freelance work as opposed to permanent jobs—has fundamentally shifted the traditional understanding of employment. Proponents argue that this shift empowers workers, offering them the flexibility to choose their hours and the autonomy to be their own bosses. Platforms like Uber, Upwork, and TaskRabbit are cited as liberators that break the shackles of the 9-to-5 grind.\n\nHowever, critics paint a starkly different picture. They contend that the gig economy is a euphemism for the erosion of worker rights. Without the safety net of health insurance, paid leave, and retirement benefits, gig workers are often left vulnerable to economic downturns. Furthermore, the algorithm-driven management of these platforms can be just as demanding, if not more so, than a human supervisor, often penalizing workers for taking breaks or refusing low-paying tasks. As this sector grows, the debate intensifies: is this the future of freedom, or a regression to a precariat class where financial stability is a luxury?\n\nQuestion: The author’s attitude toward the gig economy can best be described as:",
     "options": [
@@ -313,6 +339,7 @@
   },
   {
     "id": 27,
+    "type": "eng",
     "topic": "Reading Comprehension (Prose)",
     "question": "Passage: The rise of the 'gig economy'—a labor market characterized by the prevalence of short-term contracts or freelance work as opposed to permanent jobs—has fundamentally shifted the traditional understanding of employment. Proponents argue that this shift empowers workers, offering them the flexibility to choose their hours and the autonomy to be their own bosses. Platforms like Uber, Upwork, and TaskRabbit are cited as liberators that break the shackles of the 9-to-5 grind.\n\nHowever, critics paint a starkly different picture. They contend that the gig economy is a euphemism for the erosion of worker rights. Without the safety net of health insurance, paid leave, and retirement benefits, gig workers are often left vulnerable to economic downturns. Furthermore, the algorithm-driven management of these platforms can be just as demanding, if not more so, than a human supervisor, often penalizing workers for taking breaks or refusing low-paying tasks. As this sector grows, the debate intensifies: is this the future of freedom, or a regression to a precariat class where financial stability is a luxury?\n\nQuestion: Which choice provides the best evidence for the claim that gig work is not truly autonomous?",
     "options": [
@@ -325,6 +352,7 @@
   },
   {
     "id": 28,
+    "type": "eng",
     "topic": "Reading Comprehension (Business Prose)",
     "question": "Passage: In economics and business decision-making, a sunk cost is a cost that has already been incurred and cannot be recovered. The 'sunk cost fallacy' occurs when individuals continue a behavior or endeavor as a result of previously invested resources (time, money, or effort) rather than based on the current optimal choice.\n\nImagine a company that has spent $5 million developing a new software product. Just before launch, a competitor releases a superior product for free. A rational actor would abandon the project to avoid further losses. However, the sunk cost fallacy drives the company to spend another $1 million to launch the inferior product, simply to 'justify' the initial $5 million. This psychological trap often leads to 'throwing good money after bad.' Recognizing this bias is crucial for effective leadership.\n\nQuestion: The 'sunk cost fallacy' is best defined as:",
     "options": [
@@ -337,6 +365,7 @@
   },
   {
     "id": 29,
+    "type": "eng",
     "topic": "Reading Comprehension (Business Prose)",
     "question": "Passage: In economics and business decision-making, a sunk cost is a cost that has already been incurred and cannot be recovered. The 'sunk cost fallacy' occurs when individuals continue a behavior or endeavor as a result of previously invested resources (time, money, or effort) rather than based on the current optimal choice.\n\nImagine a company that has spent $5 million developing a new software product. Just before launch, a competitor releases a superior product for free. A rational actor would abandon the project to avoid further losses. However, the sunk cost fallacy drives the company to spend another $1 million to launch the inferior product, simply to 'justify' the initial $5 million. This psychological trap often leads to 'throwing good money after bad.' Recognizing this bias is crucial for effective leadership.\n\nQuestion: In the example provided, a 'rational actor' would:",
     "options": [
@@ -349,6 +378,7 @@
   },
   {
     "id": 30,
+    "type": "eng",
     "topic": "Reading Comprehension (Business Prose)",
     "question": "Passage: In economics and business decision-making, a sunk cost is a cost that has already been incurred and cannot be recovered. The 'sunk cost fallacy' occurs when individuals continue a behavior or endeavor as a result of previously invested resources (time, money, or effort) rather than based on the current optimal choice.\n\nImagine a company that has spent $5 million developing a new software product. Just before launch, a competitor releases a superior product for free. A rational actor would abandon the project to avoid further losses. However, the sunk cost fallacy drives the company to spend another $1 million to launch the inferior product, simply to 'justify' the initial $5 million. This psychological trap often leads to 'throwing good money after bad.' Recognizing this bias is crucial for effective leadership.\n\nQuestion: The phrase 'throwing good money after bad' implies:",
     "options": [
@@ -361,6 +391,7 @@
   },
   {
     "id": 31,
+    "type": "eng",
     "topic": "Reading Comprehension (Business Prose)",
     "question": "Passage: In economics and business decision-making, a sunk cost is a cost that has already been incurred and cannot be recovered. The 'sunk cost fallacy' occurs when individuals continue a behavior or endeavor as a result of previously invested resources (time, money, or effort) rather than based on the current optimal choice.\n\nImagine a company that has spent $5 million developing a new software product. Just before launch, a competitor releases a superior product for free. A rational actor would abandon the project to avoid further losses. However, the sunk cost fallacy drives the company to spend another $1 million to launch the inferior product, simply to 'justify' the initial $5 million. This psychological trap often leads to 'throwing good money after bad.' Recognizing this bias is crucial for effective leadership.\n\nQuestion: The passage suggests that effective leadership requires:",
     "options": [
@@ -373,6 +404,7 @@
   },
   {
     "id": 32,
+    "type": "eng",
     "topic": "Reading Comprehension (Business Prose)",
     "question": "Passage: In economics and business decision-making, a sunk cost is a cost that has already been incurred and cannot be recovered. The 'sunk cost fallacy' occurs when individuals continue a behavior or endeavor as a result of previously invested resources (time, money, or effort) rather than based on the current optimal choice.\n\nImagine a company that has spent $5 million developing a new software product. Just before launch, a competitor releases a superior product for free. A rational actor would abandon the project to avoid further losses. However, the sunk cost fallacy drives the company to spend another $1 million to launch the inferior product, simply to 'justify' the initial $5 million. This psychological trap often leads to 'throwing good money after bad.' Recognizing this bias is crucial for effective leadership.\n\nQuestion: The main structure of the passage is:",
     "options": [
@@ -385,6 +417,7 @@
   },
   {
     "id": 33,
+    "type": "eng",
     "topic": "Reading Comprehension (Poetry)",
     "question": "Passage:\nTwo roads diverged in a yellow wood,\nAnd sorry I could not travel both\nAnd be one traveler, long I stood\nAnd looked down one as far as I could\nTo where it bent in the undergrowth;\n\nThen took the other, as just as fair,\nAnd having perhaps the better claim,\nBecause it was grassy and wanted wear;\nThough as for that the passing there\nHad worn them really about the same,\n\nAnd both that morning equally lay\nIn leaves no step had trodden black.\nOh, I kept the first for another day!\nYet knowing how way leads on to way,\nI doubted if I should ever come back.\n\nQuestion: The speaker’s tone in the first stanza is primarily one of:",
     "options": [
@@ -397,6 +430,7 @@
   },
   {
     "id": 34,
+    "type": "eng",
     "topic": "Reading Comprehension (Poetry)",
     "question": "Passage:\nTwo roads diverged in a yellow wood,\nAnd sorry I could not travel both\nAnd be one traveler, long I stood\nAnd looked down one as far as I could\nTo where it bent in the undergrowth;\n\nThen took the other, as just as fair,\nAnd having perhaps the better claim,\nBecause it was grassy and wanted wear;\nThough as for that the passing there\nHad worn them really about the same,\n\nAnd both that morning equally lay\nIn leaves no step had trodden black.\nOh, I kept the first for another day!\nYet knowing how way leads on to way,\nI doubted if I should ever come back.\n\nQuestion: The phrase 'wanted wear' in the second stanza means the road:",
     "options": [
@@ -409,6 +443,7 @@
   },
   {
     "id": 35,
+    "type": "eng",
     "topic": "Reading Comprehension (Poetry)",
     "question": "Passage:\nTwo roads diverged in a yellow wood,\nAnd sorry I could not travel both\nAnd be one traveler, long I stood\nAnd looked down one as far as I could\nTo where it bent in the undergrowth;\n\nThen took the other, as just as fair,\nAnd having perhaps the better claim,\nBecause it was grassy and wanted wear;\nThough as for that the passing there\nHad worn them really about the same,\n\nAnd both that morning equally lay\nIn leaves no step had trodden black.\nOh, I kept the first for another day!\nYet knowing how way leads on to way,\nI doubted if I should ever come back.\n\nQuestion: By saying 'I doubted if I should ever come back,' the speaker acknowledges that:",
     "options": [
@@ -421,6 +456,7 @@
   },
   {
     "id": 36,
+    "type": "eng",
     "topic": "Reading Comprehension (Poetry)",
     "question": "Passage:\nTwo roads diverged in a yellow wood,\nAnd sorry I could not travel both\nAnd be one traveler, long I stood\nAnd looked down one as far as I could\nTo where it bent in the undergrowth;\n\nThen took the other, as just as fair,\nAnd having perhaps the better claim,\nBecause it was grassy and wanted wear;\nThough as for that the passing there\nHad worn them really about the same,\n\nAnd both that morning equally lay\nIn leaves no step had trodden black.\nOh, I kept the first for another day!\nYet knowing how way leads on to way,\nI doubted if I should ever come back.\n\nQuestion: The central theme of the poem represents:",
     "options": [
@@ -433,6 +469,7 @@
   },
   {
     "id": 37,
+    "type": "eng",
     "topic": "Reading Comprehension (Poetry)",
     "question": "Passage:\nTwo roads diverged in a yellow wood,\nAnd sorry I could not travel both\nAnd be one traveler, long I stood\nAnd looked down one as far as I could\nTo where it bent in the undergrowth;\n\nThen took the other, as just as fair,\nAnd having perhaps the better claim,\nBecause it was grassy and wanted wear;\nThough as for that the passing there\nHad worn them really about the same,\n\nAnd both that morning equally lay\nIn leaves no step had trodden black.\nOh, I kept the first for another day!\nYet knowing how way leads on to way,\nI doubted if I should ever come back.\n\nQuestion: In the context of the poem, the 'yellow wood' likely symbolizes:",
     "options": [
@@ -445,6 +482,7 @@
   },
   {
     "id": 38,
+    "type": "eng",
     "topic": "Reading Comprehension (Poetry)",
     "question": "Passage:\nTwo roads diverged in a yellow wood,\nAnd sorry I could not travel both\nAnd be one traveler, long I stood\nAnd looked down one as far as I could\nTo where it bent in the undergrowth;\n\nThen took the other, as just as fair,\nAnd having perhaps the better claim,\nBecause it was grassy and wanted wear;\nThough as for that the passing there\nHad worn them really about the same,\n\nAnd both that morning equally lay\nIn leaves no step had trodden black.\nOh, I kept the first for another day!\nYet knowing how way leads on to way,\nI doubted if I should ever come back.\n\nQuestion: The speaker claims the second road had 'the better claim' because:",
     "options": [
@@ -457,6 +495,7 @@
   },
   {
     "id": 39,
+    "type": "eng",
     "topic": "Cloze Passage",
     "question": "Passage: The origins of coffee are shrouded in legend. One story involves a goat herder named Kaldi in Ethiopia, who noticed that his goats became [39] after eating berries from a certain tree. Kaldi reported his findings to the abbot of the local monastery, who made a drink with the berries and found that it kept him [40] during the long hours of evening prayer. The knowledge of the 'energizing berries' began to [41]. As word moved east and reached the Arabian peninsula, it began a journey which would [42] bring these beans across the globe. Today, coffee is one of the most [43] consumed beverages in the world.\n\nQuestion: Select the best word for blank [39]:",
     "options": [
@@ -469,6 +508,7 @@
   },
   {
     "id": 40,
+    "type": "eng",
     "topic": "Cloze Passage",
     "question": "Passage: The origins of coffee are shrouded in legend. One story involves a goat herder named Kaldi in Ethiopia, who noticed that his goats became [39] after eating berries from a certain tree. Kaldi reported his findings to the abbot of the local monastery, who made a drink with the berries and found that it kept him [40] during the long hours of evening prayer. The knowledge of the 'energizing berries' began to [41]. As word moved east and reached the Arabian peninsula, it began a journey which would [42] bring these beans across the globe. Today, coffee is one of the most [43] consumed beverages in the world.\n\nQuestion: Select the best word for blank [40]:",
     "options": [
@@ -481,6 +521,7 @@
   },
   {
     "id": 41,
+    "type": "eng",
     "topic": "Cloze Passage",
     "question": "Passage: The origins of coffee are shrouded in legend. One story involves a goat herder named Kaldi in Ethiopia, who noticed that his goats became [39] after eating berries from a certain tree. Kaldi reported his findings to the abbot of the local monastery, who made a drink with the berries and found that it kept him [40] during the long hours of evening prayer. The knowledge of the 'energizing berries' began to [41]. As word moved east and reached the Arabian peninsula, it began a journey which would [42] bring these beans across the globe. Today, coffee is one of the most [43] consumed beverages in the world.\n\nQuestion: Select the best word for blank [41]:",
     "options": [
@@ -493,6 +534,7 @@
   },
   {
     "id": 42,
+    "type": "eng",
     "topic": "Cloze Passage",
     "question": "Passage: The origins of coffee are shrouded in legend. One story involves a goat herder named Kaldi in Ethiopia, who noticed that his goats became [39] after eating berries from a certain tree. Kaldi reported his findings to the abbot of the local monastery, who made a drink with the berries and found that it kept him [40] during the long hours of evening prayer. The knowledge of the 'energizing berries' began to [41]. As word moved east and reached the Arabian peninsula, it began a journey which would [42] bring these beans across the globe. Today, coffee is one of the most [43] consumed beverages in the world.\n\nQuestion: Select the best word for blank [42]:",
     "options": [
@@ -505,6 +547,7 @@
   },
   {
     "id": 43,
+    "type": "eng",
     "topic": "Cloze Passage",
     "question": "Passage: The origins of coffee are shrouded in legend. One story involves a goat herder named Kaldi in Ethiopia, who noticed that his goats became [39] after eating berries from a certain tree. Kaldi reported his findings to the abbot of the local monastery, who made a drink with the berries and found that it kept him [40] during the long hours of evening prayer. The knowledge of the 'energizing berries' began to [41]. As word moved east and reached the Arabian peninsula, it began a journey which would [42] bring these beans across the globe. Today, coffee is one of the most [43] consumed beverages in the world.\n\nQuestion: Select the best word for blank [43]:",
     "options": [
@@ -517,6 +560,7 @@
   },
   {
     "id": 44,
+    "type": "eng",
     "topic": "Logic & Reasoning",
     "question": "Choose the best version of the bold portion: **Because the data was incomplete**, the committee decided to delay the vote until next month.",
     "options": [
@@ -529,6 +573,7 @@
   },
   {
     "id": 45,
+    "type": "eng",
     "topic": "Logic & Reasoning",
     "question": "Choose the best version of the bold portion: The manager not only requires punctuality **but also he demands** absolute silence in the office.",
     "options": [
