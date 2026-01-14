@@ -105,6 +105,10 @@ export default function ResultHistoryPage() {
         router.push("/dashboard");
     };
 
+    const handleBackToOverview = () => {
+        router.push("/results");
+    };
+
     const handleRetake = async () => {
         // Redirect to /exams page or trigger retake logic?
         // Let's redirect to /exams where user can click Retake.
@@ -125,6 +129,7 @@ export default function ResultHistoryPage() {
                 score={score}
                 timeTaken={timeTaken}
                 onBackToDashboard={handleBackToDashboard}
+                onBackToOverview={handleBackToOverview}
             />
         </div>
     );

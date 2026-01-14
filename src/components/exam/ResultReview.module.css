@@ -540,8 +540,31 @@
     max-width: 900px;
     margin: 3rem auto 0;
     padding: 2rem 0;
-    text-align: center;
     border-top: 1px solid #e5e7eb;
+}
+
+.buttonGroup {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.overviewBtn {
+    background: white;
+    color: #5f002a;
+    border: 2px solid #5f002a;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.overviewBtn:hover {
+    background: #f9fafb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(95, 0, 42, 0.15);
 }
 
 .dashboardBtn {

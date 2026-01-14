@@ -6,8 +6,9 @@ import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import Link from "next/link";
+import AttemptsModal from "@/components/exam/AttemptsModal";
 import styles from "./page.module.css";
-import { ArrowLeft, BookOpen } from "lucide-react";
+import { BookOpen } from "lucide-react";
 
 interface Attempt {
     id: string;
@@ -36,7 +37,7 @@ export default function ResultsPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(true);
     const [groupedAttempts, setGroupedAttempts] = useState<GroupedAttempts>({});
-    const [expandedMockId, setExpandedMockId] = useState<string | null>(null);
+    const [selectedMockId, setSelectedMockId] = useState<string | null>(null);
 
     useEffect(() => {
         async function loadResults() {
@@ -78,7 +79,10 @@ export default function ResultsPage() {
                     if (mockData) {
                         grouped[mockId] = {
                             mock: mockData,
-                            attempts: mockAttempts
+                            attempts: mockAttempts.sort((a, b) =>
+                                new Date(b.finished_at).getTime() -
+                                new Date(a.finished_at).getTime()
+                            )
                         };
                     }
                 });
@@ -121,12 +125,6 @@ export default function ResultsPage() {
                             Review your past exams and track your performance over time.
                         </p>
                     </div>
-                    <Link href="/dashboard">
-                        <Button size="sm" style={{ background: "#5F002A", color: "white" }}>
-                            <ArrowLeft size={16} style={{ marginRight: "0.5rem" }} />
-                            Back to Dashboard
-                        </Button>
-                    </Link>
                 </div>
 
                 {!hasAttempts ? (
@@ -150,141 +148,85 @@ export default function ResultsPage() {
                         </div>
                     </div>
                 ) : (
-                    // Results List
-                    <div className={styles.resultsList}>
-                        {mockIds.map(mockId => {
-                            const group = groupedAttempts[mockId];
-                            const isExpanded = expandedMockId === mockId;
-                            const attemptCount = group.attempts.length;
-                            const bestScore = Math.max(...group.attempts.map(a => a.score || 0));
-                            const avgScore = Math.round(
-                                group.attempts.reduce((sum, a) => sum + (a.score || 0), 0) / attemptCount
-                            );
-                            const mostRecent = group.attempts[0];
+                    // Results Grid
+                    <>
+                        <div className={styles.cardsGrid}>
+                            {mockIds.map(mockId => {
+                                const group = groupedAttempts[mockId];
+                                const attemptCount = group.attempts.length;
+                                const bestScore = Math.max(...group.attempts.map(a => a.score || 0));
+                                const bestPercentage = Math.round((bestScore / 360) * 100);
+                                const avgScore = Math.round(
+                                    group.attempts.reduce((sum, a) => sum + (a.score || 0), 0) / attemptCount
+                                );
+                                const avgPercentage = Math.round((avgScore / 360) * 100);
+                                const mostRecent = group.attempts[0];
 
-                            return (
-                                <div key={mockId} className={styles.examCard}>
-                                    {/* Exam Header */}
+                                return (
                                     <button
-                                        className={`${styles.examHeader} ${isExpanded ? styles.expanded : ""}`}
-                                        onClick={() =>
-                                            setExpandedMockId(isExpanded ? null : mockId)
-                                        }
+                                        key={mockId}
+                                        className={styles.summaryCard}
+                                        onClick={() => setSelectedMockId(mockId)}
                                     >
-                                        <div className={styles.examInfo}>
-                                            <h3 className={styles.examTitle}>{group.mock.title}</h3>
-                                            <span className={styles.attemptCount}>
+                                        <div className={styles.cardHeader}>
+                                            <h3 className={styles.cardTitle}>{group.mock.title}</h3>
+                                            <span className={styles.cardBadge}>
                                                 {attemptCount} {attemptCount === 1 ? "attempt" : "attempts"}
                                             </span>
                                         </div>
 
-                                        <div className={styles.examStats}>
-                                            <div className={styles.stat}>
-                                                <span className={styles.statLabel}>Best</span>
-                                                <span className={styles.statValue}>{bestScore}</span>
+                                        <div className={styles.cardContent}>
+                                            <div className={styles.statBlock}>
+                                                <span className={styles.statSmallLabel}>Best Score</span>
+                                                <div className={styles.scoreBlock}>
+                                                    <span className={styles.scoreValue}>{bestScore}/360</span>
+                                                    <span className={styles.scorePercentage}>
+                                                        {bestPercentage}%
+                                                    </span>
+                                                </div>
                                             </div>
-                                            <div className={styles.stat}>
-                                                <span className={styles.statLabel}>Avg</span>
-                                                <span className={styles.statValue}>{avgScore}</span>
-                                            </div>
-                                            <div className={styles.toggleIcon}>
-                                                {isExpanded ? "▼" : "▶"}
+
+                                            <div className={styles.statBlock}>
+                                                <span className={styles.statSmallLabel}>Average</span>
+                                                <div className={styles.scoreBlock}>
+                                                    <span className={styles.scoreValue}>{avgScore}/360</span>
+                                                    <span className={styles.scorePercentage}>
+                                                        {avgPercentage}%
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </button>
 
-                                    {/* Recent Attempt Preview */}
-                                    {!isExpanded && (
-                                        <div className={styles.recentPreview}>
-                                            <span className={styles.recentLabel}>Most Recent</span>
-                                            <div className={styles.attemptPreview}>
-                                                <span className={styles.attemptDate}>
+                                        <div className={styles.cardFooter}>
+                                            <div className={styles.recentInfo}>
+                                                <span className={styles.recentLabel}>Last attempt:</span>
+                                                <span className={styles.recentDate}>
                                                     {formatDate(new Date(mostRecent.finished_at))}
                                                 </span>
-                                                <span className={styles.attemptScore}>
-                                                    {mostRecent.score}/360 marks ({Math.round(((mostRecent.score || 0) / 360) * 100)}%)
-                                                </span>
-                                                <span className={styles.attemptTime}>
-                                                    {formatTime(mostRecent.started_at, mostRecent.finished_at)}
-                                                </span>
                                             </div>
+                                            <span className={styles.viewArrow}>→</span>
                                         </div>
-                                    )}
+                                    </button>
+                                );
+                            })}
+                        </div>
 
-                                    {/* Expanded Attempts List */}
-                                    {isExpanded && (
-                                        <div className={styles.attemptsList}>
-                                            {group.attempts.map((attempt, index) => {
-                                                const percentage = attempt.score
-                                                    ? Math.round((attempt.score / 360) * 100)
-                                                    : 0;
-                                                const performanceLevel = getPerformanceLevel(percentage);
-
-                                                return (
-                                                    <div key={attempt.id} className={styles.attemptItem}>
-                                                        <div className={styles.attemptItemLeft}>
-                                                            <div className={styles.attemptHeader}>
-                                                                <span className={styles.attemptNumber}>
-                                                                    Attempt {attemptCount - index}
-                                                                </span>
-                                                                <span className={styles.attemptDate}>
-                                                                    {formatDate(new Date(attempt.finished_at))}
-                                                                </span>
-                                                            </div>
-
-                                                            <div className={styles.scoreDisplay}>
-                                                                <div className={styles.scoreMain}>
-                                                                    <span className={styles.scoreNumber}>{attempt.score || 0}</span>
-                                                                    <span className={styles.scoreTotal}>/360</span>
-                                                                </div>
-                                                                <span className={styles.scorePercentage}>
-                                                                    {Math.round(((attempt.score || 0) / 360) * 100)}%
-                                                                </span>
-                                                            </div>
-
-                                                            <span className={styles.timeInfo}>
-                                                                ⏱ {formatTime(attempt.started_at, attempt.finished_at)}
-                                                            </span>
-                                                        </div>
-
-                                                        <div className={styles.attemptItemRight}>
-                                                            <div className={`${styles.badge} ${styles[performanceLevel]}`}>
-                                                                {performanceLevel === "excellent"
-                                                                    ? "Excellent"
-                                                                    : performanceLevel === "good"
-                                                                    ? "Good"
-                                                                    : performanceLevel === "average"
-                                                                    ? "Average"
-                                                                    : "Needs Work"}
-                                                            </div>
-                                                            <div className={styles.attemptButtons}>
-                                                                <Link href={`/exam/results/${attempt.id}`}>
-                                                                    <Button size="sm" style={{ background: "#5F002A", color: "white" }}>
-                                                                        View Details
-                                                                    </Button>
-                                                                </Link>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-                                    )}
-
-                                    {/* Retake Button */}
-                                    {isExpanded && (
-                                        <div className={styles.retakeSection}>
-                                            <Link href={`/exam/${mockId}/rules`}>
-                                                <Button size="lg" style={{ background: "#5F002A", color: "white", width: "100%" }}>
-                                                    Retake {group.mock.title}
-                                                </Button>
-                                            </Link>
-                                        </div>
-                                    )}
-                                </div>
-                            );
-                        })}
-                    </div>
+                        {/* Modal */}
+                        <AttemptsModal
+                            isOpen={selectedMockId !== null}
+                            onClose={() => setSelectedMockId(null)}
+                            mock={
+                                selectedMockId
+                                    ? groupedAttempts[selectedMockId].mock
+                                    : { id: "", title: "" }
+                            }
+                            attempts={
+                                selectedMockId
+                                    ? groupedAttempts[selectedMockId].attempts
+                                    : []
+                            }
+                        />
+                    </>
                 )}
             </div>
         </main>
@@ -298,26 +240,4 @@ function formatDate(date: Date): string {
         day: "numeric",
         year: "numeric",
     }).format(date);
-}
-
-function formatTime(startTime: string, endTime: string): string {
-    const start = new Date(startTime).getTime();
-    const end = new Date(endTime).getTime();
-    const seconds = Math.floor((end - start) / 1000);
-
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-
-    if (hours > 0) {
-        return `${hours}h ${minutes}m`;
-    }
-    return `${minutes}m ${secs}s`;
-}
-
-function getPerformanceLevel(percentage: number): string {
-    if (percentage >= 80) return "excellent";
-    if (percentage >= 60) return "good";
-    if (percentage >= 40) return "average";
-    return "poor";
 }

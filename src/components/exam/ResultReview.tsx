@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ChevronUp, CheckCircle2, XCircle, Clock } from "lucide-react";
+import { ChevronDown, ChevronUp, CheckCircle2, XCircle, Clock, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import styles from "./ResultReview.module.css";
 
@@ -20,6 +20,7 @@ interface ResultReviewProps {
     score: number;
     timeTaken: number; // in seconds
     onBackToDashboard: () => void;
+    onBackToOverview: () => void;
 }
 
 interface ExpandedState {
@@ -32,6 +33,7 @@ export const ResultReview = ({
     score,
     timeTaken,
     onBackToDashboard,
+    onBackToOverview,
 }: ResultReviewProps) => {
     const [expandedQuestions, setExpandedQuestions] = useState<ExpandedState>({});
 
@@ -428,15 +430,27 @@ export const ResultReview = ({
                 ))}
             </div>
 
-            {/* Action Button */}
+            {/* Action Buttons */}
             <div className={styles.footer}>
-                <Button
-                    size="lg"
-                    onClick={onBackToDashboard}
-                    className={styles.dashboardBtn}
-                >
-                    Back to Dashboard
-                </Button>
+                <div className={styles.buttonGroup}>
+                    <Button
+                        size="lg"
+                        onClick={onBackToOverview}
+                        className={styles.overviewBtn}
+                        variant="secondary"
+                    >
+                        <ArrowLeft size={18} style={{ marginRight: "0.5rem" }} />
+                        Back to Overview
+                    </Button>
+                    <Button
+                        size="lg"
+                        onClick={onBackToDashboard}
+                        className={styles.dashboardBtn}
+                    >
+                        <ArrowLeft size={18} style={{ marginRight: "0.5rem" }} />
+                        Back to Dashboard
+                    </Button>
+                </div>
             </div>
         </div>
     );
