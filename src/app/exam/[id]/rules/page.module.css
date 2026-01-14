@@ -1,7 +1,7 @@
 .container {
     min-height: 100vh;
     padding: 2rem;
-    background-color: var(--background-subtle);
+    background: linear-gradient(135deg, #FAFAFA 0%, #F0E6F6 50%, #FFFFFF 100%);
     display: flex;
     justify-content: center;
     align-items: center;

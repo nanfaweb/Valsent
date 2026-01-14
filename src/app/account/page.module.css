@@ -2,7 +2,7 @@
     max-width: var(--max-width);
     margin: 0 auto;
     padding: 2rem 1rem;
-    min-height: 80vh;
+    min-height: 100vh;
 }
 
 .title {
@@ -21,13 +21,14 @@
 
 .grid {
     display: grid;
-    grid-template-columns: 300px 1fr;
+    grid-template-columns: 300px 300px;
     gap: 2rem;
 }
 
 .profileCard {
     text-align: center;
     padding: 2.5rem 1.5rem;
+    min-height: 300px;
 }
 
 .avatar {
@@ -67,6 +68,7 @@
 
 .sectionCard {
     padding: 2rem;
+    min-height: 300px;
 }
 
 .sectionHeader {
