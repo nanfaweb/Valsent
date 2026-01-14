@@ -1,42 +1,66 @@
-
 "use client";
 
 import { useAuth } from "@/context/AuthContext";
-import { startTrialAttempt } from "@/app/exam/actions";
+import { startExamAttempt } from "@/app/exam/actions";
 import { Button } from "@/components/ui/Button";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import styles from "./page.module.css";
 import { Card } from "@/components/ui/Card";
 import { Clock, BookOpen, AlertCircle, PlayCircle } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
-export default function TrialInstructionsPage() {
+export default function ExamRulesPage() {
     const { user } = useAuth();
     const router = useRouter();
+    const params = useParams();
+    const examId = params.id as string;
+
     const [loading, setLoading] = useState(false);
+    const [pageLoading, setPageLoading] = useState(true);
+    const [exam, setExam] = useState<any>(null);
     const [activeAttempt, setActiveAttempt] = useState<any>(null);
 
     useEffect(() => {
-        if (!user) return;
-        async function checkAttempt() {
-            const { data: trialMock } = await supabase.from('mocks').select('id').eq('is_trial', true).single();
-            if (trialMock) {
+        if (!user) return; // Wait for auth, or redirect if protected layout doesn't handle it
+
+        async function loadData() {
+            try {
+                // 1. Load Exam Details
+                const { data: examData, error: examError } = await supabase
+                    .from('mocks')
+                    .select('*')
+                    .eq('id', examId)
+                    .single();
+
+                if (examError || !examData) {
+                    console.error("Exam not found");
+                    router.push('/exams'); // Fallback
+                    return;
+                }
+                setExam(examData);
+
+                // 2. Check for Active Attempt
                 const { data: attempt } = await supabase
                     .from('attempts')
                     .select('id, status, remaining_seconds')
                     .eq('user_id', user.id)
-                    .eq('mock_id', trialMock.id)
+                    .eq('mock_id', examId)
                     .in('status', ['in_progress', 'paused'])
                     .single();
 
                 if (attempt) {
                     setActiveAttempt(attempt);
                 }
+            } catch (error) {
+                console.error("Error loading exam data:", error);
+            } finally {
+                setPageLoading(false);
             }
         }
-        checkAttempt();
-    }, [user]);
+
+        loadData();
+    }, [user, examId, router]);
 
     const handleStart = async () => {
         if (!user) {
@@ -46,12 +70,12 @@ export default function TrialInstructionsPage() {
 
         try {
             setLoading(true);
-            const { attemptId } = await startTrialAttempt(user.id);
+            const { attemptId } = await startExamAttempt(user!.id, examId);
             if (attemptId) {
-                router.push("/exam/trial/play");
+                router.push(`/exam/${examId}`);
             }
         } catch (error) {
-            console.error("Failed to start trial:", error);
+            console.error("Failed to start exam:", error);
             alert("Something went wrong. Please try again.");
         } finally {
             setLoading(false);
@@ -61,14 +85,31 @@ export default function TrialInstructionsPage() {
     const formatTime = (seconds: number) => {
         const h = Math.floor(seconds / 3600);
         const m = Math.floor((seconds % 3600) / 60);
-        return `${h} hour${h !== 1 ? 's' : ''} ${m} minute${m !== 1 ? 's' : ''}`;
+        const parts = [];
+        if (h > 0) parts.push(`${h} hour${h !== 1 ? 's' : ''}`);
+        if (m > 0 || h === 0) parts.push(`${m} minute${m !== 1 ? 's' : ''}`);
+        return parts.join(' ');
     };
+
+    if (pageLoading) {
+        return (
+            <main className={styles.container}>
+                <div className={styles.loading}>Loading exam details...</div>
+            </main>
+        );
+    }
+
+    if (!exam) return null;
 
     return (
         <main className={styles.container}>
             <div className={styles.wrapper}>
 
                 <div className={styles.content}>
+                    <div className={styles.pageTitle}>
+                        <h1>{exam.title}</h1>
+                    </div>
+
                     <Card className={styles.infoCard}>
                         <div className={styles.row}>
                             <Clock className={styles.icon} />
@@ -80,7 +121,7 @@ export default function TrialInstructionsPage() {
                                     </>
                                 ) : (
                                     <>
-                                        <h3>2 Hours 45 Minutes</h3>
+                                        <h3>{formatTime(exam.duration_minutes * 60)}</h3>
                                         <p>Total duration. Timer pauses if you save & exit.</p>
                                     </>
                                 )}
@@ -90,8 +131,8 @@ export default function TrialInstructionsPage() {
                         <div className={styles.row}>
                             <BookOpen className={styles.icon} />
                             <div>
-                                <h3>90 Questions</h3>
-                                <p>Includes two sections: Mathematics and English, with 45 questions each, totaling 360 marks.</p>
+                                <h3>{exam.total_questions || 90} Questions</h3>
+                                <p>Includes structured sections (e.g. Mathematics, English) totaling maximum marks.</p>
                             </div>
                         </div>
                     </Card>

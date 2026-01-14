@@ -91,14 +91,7 @@ export const ExamPreviewGrid = ({ exams, locked, showTitle = true }: ExamPreview
                                 </div>
                             </div>
 
-                            {exam.difficulty && (
-                                <div
-                                    className={styles.difficulty}
-                                    style={{ backgroundColor: `${difficultyColors[exam.difficulty]}15`, color: difficultyColors[exam.difficulty] }}
-                                >
-                                    {exam.difficulty.charAt(0).toUpperCase() + exam.difficulty.slice(1)}
-                                </div>
-                            )}
+
                         </div>
                     </div>
                 ))}

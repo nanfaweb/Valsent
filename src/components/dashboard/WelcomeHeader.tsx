@@ -17,7 +17,7 @@ export const WelcomeHeader = ({ userName }: WelcomeHeaderProps) => {
             <h1 className={styles.greeting}>
                 {getGreeting()}, <span className={styles.name}>{userName}</span>
             </h1>
-            <p className={styles.subtitle}>Ready to ace your exam?</p>
+            <p className={styles.subtitle}>Ready to ace your entrance exam?</p>
         </div>
     );
 };

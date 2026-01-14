@@ -37,30 +37,7 @@ export default function BrowseExamsPage() {
     }, [user, router]);
 
     const handleAction = async (examId: string, action: 'start' | 'resume' | 'retake') => {
-        if (!user) return;
-        setActionLoading(examId);
-
-        try {
-            // Call server action to start/resume
-            const result = await startExamAttempt(user.id, examId);
-
-            // Redirect to exam player
-            router.push(`/exam/${examId}`);
-
-            // Note: The player will fetch the attempt details using the exam ID. 
-            // Wait, the player route is /exam/[id]. 
-            // In existing code (/exam/[id]/page.tsx), it checks for existing in_progress attempt.
-            // If we created a NEW one (Retake), the player needs to know WHICH attempt to load?
-            // The existing player logic uses:
-            // const { data: existingAttempt } = await supabase... eq('status', 'in_progress')
-            // So if we just created a NEW in_progress attempt, the player will find it!
-            // Correct.
-
-        } catch (error) {
-            console.error("Failed to start exam", error);
-            alert("Failed to start exam. Please try again.");
-            setActionLoading(null);
-        }
+        router.push(`/exam/${examId}/rules`);
     };
 
     if (loading) {
@@ -71,7 +48,7 @@ export default function BrowseExamsPage() {
         <div className={styles.container}>
             <div className={styles.header}>
                 <h1 className={styles.title}>Browse Exams</h1>
-                <p className={styles.subtitle}>Choose a mock exam to practice your skills</p>
+                <p className={styles.subtitle}>Choose an exam. Practice and repeat. Reach your goal.</p>
             </div>
 
             <div className={styles.grid}>

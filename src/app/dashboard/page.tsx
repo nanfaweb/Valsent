@@ -197,7 +197,7 @@ export default function Dashboard() {
 
                         <div className={styles.primaryAction}>
                             {trialMockId ? (
-                                <Link href="/exam/trial" className={styles.ctaLink}>
+                                <Link href={`/exam/${trialMockId}/rules`} className={styles.ctaLink}>
                                     <Button size="lg" className={styles.primaryCta}>
                                         {(trialAttempt as any)?.status === 'in_progress' || (trialAttempt as any)?.status === 'paused'
                                             ? "Continue Your Free Mock Exam"
@@ -278,7 +278,7 @@ export default function Dashboard() {
                 {state === "plan_purchased" && (
                     <>
                         <div className={styles.confirmationBanner}>
-                            <h2>🎉 All mock exams unlocked!</h2>
+                            <h2>All mock exams unlocked!</h2>
                             <p>You have lifetime access to all content</p>
                         </div>
 
