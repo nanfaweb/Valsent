@@ -297,7 +297,7 @@ export default function Dashboard() {
                                     View All Mock Exams
                                 </Button>
                             </Link>
-                            <Link href="/performance">
+                            <Link href="/results">
                                 <Button size="lg" variant="outline">
                                     View Performance Summary
                                 </Button>

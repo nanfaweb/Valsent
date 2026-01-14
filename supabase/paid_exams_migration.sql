@@ -1,0 +1,2088 @@
+
+-- /*
+--   PAID MOCKS MIGRATION
+--   - Inserts 2 Paid Mocks into 'mocks' table
+--   - Inserts 180 Questions into 'questions' table
+--   - Adds 'section' column to 'questions' table to support multi-section structure
+-- */
+
+
+-- -- BBA Mock Exam 1 (Paid)
+-- DO $$
+-- DECLARE
+--   mock_uuid uuid;
+-- BEGIN
+--   -- 1. Create Mock
+--   INSERT INTO public.mocks (title, duration_minutes, total_questions, difficulty, is_trial, created_at)
+--   VALUES (
+--     'BBA Mock Exam 1 (Paid)',
+--     165,
+--     90,
+--     'medium',
+--     false,
+--     now()
+--   )
+--   RETURNING id INTO mock_uuid;
+
+--   -- 2. Add Section Column if missing (Safe Migration)
+--   IF NOT EXISTS (
+--     SELECT 1 FROM information_schema.columns 
+--     WHERE table_name = 'questions' AND column_name = 'section'
+--   ) THEN
+--     ALTER TABLE public.questions ADD COLUMN section text;
+--   END IF;
+
+--   -- 3. Insert Math Questions
+  
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'A library has 360 books divided equally into three genres: Mystery, Sci-Fi, and History. If 40 Mystery books are borrowed, what is the total number of books remaining in the library?',
+--       '["A. 120","B. 240","C. 320","D. 300"]'::jsonb,
+--       'C. 320',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The cost of 5 apples is equal to the cost of 3 mangoes. If 10 apples and 6 mangoes cost Rs. 240, find the price of 2 mangoes.',
+--       '["A. Rs. 40","B. Rs. 20","C. Rs. 60","D. Rs. 80"]'::jsonb,
+--       'A. Rs. 40',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'In a test, for every correct answer a student gets 4 marks and for every wrong answer 1 mark is deducted. If a student attempts 30 questions and gets 70 marks, how many questions did he get right?',
+--       '["A. 15","B. 20","C. 25","D. 10"]'::jsonb,
+--       'B. 20',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'If x - 1/x = 5, find the value of x² + 1/x².',
+--       '["A. 23","B. 25","C. 27","D. 21"]'::jsonb,
+--       'C. 27',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'If a² + b² = 45 and ab = 18, find the value of (a + b).',
+--       '["A. 9","B. 81","C. 7","D. 63"]'::jsonb,
+--       'A. 9',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Simplify: (x + y)² - (x - y)²',
+--       '["A. 2x² + 2y²","B. 4xy","C. 2xy","D. 0"]'::jsonb,
+--       'B. 4xy',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Find the range of x that satisfies |3x - 6| ≤ 12.',
+--       '["A. -2 ≤ x ≤ 6","B. 2 ≤ x ≤ 6","C. -6 ≤ x ≤ 6","D. 0 ≤ x ≤ 4"]'::jsonb,
+--       'A. -2 ≤ x ≤ 6',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'How many integers satisfy the inequality |x + 2| < 3?',
+--       '["A. 3","B. 4","C. 5","D. 6"]'::jsonb,
+--       'C. 5',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'If -4 < 2x + 2 < 10, then:',
+--       '["A. -3 < x < 4","B. -2 < x < 5","C. -1 < x < 4","D. -3 < x < 6"]'::jsonb,
+--       'A. -3 < x < 4',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'If 3^(x-1) + 3^(x+1) = 90, find x.',
+--       '["A. 2","B. 3","C. 4","D. 5"]'::jsonb,
+--       'B. 3',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Evaluate: (√5 + √3) / (√5 - √3)',
+--       '["A. 4 + √15","B. 8 + 2√15","C. 2","D. 5 + √15"]'::jsonb,
+--       'A. 4 + √15',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Find the largest among: 2^(1/2), 3^(1/3), 6^(1/6).',
+--       '["A. 2^(1/2)","B. 3^(1/3)","C. 6^(1/6)","D. They are all equal"]'::jsonb,
+--       'B. 3^(1/3)',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'What is the smallest number by which 180 must be multiplied to make it a perfect square?',
+--       '["A. 2","B. 3","C. 5","D. 6"]'::jsonb,
+--       'C. 5',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'If n is an integer, which of the following is always an odd number?',
+--       '["A. 2n + 2","B. n² + 1","C. 4n + 1","D. n(n+1)"]'::jsonb,
+--       'C. 4n + 1',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The sum of three consecutive multiples of 5 is 150. What is the largest of these multiples?',
+--       '["A. 45","B. 50","C. 55","D. 60"]'::jsonb,
+--       'C. 55',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The average age of a family of 5 members is 24 years. If the youngest member is 8 years old, what was the average age of the family at the time of the birth of the youngest member?',
+--       '["A. 16 years","B. 20 years","C. 18 years","D. 15 years"]'::jsonb,
+--       'B. 20 years',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The average score of 15 matches is 40. If the average of the first 8 matches is 35 and the last 8 matches is 42, find the score of the 8th match.',
+--       '["A. 16","B. 10","C. 20","D. 24"]'::jsonb,
+--       'A. 16',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The average weight of 8 persons increases by 2.5 kg when a new person comes in place of one of them weighing 65 kg. What is the weight of the new person?',
+--       '["A. 70 kg","B. 75 kg","C. 85 kg","D. 80 kg"]'::jsonb,
+--       'C. 85 kg',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'A worker spends 2/5 of his salary on house rent, 1/4 on food, and saves the remaining Rs. 7000. What is his total salary?',
+--       '["A. Rs. 15000","B. Rs. 20000","C. Rs. 25000","D. Rs. 30000"]'::jsonb,
+--       'B. Rs. 20000',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'If 3/4 of a number is 12 more than 1/2 of the same number, what is the number?',
+--       '["A. 48","B. 36","C. 24","D. 60"]'::jsonb,
+--       'A. 48',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Arrange the following fractions in ascending order: 2/3, 5/6, 3/4.',
+--       '["A. 2/3, 3/4, 5/6","B. 3/4, 2/3, 5/6","C. 5/6, 3/4, 2/3","D. 2/3, 5/6, 3/4"]'::jsonb,
+--       'A. 2/3, 3/4, 5/6',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'If the price of a laptop is increased by 10% and then decreased by 10%, what is the net change in price?',
+--       '["A. 1% increase","B. 1% decrease","C. No change","D. 2% decrease"]'::jsonb,
+--       'B. 1% decrease',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'A person’s salary was Rs. 20,000. It was increased by 20% and then later increased by another 10%. What is his final salary?',
+--       '["A. Rs. 26000","B. Rs. 26400","C. Rs. 25000","D. Rs. 27000"]'::jsonb,
+--       'B. Rs. 26400',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'In an election, a candidate got 40% of the total votes and lost to his opponent by 600 votes. What was the total number of votes cast?',
+--       '["A. 2000","B. 3000","C. 4000","D. 5000"]'::jsonb,
+--       'B. 3000',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The ratio of boys to girls in a school is 5:3. If there are 160 more boys than girls, find the total number of students.',
+--       '["A. 400","B. 640","C. 320","D. 800"]'::jsonb,
+--       'B. 640',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Find the third proportional to 16 and 24.',
+--       '["A. 32","B. 36","C. 40","D. 48"]'::jsonb,
+--       'B. 36',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'If A:B = 2:3, B:C = 4:5, and C:D = 6:7, find A:D.',
+--       '["A. 16:35","B. 8:15","C. 12:35","D. 24:35"]'::jsonb,
+--       'A. 16:35',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'A man covers a distance of 600m in 2 minutes. What is his speed in km/h?',
+--       '["A. 12 km/h","B. 18 km/h","C. 20 km/h","D. 15 km/h"]'::jsonb,
+--       'B. 18 km/h',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'A person travels from A to B at 40 km/h and returns to A at 60 km/h. What is his average speed for the entire journey?',
+--       '["A. 50 km/h","B. 48 km/h","C. 45 km/h","D. 52 km/h"]'::jsonb,
+--       'B. 48 km/h',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'A train 120m long passes a platform 180m long in 15 seconds. Find the speed of the train in km/h.',
+--       '["A. 72 km/h","B. 60 km/h","C. 90 km/h","D. 80 km/h"]'::jsonb,
+--       'A. 72 km/h',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'A can do a piece of work in 20 days and B can do it in 30 days. They work together for 5 days and then A leaves. In how many more days will B finish the work?',
+--       '["A. 15 days","B. 17.5 days","C. 20 days","D. 12.5 days"]'::jsonb,
+--       'B. 17.5 days',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       '10 men can complete a project in 12 days. How many more men are required to complete the same project in 8 days?',
+--       '["A. 5","B. 15","C. 10","D. 8"]'::jsonb,
+--       'A. 5',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Two pipes A and B can fill a tank in 12 and 16 minutes respectively. If both are opened together, after how much time should pipe B be closed so that the tank is full in 9 minutes?',
+--       '["A. 3 min","B. 4 min","C. 5 min","D. 6 min"]'::jsonb,
+--       'B. 4 min',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'In a parking lot, there are motorcycles and cars. If there are 30 vehicles and 90 wheels in total, how many cars are there?',
+--       '["A. 10","B. 15","C. 20","D. 12"]'::jsonb,
+--       'B. 15',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Father''s age is 4 times his son''s age. After 20 years, his age will be twice his son''s age. Find the father''s present age.',
+--       '["A. 32","B. 40","C. 48","D. 36"]'::jsonb,
+--       'B. 40',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'A number consists of two digits. The sum of the digits is 10. If 18 is subtracted from the number, the digits are reversed. Find the number.',
+--       '["A. 46","B. 64","C. 73","D. 37"]'::jsonb,
+--       'B. 64',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'What is the probability of picking a prime number from a set of cards numbered 1 to 20?',
+--       '["A. 2/5","B. 1/2","C. 3/10","D. 7/20"]'::jsonb,
+--       'A. 2/5',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Two dice are thrown simultaneously. What is the probability that the product of the numbers appearing on them is a prime number?',
+--       '["A. 1/6","B. 1/9","C. 2/9","D. 5/36"]'::jsonb,
+--       'A. 1/6',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'A bag contains 5 red and 7 green balls. If two balls are drawn at random without replacement, what is the probability that both are red?',
+--       '["A. 5/33","B. 5/66","C. 25/144","D. 10/33"]'::jsonb,
+--       'A. 5/33',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The difference between a two-digit number and the number obtained by interchanging its digits is 36. What is the difference between the two digits of the number?',
+--       '["A. 4","B. 3","C. 2","D. 5"]'::jsonb,
+--       'A. 4',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'A number is as much greater than 36 as it is less than 86. Find the number.',
+--       '["A. 61","B. 60","C. 50","D. 65"]'::jsonb,
+--       'A. 61',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The sum of the squares of three consecutive natural numbers is 110. Find the numbers.',
+--       '["A. 5, 6, 7","B. 6, 7, 8","C. 4, 5, 6","D. 7, 8, 9"]'::jsonb,
+--       'A. 5, 6, 7',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The mean of 10 observations is 15. If one observation 24 is replaced by 34, what is the new mean?',
+--       '["A. 16","B. 15.5","C. 17","D. 16.5"]'::jsonb,
+--       'A. 16',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Find the median of the following observations: 5, 12, 3, 18, 10, 7, 21.',
+--       '["A. 10","B. 12","C. 7","D. 18"]'::jsonb,
+--       'A. 10',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'In how many ways can a committee of 4 be formed from a group of 8 people?',
+--       '["A. 70","B. 56","C. 120","D. 28"]'::jsonb,
+--       'A. 70',
+--       'Mathematics',
+--       now()
+--     );
+
+--   -- 4. Insert English Questions
+  
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The witness''s testimony was so __________ that the jury found it impossible to doubt his account of the evening.',
+--       '["A. dubious","B. veracious","C. nebulous","D. equivocal"]'::jsonb,
+--       'B. veracious',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Despite the team’s __________ start to the season, they managed to win the championship through sheer persistence.',
+--       '["A. auspicious","B. abysmal","C. stellar","D. lucrative"]'::jsonb,
+--       'B. abysmal',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The diplomat sought to __________ the tensions between the two nations by proposing a neutral trade agreement.',
+--       '["A. exacerbate","B. ameliorate","C. polarized","D. disparage"]'::jsonb,
+--       'B. ameliorate',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The scientist was known for his __________ research, often exploring niche subjects that few others understood.',
+--       '["A. recondite","B. manifest","C. trite","D. cursory"]'::jsonb,
+--       'A. recondite',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The comedian’s __________ wit often poked fun at social conventions, making the audience both laugh and think.',
+--       '["A. vapid","B. sardonic","C. fawning","D. solemn"]'::jsonb,
+--       'B. sardonic',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The city’s architecture is a __________ of various styles, ranging from Gothic cathedrals to glass-walled skyscrapers.',
+--       '["A. paucity","B. melange","C. monolith","D. vacuum"]'::jsonb,
+--       'B. melange',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'After years of living a __________ lifestyle, the former rock star decided to settle down in a quiet rural village.',
+--       '["A. sedentary","B. peripatetic","C. stoic","D. provincial"]'::jsonb,
+--       'B. peripatetic',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The manager’s __________ decision-making style often left his employees guessing about the company''s future direction.',
+--       '["A. arbitrary","B. systematic","C. transparent","D. collaborative"]'::jsonb,
+--       'A. arbitrary',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The old manuscript was so __________ that historians spent decades trying to decipher its faded ink.',
+--       '["A. illegible","B. vivid","C. coherent","D. contemporary"]'::jsonb,
+--       'A. illegible',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'To ensure the safety of the passengers, the pilot decided to __________ the flight due to the approaching storm.',
+--       '["A. expedite","B. abort","C. initiate","D. prolong"]'::jsonb,
+--       'B. abort',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Identify the error: (A) The group of (B) angry protesters (C) were marching (D) toward the capitol. (E) No error.',
+--       '["A","B","C","D"]'::jsonb,
+--       'C',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Identify the error: (A) If I (B) was (C) more experienced, I would (D) apply for the job. (E) No error.',
+--       '["A","B","C","D"]'::jsonb,
+--       'B',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Identify the error: (A) She (B) didn''t hardly (C) have enough money (D) to pay the rent. (E) No error.',
+--       '["A","B","C","D"]'::jsonb,
+--       'B',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Identify the error: (A) The new policy (B) affects (C) every employee (D) different. (E) No error.',
+--       '["A","B","C","D"]'::jsonb,
+--       'D',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Identify the error: (A) Neither the (B) doctor nor (C) the nurses (D) is available now. (E) No error.',
+--       '["A","B","C","D"]'::jsonb,
+--       'D',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Identify the error: (A) He (B) returned back (C) the book (D) to the library. (E) No error.',
+--       '["A","B","C","D"]'::jsonb,
+--       'B',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Identify the error: (A) The data (B) collected by (C) the team (D) are conclusive. (E) No error.',
+--       '["A","B","C","D"]'::jsonb,
+--       'D',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Identify the error: (A) There (B) is (C) many reasons (D) for the delay. (E) No error.',
+--       '["A","B","C","D"]'::jsonb,
+--       'B',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Identify the error: (A) Between (B) the four of us, (C) we should be able (D) to finish this. (E) No error.',
+--       '["A","B","C","D"]'::jsonb,
+--       'A',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Identify the error: (A) To (B) who (C) were you (D) speaking? (E) No error.',
+--       '["A","B","C","D"]'::jsonb,
+--       'B',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: The microbiome—the trillions of bacteria living within the human gut—is increasingly recognized as a vital organ in its own right. These microscopic inhabitants do more than just aid digestion; they communicate with the brain, regulate the immune system, and may even influence mood and behavior. Research suggests that a lack of microbial diversity is linked to various modern ailments, from allergies to obesity. As we move toward a ''post-antibiotic'' era, understanding how to cultivate a healthy internal ecosystem through diet and probiotics is becoming a cornerstone of preventative medicine.
+
+-- Question: According to the passage, the microbiome is considered a ''vital organ'' because:',
+--       '["A. It is the largest organ in the human body.","B. It performs essential functions beyond simple digestion.","C. It is the only part of the body unaffected by antibiotics.","D. It can survive independently of the human host."]'::jsonb,
+--       'B. It performs essential functions beyond simple digestion.',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: (Same as 21) Question: The author implies that modern medical issues like obesity might be partially caused by:',
+--       '["A. An over-reliance on probiotics.","B. A decrease in the variety of gut bacteria.","C. Too much communication between the gut and brain.","D. The evolution of new, larger bacteria."]'::jsonb,
+--       'B. A decrease in the variety of gut bacteria.',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: (Same as 21) Question: The term ''cornerstone'' as used in the passage most nearly means:',
+--       '["A. An optional addition.","B. A fundamental basis.","C. A decorative element.","D. A hidden obstacle."]'::jsonb,
+--       'B. A fundamental basis.',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: (Same as 21) Question: What is the tone of the passage?',
+--       '["A. Alarmist and frantic","B. Informative and forward-looking","C. Skeptical and dismissive","D. Humorous and lighthearted"]'::jsonb,
+--       'B. Informative and forward-looking',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: (Same as 21) Question: The passage mentions diet and probiotics as ways to:',
+--       '["A. Replace the need for surgery.","B. Foster a healthy internal ecosystem.","C. Eradicate all bacteria from the gut.","D. Slow down the immune system."]'::jsonb,
+--       'B. Foster a healthy internal ecosystem.',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: (Same as 21) Question: The ''post-antibiotic era'' refers to a time when:',
+--       '["A. Antibiotics are no longer used at all.","B. We must find new ways to manage health as traditional antibiotics lose efficacy.","C. Bacteria have been completely eliminated from the world.","D. Diet is the only way to cure infections."]'::jsonb,
+--       'B. We must find new ways to manage health as traditional antibiotics lose efficacy.',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: (Same as 21) Question: Which of the following would be the best title for this passage?',
+--       '["A. The History of Antibiotics","B. Digestion: A Simple Process","C. The Gut Microbiome: Our Internal Ally","D. The Dangers of Modern Diet"]'::jsonb,
+--       'C. The Gut Microbiome: Our Internal Ally',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: The concept of ''Blue Ocean Strategy'' suggests that companies are better off searching for ways to play in ''uncontested market space'' rather than engaging in traditional competition in existing industries. In ''Red Oceans,'' industry boundaries are defined and accepted, and the competitive rules of the game are known. Here, companies try to outperform their rivals to seize a greater share of existing demand. As the market space gets crowded, prospects for profits and growth are reduced. Products become commodities, and ''cutthroat'' competition turns the ocean red. In contrast, ''Blue Oceans'' are defined by untapped market space, demand creation, and the opportunity for highly profitable growth.
+
+-- Question: A ''Red Ocean'' is characterized by:',
+--       '["A. Lack of competitors.","B. High innovation and new demand.","C. Intense competition within existing boundaries.","D. Government-regulated industries."]'::jsonb,
+--       'C. Intense competition within existing boundaries.',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: (Same as 28) Question: According to the passage, why do profits often decline in Red Oceans?',
+--       '["A. The market becomes saturated and products become commoditized.","B. Companies stop advertising to save money.","C. Customers lose interest in all products.","D. Innovation becomes too expensive for small firms."]'::jsonb,
+--       'A. The market becomes saturated and products become commoditized.',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: (Same as 28) Question: The primary goal of a ''Blue Ocean Strategy'' is to:',
+--       '["A. Lower prices to drive rivals out of business.","B. Create a new market where competition is irrelevant.","C. Copy a rival''s successful product.","D. Merge with larger corporations."]'::jsonb,
+--       'B. Create a new market where competition is irrelevant.',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: (Same as 28) Question: The word ''cutthroat'' in the passage implies competition that is:',
+--       '["A. Fair and balanced.","B. Aggressive and damaging.","C. Illegal and unregulated.","D. Strategic and slow."]'::jsonb,
+--       'B. Aggressive and damaging.',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: (Same as 28) Question: The author suggests that in a Blue Ocean, demand is:',
+--       '["A. Stagnant.","B. Actively created rather than fought over.","C. Decreasing due to lack of interest.","D. Harder to find than in Red Oceans."]'::jsonb,
+--       'B. Actively created rather than fought over.',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage:
+-- Time’s gradual touch has paled her cheek,
+-- And dimmed the radiance of her eye;
+-- No more those liquid accents speak
+-- In tones of silken melody.
+
+-- But still that heart is beating warm,
+-- And through the wreck of many a storm,
+-- Its early faith is shining clear,
+-- Like stars that light the closing year.
+
+-- Question: What is the primary subject of the poem?',
+--       '["A. The arrival of winter.","B. The physical and emotional effects of aging.","C. A shipwreck in a storm.","D. The discovery of a new star."]'::jsonb,
+--       'B. The physical and emotional effects of aging.',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: (Same as 33) Question: The phrase ''wreck of many a storm'' is a metaphor for:',
+--       '["A. A literal broken ship.","B. The hardships and trials of life.","C. A cold winter season.","D. A lost love."]'::jsonb,
+--       'B. The hardships and trials of life.',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: (Same as 33) Question: According to the second stanza, what has remained unchanged?',
+--       '["A. The person''s physical beauty.","B. The person''s voice and eyes.","C. The person''s inner faith and heart.","D. The weather outside."]'::jsonb,
+--       'C. The person''s inner faith and heart.',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: (Same as 33) Question: The tone of the poem can best be described as:',
+--       '["A. Hopeless and bitter.","B. Reflective and resilient.","C. Angry and loud.","D. Sarcastic and witty."]'::jsonb,
+--       'B. Reflective and resilient.',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: (Same as 33) Question: The comparison to ''stars that light the closing year'' suggests that faith is:',
+--       '["A. Fading away slowly.","B. A guide in the later stages of life.","C. Too far away to be useful.","D. Only visible at night."]'::jsonb,
+--       'B. A guide in the later stages of life.',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: (Same as 33) Question: The ''liquid accents'' in the first stanza likely refer to:',
+--       '["A. Rain falling.","B. A beautiful voice.","C. Drinking water.","D. Writing in ink."]'::jsonb,
+--       'B. A beautiful voice.',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: The [39] of the printing press by Johannes Gutenberg in the 15th century was a pivotal moment in human history. Before this, books were [40] copied by hand, making them expensive and rare. The ability to mass-produce texts allowed for the [41] of knowledge at an unprecedented speed. It played a crucial role in the Reformation and the Scientific Revolution. Today, we see a similar [42] in the digital age, where the internet has further [43] access to information.
+
+-- Question: Select the best word for blank [39]:',
+--       '["A. destruction","B. invention","C. concealment","D. imitation"]'::jsonb,
+--       'B. invention',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Question: Select the best word for blank [40]:',
+--       '["A. automatically","B. laboriously","C. quickly","D. never"]'::jsonb,
+--       'B. laboriously',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Question: Select the best word for blank [41]:',
+--       '["A. dissemination","B. restriction","C. collection","D. evaporation"]'::jsonb,
+--       'A. dissemination',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Question: Select the best word for blank [42]:',
+--       '["A. failure","B. transformation","C. stagnation","D. mystery"]'::jsonb,
+--       'B. transformation',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Question: Select the best word for blank [43]:',
+--       '["A. democratized","B. blocked","C. complicated","D. ignored"]'::jsonb,
+--       'A. democratized',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Choose the best version of the bold portion: **Unlike the previous model, the engine of the new car** is much more fuel-efficient.',
+--       '["A. Unlike the previous model, the engine of the new car","B. Unlike the previous model, the new car''s engine","C. Unlike the engine of the previous model, the new car","D. Unlike that of the previous model, the new car''s engine"]'::jsonb,
+--       'D. Unlike that of the previous model, the new car''s engine',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Choose the best version of the bold portion: The board of directors **not only approved the budget but they also voted** to increase dividends.',
+--       '["A. not only approved the budget but they also voted","B. not only approved the budget but also voted","C. approved the budget not only but also they voted","D. both approved the budget as well as voted"]'::jsonb,
+--       'B. not only approved the budget but also voted',
+--       'English',
+--       now()
+--     );
+
+-- END $$;
+
+
+
+-- -- BBA Mock Exam 2 (Paid)
+-- DO $$
+-- DECLARE
+--   mock_uuid uuid;
+-- BEGIN
+--   -- 1. Create Mock
+--   INSERT INTO public.mocks (title, duration_minutes, total_questions, difficulty, is_trial, created_at)
+--   VALUES (
+--     'BBA Mock Exam 2 (Paid)',
+--     165,
+--     90,
+--     'medium',
+--     false,
+--     now()
+--   )
+--   RETURNING id INTO mock_uuid;
+
+--   -- 2. Add Section Column if missing (Safe Migration)
+--   IF NOT EXISTS (
+--     SELECT 1 FROM information_schema.columns 
+--     WHERE table_name = 'questions' AND column_name = 'section'
+--   ) THEN
+--     ALTER TABLE public.questions ADD COLUMN section text;
+--   END IF;
+
+--   -- 3. Insert Math Questions
+  
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'A clothing store sells shirts for Rs. 500 each and trousers for Rs. 800 each. If a customer buys a total of 10 items and the total bill is Rs. 5900, how many trousers did the customer buy?',
+--       '["A. 2","B. 3","C. 4","D. 5"]'::jsonb,
+--       'B. 3',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The price of 3 tables is equal to the price of 12 chairs. If the cost of 1 table and 2 chairs is Rs. 3000, find the price of 5 chairs.',
+--       '["A. Rs. 2000","B. Rs. 2500","C. Rs. 3000","D. Rs. 3500"]'::jsonb,
+--       'C. Rs. 3000',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'A fruit seller has a certain number of oranges. He sells 40% and still has 420 oranges. How many oranges did he have originally?',
+--       '["A. 600","B. 700","C. 800","D. 900"]'::jsonb,
+--       'B. 700',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'If x + 1/x = 4, find the value of x³ + 1/x³.',
+--       '["A. 64","B. 52","C. 60","D. 48"]'::jsonb,
+--       'B. 52',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Find the value of (103)² - (97)² using algebraic identities.',
+--       '["A. 600","B. 1200","C. 1800","D. 2400"]'::jsonb,
+--       'B. 1200',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'If x = 1/(2+√3), find the value of x² - 4x + 1.',
+--       '["A. 1","B. -1","C. 0","D. 2"]'::jsonb,
+--       'C. 0',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Solve the inequality: |2x + 3| > 7.',
+--       '["A. x > 2 or x < -5","B. -5 < x < 2","C. x > 5 or x < -2","D. x < 2"]'::jsonb,
+--       'A. x > 2 or x < -5',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'If |x - 10| ≤ 2 and x is an integer, what is the sum of all possible values of x?',
+--       '["A. 30","B. 50","C. 40","D. 60"]'::jsonb,
+--       'B. 50',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Find the set of values of x for which 2 < 3x - 1 < 11.',
+--       '["A. 1 < x < 3","B. 1 < x < 4","C. 2 < x < 4","D. 0 < x < 5"]'::jsonb,
+--       'B. 1 < x < 4',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'If 2^(x-1) + 2^(x+1) = 320, find the value of x.',
+--       '["A. 5","B. 6","C. 7","D. 8"]'::jsonb,
+--       'C. 7',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Simplify: [(81)^(3/4) - (32)^(2/5)]',
+--       '["A. 23","B. 25","C. 27","D. 31"]'::jsonb,
+--       'A. 23',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Find the value of x if (1/5)^(3x-1) = 125.',
+--       '["A. -2/3","B. 2/3","C. -1/3","D. 1/3"]'::jsonb,
+--       'A. -2/3',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'What is the remainder when (7^19 + 2) is divided by 6?',
+--       '["A. 1","B. 2","C. 3","D. 4"]'::jsonb,
+--       'C. 3',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The difference between the squares of two consecutive odd integers is always divisible by:',
+--       '["A. 3","B. 6","C. 8","D. 12"]'::jsonb,
+--       'C. 8',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'How many numbers between 100 and 300 are exactly divisible by both 4 and 6?',
+--       '["A. 15","B. 16","C. 17","D. 18"]'::jsonb,
+--       'B. 16',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The average weight of 10 containers is 50 kg. If a new container is added, the average weight increases by 1 kg. What is the weight of the new container?',
+--       '["A. 51 kg","B. 60 kg","C. 61 kg","D. 62 kg"]'::jsonb,
+--       'C. 61 kg',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The average of 7 numbers is 30. The average of the first three is 25 and the average of the last three is 35. Find the fourth number.',
+--       '["A. 25","B. 30","C. 35","D. 40"]'::jsonb,
+--       'B. 30',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'A student''s average marks in 4 subjects is 75. If he gets 80 marks in the 5th subject, what will be his new average?',
+--       '["A. 76","B. 77","C. 78","D. 79"]'::jsonb,
+--       'A. 76',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'A tank is 1/4 full. When 11 liters are added, it becomes 3/5 full. What is the capacity of the tank?',
+--       '["A. 30 liters","B. 31.4 liters","C. 20 liters","D. 40 liters"]'::jsonb,
+--       'B. 31.4 liters',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'A person spends 1/3 of his wealth on his son and 1/4 of the remaining on his daughter. If he still has Rs. 15,000 left, what was his total wealth?',
+--       '["A. Rs. 30,000","B. Rs. 26,666","C. Rs. 25,000","D. Rs. 20,000"]'::jsonb,
+--       'B. Rs. 26,666',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Which of the following fractions is the largest: 7/8, 5/6, 3/4, 2/3?',
+--       '["A. 7/8","B. 5/6","C. 3/4","D. 2/3"]'::jsonb,
+--       'A. 7/8',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'If A''s height is 10% more than B''s, how much percent is B''s height less than A''s?',
+--       '["A. 10%","B. 9.09%","C. 11.11%","D. 8.5%"]'::jsonb,
+--       'B. 9.09%',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'In a school, 70% of students are boys. If there are 540 girls, find the number of boys.',
+--       '["A. 1260","B. 1800","C. 1500","D. 1200"]'::jsonb,
+--       'A. 1260',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'A man''s salary was increased by 20% and then decreased by 20%. What is the net percentage change in his salary?',
+--       '["A. No change","B. 4% increase","C. 4% decrease","D. 2% decrease"]'::jsonb,
+--       'C. 4% decrease',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The ratio of copper and zinc in an alloy is 9:5. If there is 2.5 kg of zinc, find the weight of copper in the alloy.',
+--       '["A. 4.5 kg","B. 5.0 kg","C. 5.5 kg","D. 6.0 kg"]'::jsonb,
+--       'A. 4.5 kg',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Find the fourth proportional to 4, 9, 12.',
+--       '["A. 18","B. 27","C. 36","D. 24"]'::jsonb,
+--       'B. 27',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Two numbers are in the ratio 3:5. If 9 is subtracted from each, they are in the ratio 12:23. The smaller number is:',
+--       '["A. 27","B. 33","C. 49","D. 55"]'::jsonb,
+--       'B. 33',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'A car travels at a speed of 40 km/h for the first half of the distance and 60 km/h for the second half. If the total distance is 240 km, find the total time taken.',
+--       '["A. 4 hours","B. 4.8 hours","C. 5 hours","D. 6 hours"]'::jsonb,
+--       'C. 5 hours',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'A thief is spotted by a policeman from a distance of 100 meters. When the policeman starts the chase, the thief also starts running. If the thief''s speed is 8 km/h and the policeman''s is 10 km/h, how far will the thief have run before he is caught?',
+--       '["A. 300 m","B. 400 m","C. 500 m","D. 600 m"]'::jsonb,
+--       'B. 400 m',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'A train 150 meters long takes 10 seconds to cross a man walking at 6 km/h in the same direction as the train. Find the speed of the train.',
+--       '["A. 54 km/h","B. 60 km/h","C. 66 km/h","D. 72 km/h"]'::jsonb,
+--       'B. 60 km/h',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'A, B and C can do a work in 12, 15 and 20 days respectively. How long will they take to do the work together?',
+--       '["A. 5 days","B. 6 days","C. 7 days","D. 8 days"]'::jsonb,
+--       'A. 5 days',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'If 12 laborers can dig a pond in 8 days, how many laborers can dig it in 6 days?',
+--       '["A. 14","B. 16","C. 18","D. 20"]'::jsonb,
+--       'B. 16',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'A is thrice as efficient as B and is therefore able to finish a piece of work in 60 days less than B. Find the time in which they can do it together.',
+--       '["A. 22.5 days","B. 25 days","C. 30 days","D. 20 days"]'::jsonb,
+--       'A. 22.5 days',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'In a cage, there are rabbits and parrots. If heads are counted, there are 20. If legs are counted, there are 56. How many rabbits are there?',
+--       '["A. 8","B. 10","C. 12","D. 14"]'::jsonb,
+--       'A. 8',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The sum of the ages of a mother and her daughter is 50 years. Five years ago, the mother''s age was 7 times the daughter''s age. What are their present ages?',
+--       '["A. 40, 10","B. 35, 15","C. 38, 12","D. 42, 8"]'::jsonb,
+--       'A. 40, 10',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'A man has some hens and cows. If the number of heads be 48 and the number of feet equals 140, then the number of hens will be:',
+--       '["A. 22","B. 24","C. 26","D. 28"]'::jsonb,
+--       'C. 26',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'A card is drawn from a well-shuffled pack of 52 cards. What is the probability that it is a heart or a King?',
+--       '["A. 4/13","B. 17/52","C. 1/4","D. 1/13"]'::jsonb,
+--       'A. 4/13',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Two coins are tossed. What is the probability of getting at least one tail?',
+--       '["A. 1/4","B. 1/2","C. 3/4","D. 1"]'::jsonb,
+--       'C. 3/4',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'A bag contains 6 black and 8 white balls. One ball is drawn at random. What is the probability that the ball drawn is white?',
+--       '["A. 3/7","B. 4/7","C. 1/8","D. 3/4"]'::jsonb,
+--       'B. 4/7',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'A number exceeds its two-fifth by 75. The number is:',
+--       '["A. 100","B. 115","C. 125","D. 150"]'::jsonb,
+--       'C. 125',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The product of two numbers is 120 and the sum of their squares is 289. Find the sum of the numbers.',
+--       '["A. 20","B. 23","C. 25","D. 27"]'::jsonb,
+--       'B. 23',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'If one-third of a number is 15, what is 40% of that number?',
+--       '["A. 15","B. 18","C. 20","D. 24"]'::jsonb,
+--       'B. 18',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The mean of 5 numbers is 20. If one more number is added, the mean remains 20. What is the added number?',
+--       '["A. 0","B. 20","C. 40","D. 10"]'::jsonb,
+--       'B. 20',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Find the mode of the following data: 4, 7, 4, 8, 9, 4, 7, 3, 4.',
+--       '["A. 4","B. 7","C. 8","D. 9"]'::jsonb,
+--       'A. 4',
+--       'Mathematics',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'In how many ways can a group of 3 players be selected from 10 players?',
+--       '["A. 120","B. 720","C. 30","D. 90"]'::jsonb,
+--       'A. 120',
+--       'Mathematics',
+--       now()
+--     );
+
+--   -- 4. Insert English Questions
+  
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The city council’s decision to demolish the historic theater was met with __________ from local preservationists.',
+--       '["A. adulation","B. vehemence","C. indifference","D. euphoria"]'::jsonb,
+--       'B. vehemence',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The mountain air was so __________ that it seemed to instantly revive the exhausted climbers.',
+--       '["A. stultifying","B. bracing","C. fetid","D. somniferous"]'::jsonb,
+--       'B. bracing',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The author’s latest novel is quite __________; it manages to summarize complex philosophical ideas in simple, accessible prose.',
+--       '["A. laconic","B. sententious","C. prolix","D. turgid"]'::jsonb,
+--       'B. sententious',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Despite his __________ exterior, the drill sergeant was known to be a deeply compassionate mentor to his recruits.',
+--       '["A. forbidding","B. genial","C. benevolent","D. tractable"]'::jsonb,
+--       'A. forbidding',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The tech giant’s growth has been __________; it began in a garage and now dominates the global market.',
+--       '["A. meteoric","B. dormant","C. gradual","D. stagnant"]'::jsonb,
+--       'A. meteoric',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The negotiator’s __________ approach helped settle the strike without further escalating the conflict.',
+--       '["A. conciliatory","B. bellicose","C. provocative","D. recalcitrant"]'::jsonb,
+--       'A. conciliatory',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The ancient ritual was described as __________, involving customs that had not changed for over a thousand years.',
+--       '["A. immutable","B. ephemeral","C. capricious","D. volatile"]'::jsonb,
+--       'A. immutable',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The scientist was criticized for his __________ findings, which were based on a very small and biased sample size.',
+--       '["A. empirical","B. spurious","C. authentic","D. infallible"]'::jsonb,
+--       'B. spurious',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'In the desert, water is a __________ resource, and its conservation is a matter of survival.',
+--       '["A. copious","B. scant","C. redundant","D. superfluous"]'::jsonb,
+--       'B. scant',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'The teenager’s __________ behavior often landed him in detention, as he constantly challenged his teachers'' authority.',
+--       '["A. impetuous","B. deferential","C. placid","D. servile"]'::jsonb,
+--       'A. impetuous',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Identify the error: (A) If the jury (B) reaches a verdict (C) before noon, (D) they will be released. (E) No error.',
+--       '["A","B","C","D"]'::jsonb,
+--       'D',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Identify the error: (A) Having eaten (B) the sandwich, (C) the crumbs (D) were everywhere. (E) No error.',
+--       '["A","B","C","D"]'::jsonb,
+--       'C',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Identify the error: (A) The sales team (B) consists of (C) four women (D) and I. (E) No error.',
+--       '["A","B","C","D"]'::jsonb,
+--       'D',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Identify the error: (A) He is (B) the most (C) unique person (D) I have ever met. (E) No error.',
+--       '["A","B","C","D"]'::jsonb,
+--       'B',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Identify the error: (A) Not only (B) the furniture (C) but also the walls (D) was damaged in the flood. (E) No error.',
+--       '["A","B","C","D"]'::jsonb,
+--       'D',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Identify the error: (A) She (B) graduated (C) high school (D) in 2015. (E) No error.',
+--       '["A","B","C","D"]'::jsonb,
+--       'B',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Identify the error: (A) The amount (B) of people (C) in the lobby (D) was surprising. (E) No error.',
+--       '["A","B","C","D"]'::jsonb,
+--       'A',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Identify the error: (A) The reason (B) for the delay (C) is because (D) the train broke down. (E) No error.',
+--       '["A","B","C","D"]'::jsonb,
+--       'C',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Identify the error: (A) Neither of (B) the candidates (C) have (D) enough experience. (E) No error.',
+--       '["A","B","C","D"]'::jsonb,
+--       'C',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Identify the error: (A) He (B) swam (C) across the river (D) real quick. (E) No error.',
+--       '["A","B","C","D"]'::jsonb,
+--       'D',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: The rise of ''Smart Cities'' promises an urban utopia managed by data. Sensors embedded in roads, buildings, and utility grids collect real-time information to optimize traffic flow, reduce energy waste, and improve public safety. Proponents argue that this hyper-efficiency is necessary to sustain the growing global population. However, civil liberties groups warn of a ''surveillance creep,'' where the same technology used to monitor air quality can be repurposed to track individual movements. The challenge lies in balancing the undeniable benefits of algorithmic governance with the fundamental right to privacy in public spaces.
+
+-- Question: The primary concern of civil liberties groups mentioned in the passage is:',
+--       '["A. The high cost of sensor technology.","B. The potential for data to be used for unauthorized surveillance.","C. The inefficiency of traffic management algorithms.","D. The environmental impact of smart grids."]'::jsonb,
+--       'B. The potential for data to be used for unauthorized surveillance.',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: (Same as 21) Question: The author uses the term ''hyper-efficiency'' to imply:',
+--       '["A. A state of being overly complicated.","B. An extreme level of optimized performance.","C. A waste of technological resources.","D. A temporary trend in urban planning."]'::jsonb,
+--       'B. An extreme level of optimized performance.',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: (Same as 21) Question: According to the passage, smart city technology is justified by proponents as a way to:',
+--       '["A. Replace human government entirely.","B. Support an increasing global population.","C. Lower taxes for city dwellers.","D. Encourage people to move back to rural areas."]'::jsonb,
+--       'B. Support an increasing global population.',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: (Same as 21) Question: What is the ''balance'' the author refers to in the final sentence?',
+--       '["A. Budgeting for technology versus social programs.","B. Data-driven efficiency versus individual privacy.","C. Traffic optimization versus environmental protection.","D. Public safety versus energy conservation."]'::jsonb,
+--       'B. Data-driven efficiency versus individual privacy.',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: In contemporary leadership theory, ''Emotional Intelligence'' (EI) is often cited as a more reliable predictor of executive success than traditional IQ. EI involves four core competencies: self-awareness, self-management, social awareness, and relationship management. Leaders with high EI are better equipped to navigate organizational politics, build cohesive teams, and retain top talent during periods of corporate restructuring. While technical skills are a ''threshold'' requirement—getting one through the door—it is EI that usually determines how far an individual climbs the corporate ladder.
+
+-- Question: According to the passage, technical skills are considered:',
+--       '["A. Irrelevant in modern business.","B. A basic entry requirement rather than a differentiator for high-level success.","C. The most important factor in executive promotion.","D. Something that cannot be learned."]'::jsonb,
+--       'B. A basic entry requirement rather than a differentiator for high-level success.',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: (Same as 25) Question: Which of the following is NOT mentioned as a core competency of EI?',
+--       '["A. Relationship management","B. Technical proficiency","C. Self-awareness","D. Social awareness"]'::jsonb,
+--       'B. Technical proficiency',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: (Same as 25) Question: The passage suggests that leaders with high EI are particularly valuable during:',
+--       '["A. Periods of financial stability.","B. Times of corporate restructuring.","C. The initial hiring phase only.","D. Routine office meetings."]'::jsonb,
+--       'B. Times of corporate restructuring.',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: (Same as 25) Question: The word ''threshold'' in the text refers to:',
+--       '["A. A maximum limit.","B. A point of beginning or entry.","C. A type of corporate structure.","D. An emotional barrier."]'::jsonb,
+--       'B. A point of beginning or entry.',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage:
+-- The Bustle in a House
+-- The Morning after Death
+-- Is solemnest of industries
+-- Enacted upon Earth –
+
+-- The Sweeping up the Heart
+-- And putting Love away
+-- We shall not want to use again
+-- Until Eternity.
+
+-- Question: What is the ''industry'' the poet refers to in the first stanza?',
+--       '["A. The business of making furniture.","B. The chores and emotional work following a family member''s death.","C. A factory opening in the morning.","D. The process of building a new house."]'::jsonb,
+--       'B. The chores and emotional work following a family member''s death.',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: (Same as 29) Question: The metaphor ''Sweeping up the Heart'' suggests:',
+--       '["A. Cleaning a physical room.","B. Organizing one''s emotions and moving on with life.","C. Forgetting the deceased person entirely.","D. Preparing for a party."]'::jsonb,
+--       'B. Organizing one''s emotions and moving on with life.',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: (Same as 29) Question: The tone of the poem is best described as:',
+--       '["A. Frantic and chaotic.","B. Solemn and resigned.","C. Joyful and optimistic.","D. Indifferent and bored."]'::jsonb,
+--       'B. Solemn and resigned.',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: (Same as 29) Question: What does the poet imply about the ''Love'' put away?',
+--       '["A. It was never real love.","B. It is being preserved for a future state (Eternity).","C. It is being thrown out as trash.","D. It will be used again next week."]'::jsonb,
+--       'B. It is being preserved for a future state (Eternity).',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: (Same as 29) Question: The word ''Bustle'' in the context of the poem suggests:',
+--       '["A. A type of clothing.","B. Busy activity in a household.","C. A loud explosion.","D. A religious ceremony."]'::jsonb,
+--       'B. Busy activity in a household.',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: (Same as 29) Question: Why is the morning after death ''solemnest''?',
+--       '["A. Because it is a holiday.","B. Because it is when the reality of loss sets in during daily tasks.","C. Because everyone is sleepy.","D. Because the weather is usually bad."]'::jsonb,
+--       'B. Because it is when the reality of loss sets in during daily tasks.',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: (Same as 29) Question: The phrase ''putting Love away'' most nearly means:',
+--       '["A. Getting a divorce.","B. Hiding the evidence of affection.","C. Storing the memory and emotional connection of the deceased.","D. Becoming a hateful person."]'::jsonb,
+--       'C. Storing the memory and emotional connection of the deceased.',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Passage: For centuries, the magnetic compass was the most [36] tool for maritime navigation. It allowed sailors to determine their [37] even when clouds obscured the sun and stars. This technology [38] the Age of Discovery, enabling explorers to cross vast oceans. However, the compass was not [39]; it was subject to magnetic variation and could be [40] by nearby iron objects.
+
+-- Question: Select the best word for blank [36]:',
+--       '["A. decorative","B. essential","C. fragile","D. modern"]'::jsonb,
+--       'B. essential',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Question: Select the best word for blank [37]:',
+--       '["A. speed","B. heading","C. depth","D. weight"]'::jsonb,
+--       'B. heading',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Question: Select the best word for blank [38]:',
+--       '["A. prevented","B. facilitated","C. concluded","D. limited"]'::jsonb,
+--       'B. facilitated',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Question: Select the best word for blank [39]:',
+--       '["A. expensive","B. infallible","C. heavy","D. portable"]'::jsonb,
+--       'B. infallible',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Question: Select the best word for blank [40]:',
+--       '["A. cleaned","B. distorted","C. improved","D. painted"]'::jsonb,
+--       'B. distorted',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Choose the best version: The new smartphone is not only thinner **but it also has a longer battery life than the previous one.**',
+--       '["A. but it also has a longer battery life than the previous one","B. but also has a longer battery life than its predecessor","C. and also having longer battery life","D. but also the battery life is longer"]'::jsonb,
+--       'B. but also has a longer battery life than its predecessor',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Choose the best version: **Unlike a traditional bank, the interest rates at a credit union** are often more favorable for members.',
+--       '["A. Unlike a traditional bank, the interest rates at a credit union","B. Unlike those of a traditional bank, the interest rates at a credit union","C. Unlike traditional banks, a credit union''s interest rate","D. Compared to traditional banks, a credit union"]'::jsonb,
+--       'B. Unlike those of a traditional bank, the interest rates at a credit union',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Choose the best version: The professor told the students **to stop talking, to sit down, and that they should open their books.**',
+--       '["A. to stop talking, to sit down, and that they should open their books","B. to stop talking, sit down, and open their books","C. stop talking, sitting down, and open their books","D. to stop talking, sit down, and for them to open their books"]'::jsonb,
+--       'B. to stop talking, sit down, and open their books',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Choose the best version: **If he would have arrived on time,** we could have caught the first train.',
+--       '["A. If he would have arrived on time","B. Had he arrived on time","C. If he arrived timely","D. Would he have arrived on time"]'::jsonb,
+--       'B. Had he arrived on time',
+--       'English',
+--       now()
+--     );
+
+--     INSERT INTO public.questions (mock_id, type, question_text, choices, correct_answer, section, created_at)
+--     VALUES (
+--       mock_uuid,
+--       'mcq',
+--       'Choose the best version: The committee **has reached their decision** regarding the annual budget.',
+--       '["A. has reached their decision","B. have reached its decision","C. has reached its decision","D. have reached their decision"]'::jsonb,
+--       'C. has reached its decision',
+--       'English',
+--       now()
+--     );
+
+-- END $$;
+
+        
