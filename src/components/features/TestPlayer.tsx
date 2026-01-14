@@ -116,13 +116,13 @@ export const TestPlayer = ({ exam, questions, attemptId }: TestPlayerProps) => {
 
     // Redirect to result page after exam submission
     useEffect(() => {
-        if (isFinished) {
+        if (isFinished && attemptId) {
             const timer = setTimeout(() => {
-                router.push("/exam/trial/result");
+                router.push(`/exam/results/${attemptId}`);
             }, 1500);
             return () => clearTimeout(timer);
         }
-    }, [isFinished, router]);
+    }, [isFinished, router, attemptId]);
 
     const handleAnswer = (val: string) => {
         const qId = activeQuestions[currentQuestionIndex].id;

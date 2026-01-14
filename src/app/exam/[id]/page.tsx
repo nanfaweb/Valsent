@@ -69,7 +69,14 @@ export default function ExamPage() {
                 .select("*")
                 .eq("mock_id", id);
 
-            if (qData) setQuestions(qData);
+            if (qData) {
+                // Map DB type to UI section
+                const mappedQuestions = qData.map((q: any) => ({
+                    ...q,
+                    section: q.type === 'eng' ? 'English' : 'Mathematics'
+                }));
+                setQuestions(mappedQuestions);
+            }
 
             // Check for existing unfinished attempt
             const { data: existingAttempt } = await supabase

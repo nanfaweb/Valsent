@@ -224,8 +224,20 @@ export default function Dashboard() {
                             ]}
                         />
 
-                        {/* Show 4 placeholder cards for non-purchased users */}
-                        <ExamPreviewGrid exams={[]} locked={true} />
+                        <div style={{ marginTop: '2rem', textAlign: 'center' }}>
+                            <Link href="/exams">
+                                <Button variant="outline">Browse All Exams</Button>
+                            </Link>
+                        </div>
+
+                        {/* Show preview of paid exams (locked) */}
+                        <div style={{ marginTop: '2rem' }}>
+                            <h3 style={{ marginBottom: '1rem' }}>Available Paid Mocks</h3>
+                            <ExamPreviewGrid
+                                exams={mockExams.filter(m => !m.title?.toLowerCase().includes('trial')).slice(0, 4)}
+                                locked={true}
+                            />
+                        </div>
                     </>
                 )}
 
@@ -245,8 +257,20 @@ export default function Dashboard() {
 
                         <UpgradePrompt />
 
-                        {/* Show 4 placeholder cards */}
-                        <ExamPreviewGrid exams={[]} locked={true} />
+                        <div style={{ marginTop: '2rem', textAlign: 'center' }}>
+                            <Link href="/exams">
+                                <Button variant="outline">Browse All Exams</Button>
+                            </Link>
+                        </div>
+
+                        {/* Show preview of paid exams (locked) */}
+                        <div style={{ marginTop: '2rem' }}>
+                            <h3 style={{ marginBottom: '1rem' }}>Paid Mocks Library</h3>
+                            <ExamPreviewGrid
+                                exams={mockExams.filter(m => !m.title?.toLowerCase().includes('trial')).slice(0, 4)}
+                                locked={true}
+                            />
+                        </div>
                     </>
                 )}
 
