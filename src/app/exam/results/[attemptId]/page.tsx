@@ -29,6 +29,7 @@ export default function ResultHistoryPage() {
     const [answers, setAnswers] = useState<Record<string, string>>({});
     const [score, setScore] = useState(0);
     const [timeTaken, setTimeTaken] = useState(0);
+    const [hasPurchase, setHasPurchase] = useState(false);
 
     useEffect(() => {
         async function loadResult() {
@@ -38,6 +39,16 @@ export default function ResultHistoryPage() {
             }
 
             try {
+                // Check purchase status
+                const { data: purchase } = await supabase
+                    .from("purchases")
+                    .select("status")
+                    .eq("user_id", user.id)
+                    .eq("status", "active")
+                    .single();
+
+                setHasPurchase(!!purchase);
+
                 // 1. Get the attempt
                 const { data: attempt, error: attemptError } = await supabase
                     .from('attempts')
@@ -130,6 +141,7 @@ export default function ResultHistoryPage() {
                 timeTaken={timeTaken}
                 onBackToDashboard={handleBackToDashboard}
                 onBackToOverview={handleBackToOverview}
+                showBackToOverview={hasPurchase}
             />
         </div>
     );

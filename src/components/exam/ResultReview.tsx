@@ -21,6 +21,7 @@ interface ResultReviewProps {
     timeTaken: number; // in seconds
     onBackToDashboard: () => void;
     onBackToOverview: () => void;
+    showBackToOverview?: boolean; // Only show for purchased users
 }
 
 interface ExpandedState {
@@ -34,6 +35,7 @@ export const ResultReview = ({
     timeTaken,
     onBackToDashboard,
     onBackToOverview,
+    showBackToOverview = false,
 }: ResultReviewProps) => {
     const [expandedQuestions, setExpandedQuestions] = useState<ExpandedState>({});
 
@@ -433,15 +435,17 @@ export const ResultReview = ({
             {/* Action Buttons */}
             <div className={styles.footer}>
                 <div className={styles.buttonGroup}>
-                    <Button
-                        size="lg"
-                        onClick={onBackToOverview}
-                        className={styles.overviewBtn}
-                        variant="secondary"
-                    >
-                        <ArrowLeft size={18} style={{ marginRight: "0.5rem" }} />
-                        Back to Overview
-                    </Button>
+                    {showBackToOverview && (
+                        <Button
+                            size="lg"
+                            onClick={onBackToOverview}
+                            className={styles.overviewBtn}
+                            variant="secondary"
+                        >
+                            <ArrowLeft size={18} style={{ marginRight: "0.5rem" }} />
+                            Back to Overview
+                        </Button>
+                    )}
                     <Button
                         size="lg"
                         onClick={onBackToDashboard}

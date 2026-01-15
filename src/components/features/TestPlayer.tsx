@@ -34,6 +34,7 @@ export const TestPlayer = ({ exam, questions, attemptId }: TestPlayerProps) => {
 
     const sections = ["Mathematics", "English"];
 
+    const [isLoading, setIsLoading] = useState(!!attemptId); // Loading if we have an attemptId to load
     const [currentSection, setCurrentSection] = useState<string>("Mathematics");
     const [sectionLocks, setSectionLocks] = useState<Record<string, boolean>>({
         Mathematics: false,
@@ -55,29 +56,44 @@ export const TestPlayer = ({ exam, questions, attemptId }: TestPlayerProps) => {
 
     const activeQuestions = questions.filter(q => (q.section || 'Mathematics') === currentSection);
 
-    useEffect(() => {
-        setCurrentQuestionIndex(0);
-    }, [currentSection]);
+    // Load progress only on mount (attemptId change)
+    const isInitialLoad = useRef(true);
 
     useEffect(() => {
         async function loadProgress() {
-            if (!attemptId) return;
+            if (!attemptId || !isInitialLoad.current) return;
+            isInitialLoad.current = false;
 
-            const { data: attempt } = await supabase
-                .from("attempts")
-                .select("answers, remaining_seconds, current_question_index, status, current_section, section_locked")
-                .eq("id", attemptId)
-                .single();
+            try {
+                const { data: attempt } = await supabase
+                    .from("attempts")
+                    .select("answers, remaining_seconds, current_question_index, status, current_section, section_locked")
+                    .eq("id", attemptId)
+                    .single();
 
-            if (attempt) {
-                if (attempt.answers) setAnswers(attempt.answers);
-                if (attempt.remaining_seconds) setTimeLeft(attempt.remaining_seconds);
-                if (attempt.current_section) setCurrentSection(attempt.current_section);
-                if (attempt.section_locked) setSectionLocks(attempt.section_locked);
+                if (attempt) {
+                    if (attempt.answers) setAnswers(attempt.answers);
+                    if (attempt.remaining_seconds) setTimeLeft(attempt.remaining_seconds);
+                    if (attempt.current_section) setCurrentSection(attempt.current_section);
+                    if (attempt.section_locked) setSectionLocks(attempt.section_locked);
+                    if (attempt.current_question_index !== null && attempt.current_question_index !== undefined) {
+                        setCurrentQuestionIndex(attempt.current_question_index);
+                    }
+                }
+            } catch (error) {
+                console.error("Error loading progress:", error);
+            } finally {
+                setIsLoading(false);
             }
         }
         loadProgress();
     }, [attemptId]);
+
+    // Only reset question index when user manually switches sections (not on first load)
+    useEffect(() => {
+        if (isInitialLoad.current) return;
+        setCurrentQuestionIndex(0);
+    }, [currentSection]);
 
     useEffect(() => {
         if (isFinished) return;
@@ -204,8 +220,26 @@ export const TestPlayer = ({ exam, questions, attemptId }: TestPlayerProps) => {
         setShowSaveModal(true);
     };
 
-    const confirmExit = () => {
-        // Logic to simply route away, as auto-save handles the data
+    const confirmExit = async () => {
+        // Update status to "paused" and then navigate away
+        if (attemptId) {
+            try {
+                await supabase
+                    .from("attempts")
+                    .update({
+                        status: "paused",
+                        answers: answers,
+                        remaining_seconds: timeLeft,
+                        current_question_index: currentQuestionIndex,
+                        current_section: currentSection,
+                        section_locked: sectionLocks,
+                        last_saved_at: new Date().toISOString()
+                    })
+                    .eq("id", attemptId);
+            } catch (error) {
+                console.error("Error saving progress:", error);
+            }
+        }
         router.push("/dashboard");
     };
 
@@ -219,6 +253,17 @@ export const TestPlayer = ({ exam, questions, attemptId }: TestPlayerProps) => {
         }
         return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
     };
+
+    if (isLoading) {
+        return (
+            <div className={styles.playerContainer}>
+                <div className={styles.loading}>
+                    <div className={styles.spinner}></div>
+                    <p>Loading your saved progress...</p>
+                </div>
+            </div>
+        );
+    }
 
     if (isFinished) {
         return null; // Silently redirect via useEffect, no UI displayed

@@ -32,6 +32,7 @@ export default function Dashboard() {
     const [stats, setStats] = useState<any>(null);
     const [mockExams, setMockExams] = useState<any[]>([]);
     const [trialMockId, setTrialMockId] = useState<string | null>(null);
+    const [submittedTrialAttemptId, setSubmittedTrialAttemptId] = useState<string | null>(null);
 
     useEffect(() => {
         async function loadDashboard() {
@@ -152,6 +153,21 @@ export default function Dashboard() {
                                 setTrialAttempt({ status: activeAttempt.status } as any);
                             }
                         }
+
+                        // Check for submitted trial attempt (for "View Trial Performance" button)
+                        const { data: submittedAttempt } = await supabase
+                            .from("attempts")
+                            .select("id")
+                            .eq("user_id", user.id)
+                            .eq("mock_id", trialMock.id)
+                            .eq("status", "submitted")
+                            .order("created_at", { ascending: false })
+                            .limit(1)
+                            .single();
+
+                        if (submittedAttempt) {
+                            setSubmittedTrialAttemptId(submittedAttempt.id);
+                        }
                     }
 
                     setMockExams(
@@ -196,19 +212,28 @@ export default function Dashboard() {
                         <TrialIndicator used={false} showNoCardRequired />
 
                         <div className={styles.primaryAction}>
-                            {trialMockId ? (
-                                <Link href={`/exam/${trialMockId}/rules`} className={styles.ctaLink}>
-                                    <Button size="lg" className={styles.primaryCta}>
-                                        {(trialAttempt as any)?.status === 'in_progress' || (trialAttempt as any)?.status === 'paused'
-                                            ? "Continue Your Free Mock Exam"
-                                            : "Start Your Free Mock Exam"}
+                            <div className={styles.buttonsContainer}>
+                                {trialMockId ? (
+                                    <Link href={`/exam/${trialMockId}/rules`} className={styles.ctaLink}>
+                                        <Button size="lg" className={styles.primaryCta}>
+                                            {(trialAttempt as any)?.status === 'in_progress' || (trialAttempt as any)?.status === 'paused'
+                                                ? "Continue Your Free Mock Exam"
+                                                : "Start Your Free Mock Exam"}
+                                        </Button>
+                                    </Link>
+                                ) : (
+                                    <Button size="lg" className={styles.primaryCta} disabled>
+                                        Loading trial exam...
                                     </Button>
-                                </Link>
-                            ) : (
-                                <Button size="lg" className={styles.primaryCta} disabled>
-                                    Loading trial exam...
-                                </Button>
-                            )}
+                                )}
+                                {submittedTrialAttemptId && (
+                                    <Link href="/results" className={styles.ctaLink}>
+                                        <Button size="lg" variant="outline" className={styles.primaryCta}>
+                                            View Trial Performance
+                                        </Button>
+                                    </Link>
+                                )}
+                            </div>
                             <p className={styles.ctaSubtext}>
                                 Experience the full exam interface with no commitment
                             </p>
@@ -217,7 +242,7 @@ export default function Dashboard() {
                         {/* Placeholder stats */}
                         <StatsGrid
                             stats={[
-                                { label: "Mock exams available", value: "50+", icon: "exams" },
+                                { label: "Mock exams available", value: "20+", icon: "exams" },
                                 { label: "Tests taken", value: "—", icon: "taken" },
                                 { label: "Average score", value: "—", icon: "score" },
                                 { label: "Average time", value: "—", icon: "time" },
@@ -232,7 +257,6 @@ export default function Dashboard() {
 
                         {/* Show preview of paid exams (locked) */}
                         <div style={{ marginTop: '2rem' }}>
-                            <h3 style={{ marginBottom: '1rem' }}>Available Paid Mocks</h3>
                             <ExamPreviewGrid
                                 exams={mockExams.filter(m => !m.title?.toLowerCase().includes('trial')).slice(0, 4)}
                                 locked={true}
@@ -297,8 +321,8 @@ export default function Dashboard() {
                                     View All Mock Exams
                                 </Button>
                             </Link>
-                            <Link href="/results">
-                                <Button size="lg" variant="outline">
+                            <Link href="/results" className={styles.ctaLink}>
+                                <Button size="lg" className={styles.primaryCta} variant="outline">
                                     View Performance Summary
                                 </Button>
                             </Link>
