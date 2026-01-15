@@ -151,6 +151,9 @@ export default function ExamRulesPage() {
                             <li>
                                 <strong>Auto-Save:</strong> Your progress is saved automatically. You can leave and resume later.
                             </li>
+                            <li>
+                                <strong>Retakes & Previous Results:</strong> When you retake an exam, a new attempt is created. All your previous results are saved and available in your results page for comparison and review.
+                            </li>
                         </ul>
                     </div>
 

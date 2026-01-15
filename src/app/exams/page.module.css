@@ -166,7 +166,7 @@
 }
 
 .scoreGood {
-  color: #ca8a04;
+  color: #000000;
 }
 
 .scoreAverage {
@@ -174,7 +174,7 @@
 }
 
 .statusInProgress {
-  color: #ca8a04;
+  color: #000000;
   display: flex;
   align-items: center;
   gap: 0.5rem;

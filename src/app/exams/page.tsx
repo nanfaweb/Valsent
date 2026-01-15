@@ -48,7 +48,7 @@ export default function BrowseExamsPage() {
         <div className={styles.container}>
             <div className={styles.header}>
                 <h1 className={styles.title}>Browse Exams</h1>
-                <p className={styles.subtitle}>Choose an exam. Practice and repeat. Reach your goal.</p>
+                <p className={styles.subtitle}>Choose an exam. Practice and repeat.</p>
             </div>
 
             <div className={styles.grid}>
@@ -88,10 +88,10 @@ export default function BrowseExamsPage() {
                                     <>
                                         {inProgress ? (
                                             <Button
-                                                variant="secondary"
+                                                variant="primary"
                                                 isLoading={actionLoading === exam.id}
                                                 onClick={() => handleAction(exam.id, 'resume')}
-                                                style={{ width: '100%', borderColor: '#f59e0b', color: '#d97706' }}
+                                                style={{ width: '100%' }}
                                             >
                                                 <PlayCircle size={16} style={{ marginRight: 8 }} /> Resume Exam
                                             </Button>
