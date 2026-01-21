@@ -23,7 +23,7 @@ output.push(`VALUES ('${mockId}', 'BBA Trial Mock Exam', 'A comprehensive trial 
 output.push(`ON CONFLICT (id) DO UPDATE SET total_questions = 90, title = 'BBA Trial Mock Exam';`);
 
 output.push(`\n-- 2. Insert Questions (Math)`);
-mathData.forEach((q, idx) => {
+mathData.forEach((q: any, idx: number) => {
     const choices = JSON.stringify(q.options);
     const text = q.question.replace(/'/g, "''");
     const answer = q.answer.replace(/'/g, "''");
@@ -31,7 +31,7 @@ mathData.forEach((q, idx) => {
 });
 
 output.push(`\n-- 3. Insert Questions (English)`);
-engData.forEach((q, idx) => {
+engData.forEach((q: any, idx: number) => {
     const choices = JSON.stringify(q.options);
     const text = q.question.replace(/'/g, "''");
     const answer = q.answer.replace(/'/g, "''");

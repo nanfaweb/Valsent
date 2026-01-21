@@ -41,16 +41,18 @@ export default function ExamRulesPage() {
                 setExam(examData);
 
                 // 2. Check for Active Attempt
-                const { data: attempt } = await supabase
-                    .from('attempts')
-                    .select('id, status, remaining_seconds')
-                    .eq('user_id', user.id)
-                    .eq('mock_id', examId)
-                    .in('status', ['in_progress', 'paused'])
-                    .single();
+                if (user) {
+                    const { data: attempt } = await supabase
+                        .from('attempts')
+                        .select('id, status, remaining_seconds')
+                        .eq('user_id', user.id)
+                        .eq('mock_id', examId)
+                        .in('status', ['in_progress', 'paused'])
+                        .single();
 
-                if (attempt) {
-                    setActiveAttempt(attempt);
+                    if (attempt) {
+                        setActiveAttempt(attempt);
+                    }
                 }
             } catch (error) {
                 console.error("Error loading exam data:", error);

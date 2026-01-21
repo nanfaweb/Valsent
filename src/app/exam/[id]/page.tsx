@@ -71,10 +71,22 @@ export default function ExamPage() {
 
             if (qData) {
                 // Map DB type to UI section
-                const mappedQuestions = qData.map((q: any) => ({
-                    ...q,
-                    section: q.type === 'eng' ? 'English' : 'Mathematics'
-                }));
+                const mappedQuestions = qData.map((q: any) => {
+                    let section = 'Mathematics'; // default
+
+                    if (q.type === 'mcq') {
+                        // For MCQ, use the section field directly
+                        section = q.section || 'Mathematics';
+                    } else if (q.type === 'eng') {
+                        // Legacy support for 'eng' type
+                        section = 'English';
+                    } else if (q.type === 'math') {
+                        // Legacy support for 'math' type
+                        section = 'Mathematics';
+                    }
+
+                    return { ...q, section };
+                });
                 setQuestions(mappedQuestions);
             }
 

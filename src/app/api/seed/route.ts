@@ -89,6 +89,9 @@ export async function POST() {
             if (data) insertedMocks.push(data);
         }
 
+        // Find the trial mock ID
+        const trialMockId = insertedMocks.find(m => m.is_trial)?.id;
+
         // 3. Seed sample questions for the trial exam
         // 3. Seed questions for the trial exam
         if (trialMockId) {
@@ -170,7 +173,7 @@ export async function POST() {
             message: "Database seeded successfully",
             data: {
                 mocksCreated: insertedMocks.length,
-                trialMockId: trialMock?.id
+                trialMockId: trialMockId
             }
         });
 
