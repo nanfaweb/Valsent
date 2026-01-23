@@ -22,7 +22,7 @@ export const PricingCard = ({ isCheckout = false }: { isCheckout?: boolean }) =>
 
             <ul className={styles.features}>
                 {[
-                    "Unlimited Mock Exams",
+                    "10+ Mock Exams with Free Trial",
                     "Detailed Performance Analytics",
                     "Subject-wise Practice",
                     "Real Exam Simulation",
@@ -44,7 +44,6 @@ export const PricingCard = ({ isCheckout = false }: { isCheckout?: boolean }) =>
                     </Link>
                 )}
             </div>
-            <p className={styles.guarantee}>30-day money-back guarantee</p>
         </Card>
     );
 };

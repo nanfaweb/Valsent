@@ -68,11 +68,29 @@ export default function Dashboard() {
                         ? Math.round(attempts.reduce((acc, a) => acc + (a.score || 0), 0) / attempts.length)
                         : 0;
 
+                    // Calculate average time from submitted attempts
+                    // Uses (total_seconds - remaining_seconds) OR (finished_at - started_at)
+                    const submittedAttempts = attempts?.filter(a => a.status === 'submitted' && a.finished_at && a.started_at) || [];
+                    let avgTimeMinutes = 0;
+                    if (submittedAttempts.length > 0) {
+                        const totalSeconds = submittedAttempts.reduce((acc, a) => {
+                            // Prefer elapsed time from remaining_seconds if available
+                            if (a.total_seconds && a.remaining_seconds !== undefined) {
+                                return acc + (a.total_seconds - a.remaining_seconds);
+                            }
+                            // Fallback to timestamp difference
+                            const start = new Date(a.started_at).getTime();
+                            const end = new Date(a.finished_at).getTime();
+                            return acc + ((end - start) / 1000);
+                        }, 0);
+                        avgTimeMinutes = Math.round(totalSeconds / submittedAttempts.length / 60);
+                    }
+
                     setStats({
                         totalExams: allMocks?.length || 0,
                         testsTaken: attempts?.length || 0,
                         avgScore: avgScore || "—",
-                        avgTime: "45", // Placeholder
+                        avgTime: avgTimeMinutes > 0 ? avgTimeMinutes : "—",
                     });
                 } else {
                     // Check if trial used from profiles table
@@ -303,7 +321,6 @@ export default function Dashboard() {
                     <>
                         <div className={styles.confirmationBanner}>
                             <h2>All mock exams unlocked!</h2>
-                            <p>You have lifetime access to all content</p>
                         </div>
 
                         <StatsGrid
@@ -311,7 +328,7 @@ export default function Dashboard() {
                                 { label: "Total mock exams", value: stats.totalExams, icon: "exams" },
                                 { label: "Tests taken", value: stats.testsTaken, icon: "taken" },
                                 { label: "Average score", value: `${stats.avgScore}%`, icon: "score" },
-                                { label: "Average time", value: `${stats.avgTime} mins`, icon: "time" },
+                                { label: "Average time", value: stats.avgTime !== "—" ? `${stats.avgTime} mins` : "—", icon: "time" },
                             ]}
                         />
 

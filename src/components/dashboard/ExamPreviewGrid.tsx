@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Lock, Clock, FileText } from 'lucide-react';
 import styles from './ExamPreviewGrid.module.css';
 
@@ -57,6 +58,23 @@ export const ExamPreviewGrid = ({ exams, locked, showTitle = true }: ExamPreview
     // Use placeholders for locked cards, real exams for unlocked
     const displayExams = locked ? placeholderExams : exams.slice(0, 4);
 
+    const CardContent = ({ exam }: { exam: ExamPreview }) => (
+        <div className={styles.cardContent}>
+            <h3 className={styles.examTitle}>{exam.title}</h3>
+
+            <div className={styles.meta}>
+                <div className={styles.metaItem}>
+                    <Clock size={16} />
+                    <span>{exam.duration} mins</span>
+                </div>
+                <div className={styles.metaItem}>
+                    <FileText size={16} />
+                    <span>{exam.totalQuestions} questions</span>
+                </div>
+            </div>
+        </div>
+    );
+
     return (
         <div className={styles.container}>
             {showTitle && (
@@ -66,35 +84,31 @@ export const ExamPreviewGrid = ({ exams, locked, showTitle = true }: ExamPreview
             )}
 
             <div className={styles.grid}>
-                {displayExams.map((exam) => (
-                    <div key={exam.id} className={`${styles.card} ${locked ? styles.locked : ''}`}>
-                        {locked && (
+                {displayExams.map((exam) => {
+                    // Wrap unlocked cards in a Link
+                    if (!locked) {
+                        return (
+                            <Link key={exam.id} href={`/exam/${exam.id}/rules`} className={styles.cardLink}>
+                                <div className={styles.card}>
+                                    <CardContent exam={exam} />
+                                </div>
+                            </Link>
+                        );
+                    }
+
+                    // Locked cards are not clickable
+                    return (
+                        <div key={exam.id} className={`${styles.card} ${styles.locked}`}>
                             <div className={styles.lockOverlay}>
                                 <div className={styles.lockIcon}>
                                     <Lock size={40} strokeWidth={2} />
                                 </div>
                                 <p className={styles.lockText}>Unlock to Access</p>
                             </div>
-                        )}
-
-                        <div className={styles.cardContent}>
-                            <h3 className={styles.examTitle}>{exam.title}</h3>
-
-                            <div className={styles.meta}>
-                                <div className={styles.metaItem}>
-                                    <Clock size={16} />
-                                    <span>{exam.duration} mins</span>
-                                </div>
-                                <div className={styles.metaItem}>
-                                    <FileText size={16} />
-                                    <span>{exam.totalQuestions} questions</span>
-                                </div>
-                            </div>
-
-
+                            <CardContent exam={exam} />
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
 
             {locked && exams.length > 6 && (

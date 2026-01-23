@@ -111,7 +111,7 @@ export default function Home() {
           <div className={styles.faqList}>
             <div className={styles.faqItem}>
               <h3>How long do I have access?</h3>
-              <p>Once you purchase the Full Access Pass, you have unlimited access for 1 year.</p>
+              <p>Once you purchase the Full Access Pass, you have unlimited access until the chosen degree's entry exam.</p>
             </div>
             <div className={styles.faqItem}>
               <h3>Can I retake exams?</h3>

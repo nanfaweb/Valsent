@@ -172,6 +172,29 @@ export async function getAvailableExams(userId: string) {
         };
     }));
 
+     // Sort exams: Trial Mock first, then by Mock Exam Number
+     examsWithStatus.sort((a, b) => {
+        // 1. "BBA Trial Mock" always first
+        if (a.title === "BBA Trial Mock") return -1;
+        if (b.title === "BBA Trial Mock") return 1;
+
+        // 2. "BBA Mock Exam X" sorting
+        const getMockNumber = (title: string) => {
+            const match = title.match(/Mock Exam (\d+)/i);
+            return match ? parseInt(match[1]) : 999999;
+        };
+
+        const numA = getMockNumber(a.title);
+        const numB = getMockNumber(b.title);
+
+        if (numA !== 999999 || numB !== 999999) {
+            return numA - numB;
+        }
+
+        // 3. Fallback to created_at or title
+        return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+    });
+
     return examsWithStatus;
 }
 

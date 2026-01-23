@@ -20,7 +20,7 @@ export default function PricingPage() {
                             <li>
                                 <CheckCircle className={styles.icon} />
                                 <div>
-                                    <h3>50+ Full-Length Mock Exams</h3>
+                                    <h3>10+ Full-Length Mock Exams</h3>
                                     <p>Modeled after actual university entrance tests.</p>
                                 </div>
                             </li>
@@ -29,13 +29,6 @@ export default function PricingPage() {
                                 <div>
                                     <h3>Topic-wise Practice Questions</h3>
                                     <p>Master specific subjects with focused question banks.</p>
-                                </div>
-                            </li>
-                            <li>
-                                <CheckCircle className={styles.icon} />
-                                <div>
-                                    <h3>Detailed Explanations</h3>
-                                    <p>Learn from your mistakes with step-by-step solutions.</p>
                                 </div>
                             </li>
                             <li>
