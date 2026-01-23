@@ -45,8 +45,81 @@
     padding: 2rem;
     border-radius: 12px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    margin-top: 5.5rem;
+    margin-top: 0rem;
+    border: 2px solid var(--primary);
     /* Offset for desktop alignment */
+}
+
+.trialCard {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+    border: 2px solid var(--primary);
+    background: linear-gradient(to bottom right, #ffffff, #f8faff);
+}
+
+.trialBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(var(--primary-rgb), 0.1);
+    color: var(--primary);
+    padding: 0.25rem 0.75rem;
+    border-radius: 100px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.trialHeader h2 {
+    font-size: 2rem;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.trialHeader p {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+.trialFeatures {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.trialFeature {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.trialIcon {
+    color: var(--secondary);
+    margin-top: 4px;
+    flex-shrink: 0;
+}
+
+.trialFeature h3 {
+    font-size: 1.1rem;
+    color: var(--foreground);
+    margin-bottom: 0.25rem;
+}
+
+.trialFeature p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .trialFeatures {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
 }
 
 .details h2 {

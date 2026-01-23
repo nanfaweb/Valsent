@@ -1,6 +1,6 @@
 import { PricingCard } from "@/components/ui/PricingCard";
 import styles from "./page.module.css";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, Gift, RotateCcw, Sparkles } from "lucide-react";
 
 export default function PricingPage() {
     return (
@@ -11,6 +11,33 @@ export default function PricingPage() {
             </section>
 
             <div className={styles.container}>
+                <div className={styles.trialCard}>
+                    <div className={styles.trialHeader}>
+                        <div className={styles.trialBadge}>
+                            <Gift size={16} />
+                            <span>Free Trial Available</span>
+                        </div>
+                        <h2>One Free Trial Exam</h2>
+                        <p>Get a taste of our premium preparation material by creating an account today.</p>
+                    </div>
+                    <div className={styles.trialFeatures}>
+                        <div className={styles.trialFeature}>
+                            <Sparkles className={styles.trialIcon} />
+                            <div>
+                                <h3>Full Access Mock</h3>
+                                <p>Experience one complete, timed mock exam exactly like the real thing.</p>
+                            </div>
+                        </div>
+                        <div className={styles.trialFeature}>
+                            <RotateCcw className={styles.trialIcon} />
+                            <div>
+                                <h3>Unlimited Retakes</h3>
+                                <p>Review your performance and retake the trial exam as many times as you want.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div className={styles.grid}>
                     <div className={styles.details}>
                         <h2>What's included in the Full Access Pass?</h2>

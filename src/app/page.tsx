@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { HeroActions } from "@/components/landing/HeroActions";
 import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { PricingCard } from "@/components/ui/PricingCard";
@@ -19,14 +19,7 @@ export default function Home() {
               Comprehensive mock exams, real-time analytics, and expert-curated content
               to ensure you get into your dream university.
             </p>
-            <div className={styles.heroActions}>
-              <Link href="/pricing">
-                <Button size="lg" variant="primary">Start Practicing Now</Button>
-              </Link>
-              <Link href="#features">
-                <Button size="lg" variant="outline">Learn More</Button>
-              </Link>
-            </div>
+            <HeroActions />
           </div>
         </div>
       </section>
@@ -67,7 +60,9 @@ export default function Home() {
             <p>One plan, full access. No hidden fees.</p>
           </div>
           <div className={styles.pricingWrapper}>
-            <PricingCard />
+            <PricingCard type="trial" />
+            <PricingCard type="pro" />
+            <PricingCard type="soon" />
           </div>
         </div>
       </section>
