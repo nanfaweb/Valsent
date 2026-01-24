@@ -40,6 +40,21 @@ export default function ExamRulesPage() {
                 }
                 setExam(examData);
 
+                // Check access permissions
+                if (!examData.is_trial) {
+                    const { data: purchase } = await supabase
+                        .from('purchases')
+                        .select('status')
+                        .eq('user_id', user!.id)
+                        .eq('status', "active")
+                        .single();
+
+                    if (!purchase) {
+                        router.push('/pricing');
+                        return;
+                    }
+                }
+
                 // 2. Check for Active Attempt
                 if (user) {
                     const { data: attempt } = await supabase

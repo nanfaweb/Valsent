@@ -63,6 +63,27 @@ export default function ResultHistoryPage() {
                     return;
                 }
 
+                // Check for trial status of the mock
+                const { data: mockData } = await supabase
+                    .from('mocks')
+                    .select('is_trial')
+                    .eq('id', attempt.mock_id)
+                    .single();
+
+                if (mockData && !mockData.is_trial) {
+                    const { data: purchase } = await supabase
+                        .from('purchases')
+                        .select('status')
+                        .eq('user_id', user.id)
+                        .eq('status', "active")
+                        .single();
+
+                    if (!purchase) {
+                        router.push('/pricing');
+                        return;
+                    }
+                }
+
                 // 2. Get questions for this mock
                 const { data: questionsData, error: qError } = await supabase
                     .from('questions')

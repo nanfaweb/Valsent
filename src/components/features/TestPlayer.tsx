@@ -26,9 +26,10 @@ interface TestPlayerProps {
     exam: Exam;
     questions: Question[];
     attemptId?: string;
+    initialIndex?: number;
 }
 
-export const TestPlayer = ({ exam, questions, attemptId }: TestPlayerProps) => {
+export const TestPlayer = ({ exam, questions, attemptId, initialIndex = 0 }: TestPlayerProps) => {
     const { user } = useAuth();
     const router = useRouter();
 
@@ -41,7 +42,7 @@ export const TestPlayer = ({ exam, questions, attemptId }: TestPlayerProps) => {
         English: true
     });
 
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(initialIndex);
     const [answers, setAnswers] = useState<Record<string, string>>({});
     const [timeLeft, setTimeLeft] = useState(exam.duration_minutes * 60);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -62,7 +63,6 @@ export const TestPlayer = ({ exam, questions, attemptId }: TestPlayerProps) => {
     useEffect(() => {
         async function loadProgress() {
             if (!attemptId || !isInitialLoad.current) return;
-            isInitialLoad.current = false;
 
             try {
                 const { data: attempt } = await supabase
@@ -84,6 +84,7 @@ export const TestPlayer = ({ exam, questions, attemptId }: TestPlayerProps) => {
                 console.error("Error loading progress:", error);
             } finally {
                 setIsLoading(false);
+                isInitialLoad.current = false;
             }
         }
         loadProgress();

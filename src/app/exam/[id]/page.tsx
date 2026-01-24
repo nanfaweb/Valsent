@@ -22,6 +22,7 @@ export default function ExamPage() {
     const [startExam, setStartExam] = useState(false);
     const [availableExams, setAvailableExams] = useState<any[]>([]);
     const [currentAttemptId, setCurrentAttemptId] = useState<string | null>(null);
+    const [resumeQuestionIndex, setResumeQuestionIndex] = useState<number>(0);
 
     useEffect(() => {
         async function loadExam() {
@@ -93,7 +94,7 @@ export default function ExamPage() {
             // Check for existing unfinished attempt
             const { data: existingAttempt } = await supabase
                 .from("attempts")
-                .select("id, status")
+                .select("id, status, current_question_index")
                 .eq("user_id", user.id)
                 .eq("mock_id", id)
                 .in("status", ["in_progress", "paused"])
@@ -101,6 +102,9 @@ export default function ExamPage() {
 
             if (existingAttempt) {
                 setCurrentAttemptId(existingAttempt.id);
+                if (existingAttempt.current_question_index) {
+                    setResumeQuestionIndex(existingAttempt.current_question_index);
+                }
                 setStartExam(true); // Auto-resume if existing attempt
             }
 
@@ -204,7 +208,12 @@ export default function ExamPage() {
 
     return (
         <div className={styles.container}>
-            <TestPlayer exam={exam} questions={questions} attemptId={currentAttemptId || undefined} />
+            <TestPlayer
+                exam={exam}
+                questions={questions}
+                attemptId={currentAttemptId || undefined}
+                initialIndex={resumeQuestionIndex}
+            />
         </div>
     );
 }
