@@ -6,7 +6,6 @@ import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { WelcomeHeader } from "@/components/dashboard/WelcomeHeader";
-import { TrialIndicator } from "@/components/dashboard/TrialIndicator";
 import { TrialResultCard } from "@/components/dashboard/TrialResultCard";
 import { StatsGrid } from "@/components/dashboard/StatsGrid";
 import { ExamPreviewGrid } from "@/components/dashboard/ExamPreviewGrid";
@@ -93,63 +92,32 @@ export default function Dashboard() {
                         avgTime: avgTimeMinutes > 0 ? avgTimeMinutes : "—",
                     });
                 } else {
-                    // Check if trial used from profiles table
-                    const { data: profile } = await supabase
-                        .from("profiles")
-                        .select("trial_used")
-                        .eq("id", user.id)
-                        .single();
-
-                    const trialUsed = profile?.trial_used || false;
-
-                    if (trialUsed) {
-                        // State 2: Trial Completed
-                        setState("trial_completed");
-
-                        // Load trial attempt - get trial mock first
-                        const { data: trialMock } = await supabase
-                            .from("mocks")
-                            .select("id")
-                            .eq("is_trial", true)
-                            .single();
-
-                        if (trialMock) {
-                            const { data: attempt } = await supabase
-                                .from("attempts")
-                                .select("*, mocks(total_questions)")
-                                .eq("user_id", user.id)
-                                .eq("mock_id", trialMock.id)
-                                .eq("status", "submitted")
-                                .order("created_at", { ascending: false })
-                                .limit(1)
-                                .single();
-
-                            if (attempt) {
-                                const totalQuestions = (attempt.mocks as any)?.total_questions || 45;
-                                const timeTaken = attempt.elapsed_seconds ||
-                                    (attempt.finished_at && attempt.started_at
-                                        ? (new Date(attempt.finished_at).getTime() - new Date(attempt.started_at).getTime()) / 1000
-                                        : 0);
-
-                                setTrialAttempt({
-                                    score: attempt.score || 0,
-                                    total_questions: totalQuestions,
-                                    time_taken_seconds: timeTaken,
-                                    percentile: undefined, // Can be calculated later
-                                });
-                            }
-                        }
-                    } else {
-                        // State 1: Trial Available
-                        setState("trial_available");
-                    }
+                    // No purchase - show trial available state (trials can be repeated)
+                    setState("trial_available");
                 }
 
-                // Load mock exams for preview
-                const { data: mocks } = await supabase
+                // Load mock mocks for preview
+                // Filter by discipline if available
+                const { data: profile } = await supabase
+                    .from("profiles")
+                    .select("discipline")
+                    .eq("id", user.id)
+                    .single();
+
+                const userDiscipline = profile?.discipline;
+
+                let mocksQuery = supabase
                     .from("mocks")
                     .select("*")
                     .order("created_at", { ascending: false });
+
+                if (userDiscipline) {
+                    // Fetch mocks that match discipline OR are trials (if trial is global, but requirement says trial is discipline specific)
+                    // Requirement: "mocks.discipline = profiles.discipline (and include discipline-specific trials only)"
+                    mocksQuery = mocksQuery.eq('discipline', userDiscipline);
+                }
+
+                const { data: mocks } = await mocksQuery;
 
                 if (mocks) {
                     // Find trial mock
@@ -227,7 +195,6 @@ export default function Dashboard() {
                 {/* STATE 1: Trial Available or In Progress */}
                 {state === "trial_available" && (
                     <>
-                        <TrialIndicator used={false} showNoCardRequired />
 
                         <div className={styles.primaryAction}>
                             <div className={styles.buttonsContainer}>
@@ -286,7 +253,6 @@ export default function Dashboard() {
                 {/* STATE 2: Trial Completed */}
                 {state === "trial_completed" && (
                     <>
-                        <TrialIndicator used={true} />
 
                         {trialAttempt && (
                             <TrialResultCard

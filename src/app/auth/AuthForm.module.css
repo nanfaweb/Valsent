@@ -127,3 +127,64 @@
 .footer a:hover {
     text-decoration: underline;
 }
+
+.disciplineParams {
+    margin-top: 0.25rem;
+}
+
+.radioGroup {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.radioLabel {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem;
+    background: #F9FAFB;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.radioLabel:hover {
+    background: #F3F4F6;
+    border-color: #D1D5DB;
+}
+
+.radioLabel.selected {
+    background: rgba(161, 99, 130, 0.1);
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 1px var(--secondary);
+}
+
+.radioInput {
+    appearance: none;
+    margin: 0;
+    width: 1rem;
+    height: 1rem;
+    border: 1.5px solid #9CA3AF;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+}
+
+.radioInput:checked {
+    border-color: var(--secondary);
+    background: var(--secondary);
+    box-shadow: inset 0 0 0 2px white;
+}
+
+.radioText {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--foreground);
+}
+
+.helperText {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+}

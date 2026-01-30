@@ -73,19 +73,9 @@ export default function ExamPage() {
             if (qData) {
                 // Map DB type to UI section
                 const mappedQuestions = qData.map((q: any) => {
-                    let section = 'Mathematics'; // default
-
-                    if (q.type === 'mcq') {
-                        // For MCQ, use the section field directly
-                        section = q.section || 'Mathematics';
-                    } else if (q.type === 'eng') {
-                        // Legacy support for 'eng' type
-                        section = 'English';
-                    } else if (q.type === 'math') {
-                        // Legacy support for 'math' type
-                        section = 'Mathematics';
-                    }
-
+                    // Trust the section column. Default to 'Mathematics' if null/empty.
+                    // This handles BCS/BBA unification and legacy types if data was migrated.
+                    const section = q.section || 'Mathematics';
                     return { ...q, section };
                 });
                 setQuestions(mappedQuestions);

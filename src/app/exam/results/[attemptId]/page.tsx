@@ -104,8 +104,8 @@ export default function ResultHistoryPage() {
                         choices: q.choices, // Database stores jsonb, supabase returns object/array
                         correct_answer: q.correct_answer,
                         type: q.type, // 'mcq' usually
-                        // Strictly use type field as per user instruction
-                        section: q.type === 'mcq' ? (q.section || 'Mathematics') : (q.type === 'eng' ? 'English' : 'Mathematics'),
+                        // Trust the section column. 
+                        section: q.section || 'Mathematics',
                         explanation: q.explanation // If exists
                     }));
 

@@ -8,14 +8,16 @@ import styles from "./AuthForm.module.css";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Mail, Lock, Loader2, User } from "lucide-react";
+import { Mail, Lock, Loader2, User, GraduationCap } from "lucide-react";
 
 type AuthMode = "signin" | "signup";
+type Discipline = "bba" | "bcs";
 
 export const AuthForm = ({ mode }: { mode: AuthMode }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [fullName, setFullName] = useState("");
+    const [discipline, setDiscipline] = useState<Discipline | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
@@ -27,7 +29,11 @@ export const AuthForm = ({ mode }: { mode: AuthMode }) => {
 
         try {
             if (mode === "signup") {
-                const { error } = await supabase.auth.signUp({
+                if (!discipline) {
+                    throw new Error("Please select a discipline.");
+                }
+
+                const { data, error } = await supabase.auth.signUp({
                     email,
                     password,
                     options: {
@@ -37,10 +43,39 @@ export const AuthForm = ({ mode }: { mode: AuthMode }) => {
                     },
                 });
                 if (error) throw error;
+
+                // Create Profile
+                if (data.user) {
+                    try {
+                        const response = await fetch('/api/profiles/create', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                userId: data.user.id,
+                                discipline: discipline
+                            })
+                        });
+
+                        if (!response.ok) {
+                            console.error("Failed to create profile via API");
+                            // Fallback or just proceed? 
+                            // If API fails, AuthGuard/Middleware should catch them on dashboard and redirect to onboarding anyway.
+                        }
+                    } catch (apiError) {
+                        console.error("Profile API error:", apiError);
+                    }
+                }
+
                 // Check if email confirmation is required, usually Supabase default.
                 // For this demo, we assume maybe usage of "Auto confirm" is OFF, 
                 // but user prompt didn't specify. We'll handle generic success.
-                alert("Check your email for the confirmation link!");
+                // Redirect to dashboard immediately if session is active
+                if (data.session) {
+                    router.push("/dashboard");
+                } else {
+                    alert("Check your email for the confirmation link!");
+                }
+
             } else {
                 const { error } = await supabase.auth.signInWithPassword({
                     email,
@@ -89,21 +124,54 @@ export const AuthForm = ({ mode }: { mode: AuthMode }) => {
                 {error && <div className={styles.error}>{error}</div>}
 
                 {mode === "signup" && (
-                    <div className={styles.inputGroup}>
-                        <label htmlFor="fullName">Full Name</label>
-                        <div className={styles.inputWrapper}>
-                            <User className={styles.icon} size={18} />
-                            <input
-                                id="fullName"
-                                type="text"
-                                required
-                                placeholder="John Doe"
-                                value={fullName}
-                                onChange={(e) => setFullName(e.target.value)}
-                                className={styles.input}
-                            />
+                    <>
+                        <div className={styles.inputGroup}>
+                            <label htmlFor="fullName">Full Name</label>
+                            <div className={styles.inputWrapper}>
+                                <User className={styles.icon} size={18} />
+                                <input
+                                    id="fullName"
+                                    type="text"
+                                    required
+                                    placeholder="John Doe"
+                                    value={fullName}
+                                    onChange={(e) => setFullName(e.target.value)}
+                                    className={styles.input}
+                                />
+                            </div>
                         </div>
-                    </div>
+
+                        <div className={styles.inputGroup}>
+                            <label>Discipline</label>
+                            <div className={styles.disciplineParams}>
+                                <div className={styles.radioGroup}>
+                                    <label className={`${styles.radioLabel} ${discipline === 'bba' ? styles.selected : ''}`}>
+                                        <input
+                                            type="radio"
+                                            name="discipline"
+                                            value="bba"
+                                            checked={discipline === 'bba'}
+                                            onChange={() => setDiscipline('bba')}
+                                            className={styles.radioInput}
+                                        />
+                                        <span className={styles.radioText}>BBA</span>
+                                    </label>
+                                    <label className={`${styles.radioLabel} ${discipline === 'bcs' ? styles.selected : ''}`}>
+                                        <input
+                                            type="radio"
+                                            name="discipline"
+                                            value="bcs"
+                                            checked={discipline === 'bcs'}
+                                            onChange={() => setDiscipline('bcs')}
+                                            className={styles.radioInput}
+                                        />
+                                        <span className={styles.radioText}>BCS</span>
+                                    </label>
+                                </div>
+                                <p className={styles.helperText}>* We tailor available mock exams based on your discipline.</p>
+                            </div>
+                        </div>
+                    </>
                 )}
 
                 <div className={styles.inputGroup}>

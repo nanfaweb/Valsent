@@ -388,7 +388,7 @@ export const TestPlayer = ({ exam, questions, attemptId, initialIndex = 0 }: Tes
                         <h3 className={styles.questionText}>{currentQ.question_text}</h3>
 
                         <div className={styles.choices}>
-                            {["mcq", "math", "eng"].includes(currentQ.type) && currentQ.choices?.map((choice, idx) => (
+                            {currentQ.choices && currentQ.choices.length > 0 && currentQ.choices.map((choice, idx) => (
                                 <div
                                     key={idx}
                                     className={`${styles.choice} ${answers[currentQ.id] === choice ? styles.selected : ""}`}

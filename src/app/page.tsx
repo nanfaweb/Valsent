@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { PricingCard } from "@/components/ui/PricingCard";
 import styles from "./page.module.css";
-import { BookOpen, Clock, Trophy, Quote } from "lucide-react";
+import { BookOpen, Clock, Trophy } from "lucide-react";
 
 export default function Home() {
   return (
@@ -67,141 +67,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className={styles.testimonials}>
-        <div className={styles.container}>
-          <div className={styles.sectionHeader}>
-            <h2>Student Success Stories</h2>
-            <p>See how Valsent has helped students achieve their university dreams</p>
-          </div>
-          <div className={styles.testimonialsGrid}>
-            {/* Featured Testimonial - Ali Khan */}
-            <div className={`${styles.testimonialCard} ${styles.featuredTestimonial}`}>
-              <div className={styles.quoteIcon}>
-                <Quote size={32} />
-              </div>
-              <p className={styles.quote}>
-                "Valsent was a game changer for me. The timed mocks helped me manage my time perfectly during the actual exam. I went from scoring 60% in practice to acing my LUMS entry test!"
-              </p>
-              <div className={styles.author}>
-                <div className={styles.avatarImage}>
-                  <Image
-                    src="/testimonial1.jpeg"
-                    alt="Ali Khan"
-                    width={64}
-                    height={64}
-                    className={styles.avatarImg}
-                  />
-                </div>
-                <div className={styles.authorInfo}>
-                  <h4>Ali Khan</h4>
-                  <span>LUMS Student - BBA Program</span>
-                </div>
-              </div>
-            </div>
 
-            {/* Testimonial 2 - Sara Ahmed */}
-            <div className={styles.testimonialCard}>
-              <div className={styles.quoteIcon}>
-                <Quote size={24} />
-              </div>
-              <p className={styles.quote}>
-                "The analytics showed me exactly where I was losing marks. The detailed breakdown helped me focus on my weak areas. Highly recommended!"
-              </p>
-              <div className={styles.author}>
-                <div className={styles.avatarImage}>
-                  <Image
-                    src="/testimonial2.png"
-                    alt="Sara Ahmed"
-                    width={56}
-                    height={56}
-                    className={styles.avatarImg}
-                  />
-                </div>
-                <div className={styles.authorInfo}>
-                  <h4>Sara Ahmed</h4>
-                  <span>NUST Student</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Testimonial 3 - Hassan Raza */}
-            <div className={styles.testimonialCard}>
-              <div className={styles.quoteIcon}>
-                <Quote size={24} />
-              </div>
-              <p className={styles.quote}>
-                "I practiced with Valsent for just 3 weeks and saw a massive improvement in my speed and accuracy. The realistic exam interface really prepared me."
-              </p>
-              <div className={styles.author}>
-                <div className={styles.avatarImage}>
-                  <Image
-                    src="/testimonial3.png"
-                    alt="Hassan Raza"
-                    width={56}
-                    height={56}
-                    className={styles.avatarImg}
-                  />
-                </div>
-                <div className={styles.authorInfo}>
-                  <h4>Hassan Raza</h4>
-                  <span>IBA Student</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Testimonial 4 - Fatima Malik */}
-            <div className={styles.testimonialCard}>
-              <div className={styles.quoteIcon}>
-                <Quote size={24} />
-              </div>
-              <p className={styles.quote}>
-                "The subject-wise practice questions were incredibly helpful. I could focus on Mathematics which was my weakest subject. Now I'm at LUMS!"
-              </p>
-              <div className={styles.author}>
-                <div className={styles.avatarImage}>
-                  <Image
-                    src="/testimonial4.png"
-                    alt="Fatima Malik"
-                    width={56}
-                    height={56}
-                    className={styles.avatarImg}
-                  />
-                </div>
-                <div className={styles.authorInfo}>
-                  <h4>Fatima Malik</h4>
-                  <span>LUMS Student</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Testimonial 5 - Usman Sheikh */}
-            <div className={styles.testimonialCard}>
-              <div className={styles.quoteIcon}>
-                <Quote size={24} />
-              </div>
-              <p className={styles.quote}>
-                "The performance tracking feature helped me understand my progress. Seeing my scores improve week by week gave me the confidence I needed."
-              </p>
-              <div className={styles.author}>
-                <div className={styles.avatarImage}>
-                  <Image
-                    src="/testimonial5.png"
-                    alt="Usman Sheikh"
-                    width={56}
-                    height={56}
-                    className={styles.avatarImg}
-                  />
-                </div>
-                <div className={styles.authorInfo}>
-                  <h4>Usman Sheikh</h4>
-                  <span>GIKI Student</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* FAQ Section */}
       <section id="faq" className={styles.faq}>

@@ -10,14 +10,28 @@ const supabase = createClient(
 );
 
 export async function startTrialAttempt(userId: string) {
-    // 1. Get Trial Mock ID
-    const { data: trialMock } = await supabase
-        .from('mocks')
-        .select('id, duration_minutes')
-        .eq('is_trial', true)
+    // 0. Get user discipline
+    const { data: profile } = await supabase
+        .from('profiles')
+        .select('discipline')
+        .eq('id', userId)
         .single();
 
-    if (!trialMock) throw new Error("Trial mock not found");
+    const userDiscipline = profile?.discipline;
+
+    // 1. Get Trial Mock ID
+    let query = supabase
+        .from('mocks')
+        .select('id, duration_minutes')
+        .eq('is_trial', true);
+
+    if (userDiscipline) {
+        query = query.eq('discipline', userDiscipline);
+    }
+
+    const { data: trialMock } = await query.limit(1).single();
+
+    if (!trialMock) throw new Error("Trial mock not found for your discipline");
 
     // 2. Check for existing attempt
     const { data: existingAttempt } = await supabase
@@ -132,11 +146,26 @@ export async function getAvailableExams(userId: string) {
         .eq("status", "active")
         .single();
 
-    // Fetch all exams
-    const { data: exams } = await supabase
+    // Check user discipline
+    const { data: profile } = await supabase
+        .from("profiles")
+        .select("discipline")
+        .eq("id", userId)
+        .single();
+
+    const userDiscipline = profile?.discipline;
+
+    // Fetch all exams filtered by discipline
+    let query = supabase
         .from("mocks")
         .select("*")
         .order("created_at", { ascending: true });
+
+    if (userDiscipline) {
+        query = query.eq('discipline', userDiscipline);
+    }
+
+    const { data: exams } = await query;
 
     if (!exams) return [];
 
@@ -172,13 +201,13 @@ export async function getAvailableExams(userId: string) {
         };
     }));
 
-     // Sort exams: Trial Mock first, then by Mock Exam Number
-     examsWithStatus.sort((a, b) => {
-        // 1. "BBA Trial Mock" always first
-        if (a.title === "BBA Trial Mock") return -1;
-        if (b.title === "BBA Trial Mock") return 1;
+    // Sort exams: Trial Mock first, then by Mock Exam Number
+    examsWithStatus.sort((a, b) => {
+        // 1. Trial Mock always first (checks title)
+        if (a.title.includes("Trial Mock")) return -1;
+        if (b.title.includes("Trial Mock")) return 1;
 
-        // 2. "BBA Mock Exam X" sorting
+        // 2. Mock Exam X sorting
         const getMockNumber = (title: string) => {
             const match = title.match(/Mock Exam (\d+)/i);
             return match ? parseInt(match[1]) : 999999;
