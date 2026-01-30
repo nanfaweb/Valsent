@@ -33,21 +33,23 @@
     z-index: 10;
 }
 
-.grid {
-    display: grid;
-    grid-template-columns: 1fr 400px;
-    gap: 4rem;
-    align-items: start;
+.pricingGrid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-top: 2rem;
+    align-items: center;
 }
 
 .details {
     background: white;
-    padding: 2rem;
+    padding: 2.5rem;
     border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    margin-top: 0rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
     border: 2px solid var(--primary);
-    /* Offset for desktop alignment */
+    background: linear-gradient(to bottom right, #ffffff, #f8faff);
 }
 
 .trialCard {
@@ -120,6 +122,10 @@
         grid-template-columns: 1fr;
         gap: 1.5rem;
     }
+
+    .pricingGrid {
+        grid-template-columns: 1fr;
+    }
 }
 
 .details h2 {
@@ -136,21 +142,15 @@
 
 .featureList {
     list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
 }
 
 .featureList li {
     display: flex;
     gap: 1rem;
     align-items: flex-start;
-}
-
-.icon {
-    color: var(--secondary);
-    margin-top: 4px;
-    flex-shrink: 0;
 }
 
 .featureList h3 {
@@ -165,26 +165,13 @@
     line-height: 1.5;
 }
 
-.cardWrapper {
-    display: flex;
-    justify-content: center;
+.icon {
+    color: var(--secondary);
+    margin-top: 4px;
+    flex-shrink: 0;
 }
 
 @media (max-width: 900px) {
-    .grid {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-    }
-
-    .details {
-        margin-top: 0;
-        order: 2;
-    }
-
-    .cardWrapper {
-        order: 1;
-    }
-
     .hero {
         clip-path: none;
         padding-bottom: 4rem;
@@ -192,5 +179,10 @@
 
     .container {
         margin-top: 2rem;
+    }
+
+    .featureList {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
     }
 }
