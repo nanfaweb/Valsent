@@ -59,9 +59,7 @@ export default function Dashboard() {
                         .select("*")
                         .eq("user_id", user.id);
 
-                    const { data: allMocks } = await supabase
-                        .from("mocks")
-                        .select("*");
+
 
                     const avgScore = attempts?.length
                         ? Math.round(attempts.reduce((acc, a) => acc + (a.score || 0), 0) / attempts.length)
@@ -86,7 +84,7 @@ export default function Dashboard() {
                     }
 
                     setStats({
-                        totalExams: allMocks?.length || 0,
+                        totalExams: 11,
                         testsTaken: attempts?.length || 0,
                         avgScore: avgScore || "—",
                         avgTime: avgTimeMinutes > 0 ? avgTimeMinutes : "—",
@@ -227,7 +225,7 @@ export default function Dashboard() {
                         {/* Placeholder stats */}
                         <StatsGrid
                             stats={[
-                                { label: "Mock exams available", value: "20+", icon: "exams" },
+                                { label: "Mock exams available", value: "10+", icon: "exams" },
                                 { label: "Tests taken", value: "—", icon: "taken" },
                                 { label: "Average score", value: "—", icon: "score" },
                                 { label: "Average time", value: "—", icon: "time" },
@@ -285,9 +283,7 @@ export default function Dashboard() {
                 {/* STATE 3: Plan Purchased */}
                 {state === "plan_purchased" && (
                     <>
-                        <div className={styles.confirmationBanner}>
-                            <h2>All mock exams unlocked!</h2>
-                        </div>
+
 
                         <StatsGrid
                             stats={[

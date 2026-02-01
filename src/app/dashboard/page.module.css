@@ -82,26 +82,7 @@
     font-size: var(--text-sm);
 }
 
-.confirmationBanner {
-    background: linear-gradient(135deg, var(--success-light) 0%, white 100%);
-    border: 2px solid var(--success);
-    border-radius: var(--radius-xl);
-    padding: var(--space-6) var(--space-8);
-    margin-bottom: var(--space-8);
-    text-align: center;
-}
 
-.confirmationBanner h2 {
-    font-size: var(--text-2xl);
-    font-weight: var(--font-bold);
-    color: var(--success);
-    margin-bottom: var(--space-2);
-}
-
-.confirmationBanner p {
-    color: var(--foreground);
-    font-size: var(--text-base);
-}
 
 .actions {
     display: flex;

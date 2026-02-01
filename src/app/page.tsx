@@ -1,4 +1,5 @@
 import { HeroActions } from "@/components/landing/HeroActions";
+import { ScreenshotShowcase } from "@/components/landing/ScreenshotShowcase";
 import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { PricingCard } from "@/components/ui/PricingCard";
@@ -51,6 +52,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Screenshot Showcase Section */}
+      <ScreenshotShowcase />
 
       {/* Pricing Section */}
       <section className={styles.pricing}>
