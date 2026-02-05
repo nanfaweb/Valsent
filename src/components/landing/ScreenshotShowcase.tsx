@@ -14,7 +14,7 @@ const screenshots = [
     {
         src: "/screenshots/ss2.png",
         title: "Detailed Question Review",
-        description: "Review every question with correct answers and explanations.",
+        description: "Review every question with correct answers.",
     },
     {
         src: "/screenshots/ss3.png",

@@ -30,7 +30,7 @@ export const PricingCard = ({ isCheckout = false, type = 'bba' }: PricingCardPro
                     features: [
                         "1 Full-Length Mock Exam",
                         "Performance Analytics",
-                        "Topic-wise Practice",
+                        "Section-wise Practice",
                         "Unlimited Retakes",
                         "Account required"
                     ],
@@ -41,10 +41,27 @@ export const PricingCard = ({ isCheckout = false, type = 'bba' }: PricingCardPro
                     )
                 };
             case 'bba':
+                return {
+                    badge: "Coming Soon",
+                    title: "BBA Access Pass",
+                    description: "Everything you need to ace your entrance exam.",
+                    price: "2,999",
+                    currency: "PKR",
+                    original: "PKR 3,499",
+                    features: [
+                        "10+ Mock Exams with Free Trial",
+                        "Performance Analytics",
+                        "Section-wise Practice",
+                        "Real Exam Simulation",
+                        "24/7 Access"
+                    ],
+                    isLocked: true,
+                    cta: null
+                };
             case 'bcs':
                 return {
                     badge: "Most Popular",
-                    title: type === 'bba' ? "BBA Access Pass" : "BCS Access Pass",
+                    title: "BCS Access Pass",
                     description: "Everything you need to ace your entrance exam.",
                     price: "2,999",
                     currency: "PKR",
@@ -56,6 +73,7 @@ export const PricingCard = ({ isCheckout = false, type = 'bba' }: PricingCardPro
                         "Real Exam Simulation",
                         "24/7 Access"
                     ],
+                    isLocked: false,
                     cta: isCheckout ? (
                         <CheckoutButton />
                     ) : (
@@ -73,6 +91,7 @@ export const PricingCard = ({ isCheckout = false, type = 'bba' }: PricingCardPro
                     currency: "",
                     original: null,
                     features: [],
+                    isLocked: false,
                     cta: null
                 };
         }
@@ -81,30 +100,44 @@ export const PricingCard = ({ isCheckout = false, type = 'bba' }: PricingCardPro
     const content = getContent();
 
     return (
-        <Card className={`${styles.container} ${isTrial ? styles.trial : ''}`}>
-            {content.badge && <div className={styles.badge}>{content.badge}</div>}
+        <Card className={`${styles.container} ${isTrial ? styles.trial : ''} ${content.isLocked ? styles.soon : ''}`}>
+            {content.badge && (
+                <div className={`${styles.badge} ${content.isLocked ? styles.lockedBadge : ''}`}>
+                    {content.isLocked && <Lock size={12} />}
+                    {content.badge}
+                </div>
+            )}
             <h3 className={styles.title}>{content.title}</h3>
             <p className={styles.description}>{content.description}</p>
 
-            <div className={styles.price}>
-                {content.currency && <span className={styles.currency}>{content.currency}</span>}
-                <span className={styles.amount}>{content.price}</span>
-                {content.original && <span className={styles.original}>{content.original}</span>}
-            </div>
-
-            <ul className={styles.features}>
-                {content.features.map((feature, i) => (
-                    <li key={i} className={styles.feature}>
-                        <Check size={18} className={styles.check} />
-                        {feature}
-                    </li>
-                ))}
-            </ul>
-
-            {content.cta && (
-                <div className={styles.cta}>
-                    {content.cta}
+            {content.isLocked ? (
+                <div className={styles.lockedContent}>
+                    <Lock size={64} className={styles.mainLock} />
+                    <p className={styles.lockCaption}>Stay tuned for Round 2</p>
                 </div>
+            ) : (
+                <>
+                    <div className={styles.price}>
+                        {content.currency && <span className={styles.currency}>{content.currency}</span>}
+                        <span className={styles.amount}>{content.price}</span>
+                        {content.original && <span className={styles.original}>{content.original}</span>}
+                    </div>
+
+                    <ul className={styles.features}>
+                        {content.features.map((feature, i) => (
+                            <li key={i} className={styles.feature}>
+                                <Check size={18} className={styles.check} />
+                                {feature}
+                            </li>
+                        ))}
+                    </ul>
+
+                    {content.cta && (
+                        <div className={styles.cta}>
+                            {content.cta}
+                        </div>
+                    )}
+                </>
             )}
         </Card>
     );

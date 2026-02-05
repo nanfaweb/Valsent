@@ -65,8 +65,8 @@ export default function Home() {
           </div>
           <div className={styles.pricingWrapper}>
             <PricingCard type="trial" />
-            <PricingCard type="bba" />
             <PricingCard type="bcs" />
+            <PricingCard type="bba" />
           </div>
         </div>
       </section>

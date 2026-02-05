@@ -53,7 +53,7 @@ export default function PricingPage() {
                         <li>
                             <CheckCircle className={styles.icon} />
                             <div>
-                                <h3>Topic-wise Practice Questions</h3>
+                                <h3>Section-wise Practice Questions</h3>
                                 <p>Master specific subjects with focused question banks.</p>
                             </div>
                         </li>
@@ -75,8 +75,8 @@ export default function PricingPage() {
                 </div>
 
                 <div className={styles.pricingGrid}>
-                    <PricingCard type="bba" isCheckout={true} />
                     <PricingCard type="bcs" isCheckout={true} />
+                    <PricingCard type="bba" isCheckout={true} />
                 </div>
             </div>
         </main>
