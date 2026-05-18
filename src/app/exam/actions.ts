@@ -231,11 +231,22 @@ export async function startExamAttempt(userId: string, examId: string) {
     // 1. Verify Access
     const { data: exam } = await supabase
         .from("mocks")
-        .select("is_trial, duration_minutes")
+        .select("is_trial, duration_minutes, discipline")
         .eq("id", examId)
         .single();
 
     if (!exam) throw new Error("Exam not found");
+
+    // Verify discipline match
+    const { data: profile } = await supabase
+        .from("profiles")
+        .select("discipline")
+        .eq("id", userId)
+        .single();
+
+    if (profile && exam.discipline && profile.discipline !== exam.discipline) {
+        throw new Error("Access denied: This exam is not in your discipline track.");
+    }
 
     if (!exam.is_trial) {
         const { data: purchase } = await supabase

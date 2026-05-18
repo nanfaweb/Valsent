@@ -41,6 +41,18 @@ export default function ExamRulesPage() {
                 setExam(examData);
 
                 // Check access permissions
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('discipline')
+                    .eq('id', user!.id)
+                    .single();
+
+                if (profile && examData.discipline && profile.discipline !== examData.discipline) {
+                    console.error("Discipline mismatch");
+                    router.push('/dashboard');
+                    return;
+                }
+
                 if (!examData.is_trial) {
                     const { data: purchase } = await supabase
                         .from('purchases')

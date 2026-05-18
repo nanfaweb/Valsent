@@ -42,7 +42,7 @@ export const PricingCard = ({ isCheckout = false, type = 'bba' }: PricingCardPro
                 };
             case 'bba':
                 return {
-                    badge: "Coming Soon",
+                    badge: "Most Popular",
                     title: "BBA Access Pass",
                     description: "Everything you need to ace your entrance exam.",
                     price: "2,999",
@@ -50,13 +50,19 @@ export const PricingCard = ({ isCheckout = false, type = 'bba' }: PricingCardPro
                     original: "PKR 3,499",
                     features: [
                         "10+ Mock Exams with Free Trial",
-                        "Performance Analytics",
+                        "Detailed Performance Analytics",
                         "Section-wise Practice",
                         "Real Exam Simulation",
                         "24/7 Access"
                     ],
-                    isLocked: true,
-                    cta: null
+                    isLocked: false,
+                    cta: isCheckout ? (
+                        <CheckoutButton />
+                    ) : (
+                        <Link href="/pricing" style={{ width: '100%' }}>
+                            <Button size="lg" className={styles.button}> Enroll Now </Button>
+                        </Link>
+                    )
                 };
             case 'bcs':
                 return {

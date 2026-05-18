@@ -44,6 +44,18 @@ export default function ExamPage() {
 
             setExam(examData);
 
+            // Verify discipline match
+            const { data: profile } = await supabase
+                .from("profiles")
+                .select("discipline")
+                .eq("id", user.id)
+                .single();
+
+            if (profile && examData.discipline && profile.discipline !== examData.discipline) {
+                router.push("/dashboard");
+                return;
+            }
+
             // If it's a trial exam, allow access
             // Otherwise, verify purchase
             if (!examData.is_trial) {
