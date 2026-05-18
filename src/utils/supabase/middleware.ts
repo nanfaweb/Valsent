@@ -49,25 +49,36 @@ export async function updateSession(request: NextRequest) {
   const isApiProfilePath = request.nextUrl.pathname === '/api/profiles/create'
 
   if (user) {
-    // If user is logged in, check if they have a profile/discipline
-    // We only need to check this if they are accessing a protected path OR if they are just logging in (e.g. valid session)
-    // Avoid blocking APIS or assets
+    const isAdmin = user.email === process.env.ADMIN_EMAIL;
 
-    // Performance optimization: Maybe only check on protected paths?
-    // But requirement says: "If a logged-in user ... redirect them to an onboarding ... and force selection before allowing access to protected app pages"
-    // Also: "Google OAuth users ... redirected to /onboarding/discipline"
-
-    if (isProtectedPath) {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('discipline')
-        .eq('id', user.id)
-        .single()
-
-      if (!profile || !profile.discipline) {
+    if (isAdmin) {
+      // If admin attempts to access any protected or onboarding path outside /admin, redirect to /admin
+      if ((isProtectedPath || isOnboardingPath) && !request.nextUrl.pathname.startsWith('/admin')) {
         const url = request.nextUrl.clone()
-        url.pathname = '/onboarding/discipline'
+        url.pathname = '/admin'
         return NextResponse.redirect(url)
+      }
+    } else {
+      // Protect /admin from non-admin users
+      if (request.nextUrl.pathname.startsWith('/admin')) {
+        const url = request.nextUrl.clone()
+        url.pathname = '/dashboard'
+        return NextResponse.redirect(url)
+      }
+
+      // Check onboarding status for regular users
+      if (isProtectedPath) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('discipline')
+          .eq('id', user.id)
+          .single()
+
+        if (!profile || !profile.discipline) {
+          const url = request.nextUrl.clone()
+          url.pathname = '/onboarding/discipline'
+          return NextResponse.redirect(url)
+        }
       }
     }
   } else if (isProtectedPath) {

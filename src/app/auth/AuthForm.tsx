@@ -71,7 +71,11 @@ export const AuthForm = ({ mode }: { mode: AuthMode }) => {
                 // but user prompt didn't specify. We'll handle generic success.
                 // Redirect to dashboard immediately if session is active
                 if (data.session) {
-                    router.push("/dashboard");
+                    if (email.toLowerCase().trim() === 'admin@valsent.com') {
+                        router.push("/admin");
+                    } else {
+                        router.push("/dashboard");
+                    }
                 } else {
                     alert("Check your email for the confirmation link!");
                 }
@@ -82,7 +86,12 @@ export const AuthForm = ({ mode }: { mode: AuthMode }) => {
                     password,
                 });
                 if (error) throw error;
-                router.push("/dashboard");
+                
+                if (email.toLowerCase().trim() === 'admin@valsent.com') {
+                    router.push("/admin");
+                } else {
+                    router.push("/dashboard");
+                }
             }
         } catch (err: any) {
             setError(err.message);

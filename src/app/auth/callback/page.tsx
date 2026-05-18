@@ -15,7 +15,12 @@ export default function AuthCallbackPage() {
         const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
             if (event === "SIGNED_IN" || session) {
                 // Successful login
-                router.push("/dashboard");
+                const userEmail = session?.user?.email;
+                if (userEmail?.toLowerCase() === 'admin@valsent.com') {
+                    router.push("/admin");
+                } else {
+                    router.push("/dashboard");
+                }
             }
         });
 
