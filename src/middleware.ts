@@ -12,6 +12,8 @@ export const config = {
         '/account/:path*',
         '/results/:path*',
         '/exam/:path*',
+        '/payment/:path*',
+        '/admin/:path*',
         /*
          * Match all request paths except for the ones starting with:
          * - _next/static (static files)

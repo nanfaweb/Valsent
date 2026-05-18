@@ -40,6 +40,8 @@ export async function updateSession(request: NextRequest) {
     '/exams',
     '/account',
     '/results',
+    '/payment',
+    '/admin',
   ]
 
   const isProtectedPath = protectedPaths.some(path => request.nextUrl.pathname.startsWith(path)) || request.nextUrl.pathname.startsWith('/exam/')

@@ -1,0 +1,253 @@
+/* ===== Layout ===== */
+.main {
+    min-height: calc(100vh - var(--header-height));
+    padding: var(--space-10) var(--space-4);
+}
+
+.container {
+    max-width: 780px;
+    margin: 0 auto;
+}
+
+/* ===== Hero / Pricing ===== */
+.heroSection {
+    text-align: center;
+    margin-bottom: var(--space-12);
+}
+
+.heroTitle {
+    font-size: var(--text-4xl);
+    font-weight: var(--font-extrabold);
+    color: var(--primary);
+    margin-bottom: var(--space-2);
+}
+
+.heroSubtitle {
+    font-size: var(--text-lg);
+    color: var(--text-muted);
+    margin-bottom: var(--space-8);
+    max-width: var(--max-width-prose);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.pricingCard {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-2xl);
+    padding: var(--space-8) var(--space-6);
+    box-shadow: var(--shadow-lg);
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+    width: 100%;
+    max-width: 440px;
+}
+
+.planBadge {
+    display: inline-block;
+    background: var(--primary);
+    color: #fff;
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    padding: var(--space-1) var(--space-4);
+    border-radius: var(--radius-full);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.priceRow {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+}
+
+.originalPrice {
+    font-size: var(--text-lg);
+    color: var(--text-muted);
+    text-decoration: line-through;
+}
+
+.currentPrice {
+    font-size: var(--text-4xl);
+    font-weight: var(--font-extrabold);
+    color: var(--primary);
+}
+
+.featureList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.featureItem {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-base);
+    color: var(--foreground);
+}
+
+.checkIcon {
+    color: var(--success);
+    flex-shrink: 0;
+}
+
+/* ===== Payment Methods ===== */
+.methodsSection {
+    margin-bottom: var(--space-12);
+}
+
+.sectionTitle {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-bold);
+    color: var(--foreground);
+    text-align: center;
+    margin-bottom: var(--space-6);
+}
+
+.methodsGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6);
+}
+
+.methodCard {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-6);
+    box-shadow: var(--shadow-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    transition: box-shadow var(--transition-base), transform var(--transition-base);
+}
+
+.methodCard:hover {
+    box-shadow: var(--shadow-xl);
+    transform: translateY(-2px);
+}
+
+.methodHeader {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.methodHeader h3 {
+    font-size: var(--text-xl);
+    font-weight: var(--font-semibold);
+    color: var(--foreground);
+}
+
+.methodIcon {
+    color: var(--primary);
+}
+
+.methodBody {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.detailRow {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.detailLabel {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: var(--font-medium);
+}
+
+.detailValue {
+    font-size: var(--text-base);
+    font-weight: var(--font-semibold);
+    color: var(--foreground);
+    word-break: break-all;
+}
+
+.methodInstruction {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    line-height: 1.5;
+    border-top: 1px solid var(--border-light);
+    padding-top: var(--space-3);
+    margin-top: auto;
+}
+
+/* ===== WhatsApp CTA ===== */
+.ctaSection {
+    text-align: center;
+    padding: var(--space-8) 0;
+}
+
+.whatsappBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    background: #25D366;
+    color: #fff;
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    padding: var(--space-4) var(--space-8);
+    border-radius: var(--radius-xl);
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.whatsappBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.45);
+    color: #fff;
+}
+
+.ctaNote {
+    margin-top: var(--space-4);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+}
+
+.ctaSecondary {
+    margin-top: var(--space-1);
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    opacity: 0.75;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 640px) {
+    .heroTitle {
+        font-size: var(--text-2xl);
+    }
+
+    .currentPrice {
+        font-size: var(--text-3xl);
+    }
+
+    .methodsGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .whatsappBtn {
+        width: 100%;
+        font-size: var(--text-base);
+        padding: var(--space-3) var(--space-6);
+    }
+}
