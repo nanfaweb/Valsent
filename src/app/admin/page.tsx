@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { createServerSupabaseClient } from '@/utils/supabase/server';
-import { getAdminStats, getAllPurchases } from './actions';
+import { getAdminStats, getAllPurchases, getPaymentRequests } from './actions';
 import AdminDashboard from './AdminDashboard';
 import styles from './admin.module.css';
 
@@ -23,9 +23,10 @@ export default async function AdminPage() {
     }
 
     // 3. Fetch initial data server-side
-    const [stats, purchases] = await Promise.all([
+    const [stats, purchases, requests] = await Promise.all([
         getAdminStats(),
         getAllPurchases(),
+        getPaymentRequests(),
     ]);
 
     const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '';
@@ -37,6 +38,7 @@ export default async function AdminPage() {
                 <AdminDashboard
                     initialStats={stats}
                     initialPurchases={purchases}
+                    initialRequests={requests}
                     whatsappNumber={whatsappNumber}
                 />
             </div>

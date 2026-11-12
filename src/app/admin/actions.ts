@@ -1,7 +1,21 @@
 'use server';
 
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { createServerSupabaseClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
+
+/**
+ * Server actions are public HTTP endpoints, so every admin action must verify
+ * the caller itself — checking only on the /admin page is not enough.
+ */
+async function requireAdmin(): Promise<void> {
+    const supabase = await createServerSupabaseClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    const adminEmail = process.env.ADMIN_EMAIL;
+    if (!user || !adminEmail || user.email !== adminEmail) {
+        throw new Error('Not authorized');
+    }
+}
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -25,6 +39,21 @@ export interface PurchaseRow {
     status: string;
 }
 
+export interface PaymentRequestRow {
+    id: string;
+    userId: string;
+    userEmail: string;
+    discipline: 'bba' | 'bcs';
+    method: 'easypaisa' | 'jazzcash' | 'bank';
+    txnId: string;
+    senderNumber: string;
+    amountPkr: number;
+    status: 'pending' | 'approved' | 'rejected';
+    adminNote: string | null;
+    createdAt: string;
+    referenceCode: string;
+}
+
 export interface AdminStats {
     totalActivePurchases: number;
     totalUsers: number;
@@ -37,6 +66,7 @@ export interface AdminStats {
 export async function searchUser(
     email: string
 ): Promise<{ found: false } | { found: true; user: UserSearchResult }> {
+    await requireAdmin();
     const trimmed = email.toLowerCase().trim();
     if (!trimmed) return { found: false };
 
@@ -90,6 +120,7 @@ export async function grantAccess(
     paymentMethod: 'easypaisa' | 'bank' | 'other',
     notes: string
 ): Promise<{ success: boolean; error?: string }> {
+    await requireAdmin();
     const planId = discipline === 'bba' 
         ? '4f301764-ba16-4b88-ac1f-127d581bc3e4' 
         : '9aa3b281-ecf4-43b5-9319-5eb432a62394';
@@ -118,6 +149,7 @@ export async function grantAccess(
 export async function revokePurchase(
     purchaseId: string
 ): Promise<{ success: boolean; error?: string }> {
+    await requireAdmin();
     const { error } = await supabaseAdmin
         .from('purchases')
         .update({ status: 'revoked' })
@@ -136,6 +168,7 @@ export async function revokePurchase(
 /* ------------------------------------------------------------------ */
 
 export async function getAdminStats(): Promise<AdminStats> {
+    await requireAdmin();
     const { count: activePurchases } = await supabaseAdmin
         .from('purchases')
         .select('*', { count: 'exact', head: true })
@@ -156,6 +189,7 @@ export async function getAdminStats(): Promise<AdminStats> {
 /* ------------------------------------------------------------------ */
 
 export async function getAllPurchases(): Promise<PurchaseRow[]> {
+    await requireAdmin();
     const { data: purchases, error } = await supabaseAdmin
         .from('purchases')
         .select('id, user_id, plan_id, payment_method, granted_at, notes, status, plans(name)')
@@ -185,4 +219,113 @@ export async function getAllPurchases(): Promise<PurchaseRow[]> {
             status: p.status,
         };
     });
+}
+
+/* ------------------------------------------------------------------ */
+/*  Payment requests (manual EasyPaisa / JazzCash / bank)              */
+/* ------------------------------------------------------------------ */
+
+export async function getPaymentRequests(): Promise<PaymentRequestRow[]> {
+    await requireAdmin();
+
+    const { data, error } = await supabaseAdmin
+        .from('payment_requests')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(200);
+
+    if (error || !data) return [];
+
+    const { data: { users } } = await supabaseAdmin.auth.admin.listUsers({ perPage: 1000 });
+    const emailMap = new Map<string, string>();
+    users.forEach((u) => emailMap.set(u.id, u.email ?? 'unknown'));
+
+    return data.map((r) => ({
+        id: r.id,
+        userId: r.user_id,
+        userEmail: emailMap.get(r.user_id) ?? 'unknown',
+        discipline: r.discipline,
+        method: r.method,
+        txnId: r.txn_id,
+        senderNumber: r.sender_number,
+        amountPkr: r.amount_pkr,
+        status: r.status,
+        adminNote: r.admin_note,
+        createdAt: r.created_at,
+        referenceCode: `VAL-${String(r.user_id).slice(0, 6).toUpperCase()}`,
+    }));
+}
+
+/**
+ * Approve a pending request: grants access (same insert as grantAccess) and
+ * marks the request approved. Only call this after you have matched the
+ * transaction ID and amount in the EasyPaisa / JazzCash / bank history.
+ */
+export async function approvePaymentRequest(
+    requestId: string
+): Promise<{ success: boolean; error?: string }> {
+    await requireAdmin();
+
+    const { data: req } = await supabaseAdmin
+        .from('payment_requests')
+        .select('*')
+        .eq('id', requestId)
+        .single();
+
+    if (!req) return { success: false, error: 'Request not found.' };
+    if (req.status !== 'pending') {
+        return { success: false, error: `Already ${req.status}.` };
+    }
+
+    // Don't double-grant if the user already has an active purchase
+    const { data: existing } = await supabaseAdmin
+        .from('purchases')
+        .select('id')
+        .eq('user_id', req.user_id)
+        .eq('status', 'active')
+        .maybeSingle();
+
+    if (!existing) {
+        // 'jazzcash' is stored as 'other' in case purchases.payment_method is constrained
+        const paymentMethod = req.method === 'jazzcash' ? 'other' : req.method;
+        const grant = await grantAccess(
+            req.user_id,
+            req.discipline,
+            paymentMethod,
+            `${req.method} TID ${req.txn_id} from ${req.sender_number} (PKR ${req.amount_pkr})`
+        );
+        if (!grant.success) return grant;
+    }
+
+    const { error } = await supabaseAdmin
+        .from('payment_requests')
+        .update({ status: 'approved', reviewed_at: new Date().toISOString() })
+        .eq('id', requestId);
+
+    if (error) return { success: false, error: error.message };
+
+    revalidatePath('/admin');
+    return { success: true };
+}
+
+export async function rejectPaymentRequest(
+    requestId: string,
+    note: string
+): Promise<{ success: boolean; error?: string }> {
+    await requireAdmin();
+
+    const { error } = await supabaseAdmin
+        .from('payment_requests')
+        .update({
+            status: 'rejected',
+            admin_note: note.trim() || null,
+            reviewed_at: new Date().toISOString(),
+        })
+        .eq('id', requestId)
+        .eq('status', 'pending');
+
+    if (error) return { success: false, error: error.message };
+
+    revalidatePath('/admin');
+    return { success: true };
 }
