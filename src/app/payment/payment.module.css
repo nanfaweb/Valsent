@@ -231,6 +231,137 @@
     opacity: 0.75;
 }
 
+/* ===== QR + reference ===== */
+.qrWrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.qrImage {
+    width: 180px;
+    height: 180px;
+    object-fit: contain;
+    background: #fff;
+    padding: var(--space-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+}
+
+.qrCaption {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+}
+
+.referenceBox {
+    margin-top: var(--space-6);
+    padding: var(--space-4);
+    text-align: center;
+    background: rgba(255, 255, 255, 0.75);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-xl);
+}
+
+.referenceCode {
+    display: block;
+    margin-top: var(--space-1);
+    font-size: var(--text-xl);
+    font-weight: var(--font-semibold);
+    letter-spacing: 1px;
+    color: var(--foreground);
+}
+
+/* ===== Payment details form ===== */
+.paidForm {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    max-width: 480px;
+    margin: var(--space-8) auto 0;
+    padding: var(--space-6);
+    background: rgba(255, 255, 255, 0.75);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+}
+
+.formField {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.formField label {
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    color: var(--foreground);
+}
+
+.formInput {
+    padding: var(--space-3);
+    font-size: var(--text-base);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: #fff;
+    color: var(--foreground);
+}
+
+.submitBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-3) var(--space-6);
+    font-size: var(--text-base);
+    font-weight: var(--font-semibold);
+    color: #fff;
+    background: var(--primary);
+    border: none;
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+}
+
+.submitBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.formSuccess {
+    font-size: var(--text-sm);
+    color: #15803d;
+}
+
+.formError {
+    font-size: var(--text-sm);
+    color: #b91c1c;
+}
+
+.statusBanner {
+    max-width: 480px;
+    margin: var(--space-6) auto 0;
+    padding: var(--space-4);
+    font-size: var(--text-sm);
+    text-align: center;
+    border-radius: var(--radius-xl);
+    background: #fef9c3;
+    color: #854d0e;
+}
+
+.statusBannerRejected {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.spin {
+    animation: paymentSpin 1s linear infinite;
+}
+
+@keyframes paymentSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 640px) {
     .heroTitle {

@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { createServerSupabaseClient } from '@/utils/supabase/server';
 import WhatsAppButton from './WhatsAppButton';
+import PaymentForm from './PaymentForm';
 import styles from './payment.module.css';
 import { CheckCircle, Smartphone, Building2 } from 'lucide-react';
 
@@ -49,7 +50,22 @@ export default async function PaymentPage() {
     const price = plan?.price_pkr ?? 2999;
     const originalPrice = plan?.original_price_pkr ?? 3499;
 
+    // Latest payment request (if any) so we can show pending / rejected state
+    const { data: latestRequest } = await supabase
+        .from('payment_requests')
+        .select('status, admin_note')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+    // Short code the student quotes on WhatsApp so we can find them fast
+    const referenceCode = `VAL-${user.id.slice(0, 6).toUpperCase()}`;
+
     const easypaisaNumber = process.env.NEXT_PUBLIC_EASYPAISA_NUMBER ?? '';
+    const easypaisaQr = process.env.NEXT_PUBLIC_EASYPAISA_QR ?? '';
+    const jazzcashNumber = process.env.NEXT_PUBLIC_JAZZCASH_NUMBER ?? '';
+    const jazzcashQr = process.env.NEXT_PUBLIC_JAZZCASH_QR ?? '';
     const bankIban = process.env.NEXT_PUBLIC_BANK_IBAN ?? '';
     const bankTitle = process.env.NEXT_PUBLIC_BANK_TITLE ?? '';
 
@@ -93,7 +109,7 @@ export default async function PaymentPage() {
 
                 {/* Payment Methods */}
                 <section className={styles.methodsSection}>
-                    <h2 className={styles.sectionTitle}>Choose a Payment Method</h2>
+                    <h2 className={styles.sectionTitle}>Step 1 — Pay PKR {price.toLocaleString()}</h2>
                     <div className={styles.methodsGrid}>
                         {/* EasyPaisa */}
                         <div className={styles.methodCard}>
@@ -111,9 +127,45 @@ export default async function PaymentPage() {
                                     <span className={styles.detailValue}>Valsent</span>
                                 </div>
                             </div>
+                            {easypaisaQr && (
+                                <div className={styles.qrWrap}>
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img src={easypaisaQr} alt="EasyPaisa QR code" className={styles.qrImage} />
+                                    <span className={styles.qrCaption}>Scan with the EasyPaisa app</span>
+                                </div>
+                            )}
                             <p className={styles.methodInstruction}>
-                                Send PKR {price.toLocaleString()} to the number above, then tap the
-                                button below to notify us.
+                                Send exactly PKR {price.toLocaleString()} to the number above
+                                {easypaisaQr ? ' (or scan the QR)' : ''}, then enter the transaction ID below.
+                            </p>
+                        </div>
+
+                        {/* JazzCash */}
+                        <div className={styles.methodCard}>
+                            <div className={styles.methodHeader}>
+                                <Smartphone size={22} className={styles.methodIcon} />
+                                <h3>JazzCash</h3>
+                            </div>
+                            <div className={styles.methodBody}>
+                                <div className={styles.detailRow}>
+                                    <span className={styles.detailLabel}>Account Number</span>
+                                    <span className={styles.detailValue}>{jazzcashNumber}</span>
+                                </div>
+                                <div className={styles.detailRow}>
+                                    <span className={styles.detailLabel}>Account Name</span>
+                                    <span className={styles.detailValue}>Valsent</span>
+                                </div>
+                            </div>
+                            {jazzcashQr && (
+                                <div className={styles.qrWrap}>
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img src={jazzcashQr} alt="JazzCash QR code" className={styles.qrImage} />
+                                    <span className={styles.qrCaption}>Scan with the JazzCash app</span>
+                                </div>
+                            )}
+                            <p className={styles.methodInstruction}>
+                                Send exactly PKR {price.toLocaleString()} to the number above
+                                {jazzcashQr ? ' (or scan the QR)' : ''}, then enter the transaction ID below.
                             </p>
                         </div>
 
@@ -135,14 +187,39 @@ export default async function PaymentPage() {
                             </div>
                             <p className={styles.methodInstruction}>
                                 Transfer PKR {price.toLocaleString()} to the account above, then
-                                tap the button below to notify us.
+                                enter the transaction ID below.
                             </p>
                         </div>
                     </div>
                 </section>
 
-                {/* WhatsApp CTA (Client Component) */}
-                <WhatsAppButton email={user.email ?? ''} planName={planName} />
+                {/* Quote this on WhatsApp */}
+                <div className={styles.referenceBox}>
+                    Your payment reference
+                    <code className={styles.referenceCode}>{referenceCode}</code>
+                </div>
+
+                {latestRequest?.status === 'pending' && (
+                    <div className={styles.statusBanner}>
+                        We received your payment details and are verifying them. This page will
+                        redirect to your dashboard once your access is unlocked.
+                    </div>
+                )}
+                {latestRequest?.status === 'rejected' && (
+                    <div className={`${styles.statusBanner} ${styles.statusBannerRejected}`}>
+                        We could not verify your last payment
+                        {latestRequest.admin_note ? `: ${latestRequest.admin_note}` : '.'} You can
+                        submit corrected details below or message us on WhatsApp.
+                    </div>
+                )}
+
+                {latestRequest?.status !== 'pending' && <PaymentForm />}
+
+                <WhatsAppButton
+                    email={user.email ?? ''}
+                    planName={planName}
+                    referenceCode={referenceCode}
+                />
             </div>
         </main>
     );
